@@ -41,19 +41,17 @@ http://downloads.sourceforge.net/tortoisesvn/TortoiseSVN-1.6.7.18415-win32-svn-1
 ==Working with SVN==
 If you right click on the folder under version control, you will see a lot of options available to you. These are the ones that you have to worry about. 
 
-*Add
-**You need to add a file first before committing. An unadded file will have a green question mark
+* Add
+** You need to add a file first before committing. An unadded file will have a green question mark
 
-*Remove
-**Mark for removal. The file will have a red exclamation mark until you commit
+* Remove
+** Mark for removal. The file will have a red exclamation mark until you commit
 
-*Update
-**Get other people's updates(do this everytime before you start working and before you commit)
+* Update
+** Get other people's updates(do this everytime before you start working and before you commit)
 
-*Commit
-**Commit all of your changes
+* Commit
+** Commit all of your changes
 
 ==Conclusion==
 This so far has been written from memory. If there's any questions or concerns regarding the process please feel free to contact me. I feel bad for potentially consternating some of you, but I reiterate that this is something worth learning. 
-
-
