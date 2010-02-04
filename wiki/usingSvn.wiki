@@ -1,0 +1,29 @@
+#summary Introduction to using svn
+
+= Introduction =
+
+Assuming everyone is using windows, this guide is for windows only. 
+
+We are going to try out using svn for most of our documents. This will ensure that our documents are easily maintained and under version control. Despite an initial(albeit small) learning curve, rest assured it will be worth our endeavor. If not for anything else other than becoming acquainted with what most companies use who deal with even the slightest amount of code. This goes without mentioning the large amounts of aspirin saved from preventing headaches associated with ill organization. 
+
+The program we're using is *TortoiseSVN*
+
+Well, let's carry on then shall we?
+
+= Details =
+
+==Installation==
+
+Go here: http://tortoisesvn.net/downloads
+
+In case you can't find the installer on the page(32-bit install):
+
+http://downloads.sourceforge.net/tortoisesvn/TortoiseSVN-1.6.7.18415-win32-svn-1.6.9.msi?download
+
+
+==Check Out==
+
+
+
+
+
