@@ -24,8 +24,8 @@ http://downloads.sourceforge.net/tortoisesvn/TortoiseSVN-1.6.7.18415-win32-svn-1
 ==Check Out==
 
 ===Variables===
-    *username and password
-    *url for repository = https://projectrobo.googlecode.com/svn/trunk
+    * username and password
+    * url for repository = https://projectrobo.googlecode.com/svn/trunk
  
 
 ===Routine===
@@ -51,7 +51,7 @@ Mark for removal. The file will have a red exclamation mark until you commit
 Get other people's updates(do this everytime before you start working and before you commit)
 
 ===Commit===
-Commit all of your changes
+Commit all of your changes. Do this as often as you possibly can. 
 
 ==Conclusion==
 This so far has been written from memory. If there's any questions or concerns regarding the process please feel free to contact me. I feel bad for potentially consternating some of you, but I reiterate that this is something worth learning. 
