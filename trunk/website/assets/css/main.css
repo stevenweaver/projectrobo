@@ -1,0 +1,161 @@
+#work-listing{ -moz-border-radius:1em;margin:25px 0px 0px 0px; padding:10px;background: white; } 
+#project-row{ margin: 0px 0px 20px 0px; } 
+#project-thumb img{ padding: 0px 0px 0px 0px; } 
+#project-thumb h2 { padding: 15px 0px 0px 0px; } 
+#project-thumb h2 a{ cursor:pointer; } 
+#project-thumb p { font-size: 11px; line-height:15px; } 
+
+
+.content{ -moz-border-radius:1em;margin:25px 0px 0px 0px; padding:10px;background: white; } 
+
+#site {
+    clear: both;
+    background: white;
+}
+
+/*---- Layout --*/
+
+body {
+    background:black;
+    /*background:#e9e8e5*/;
+    background-image:url("http://www.windmillgames.com/artwork/showcase/1_pirate_wallpaper.jpg");
+    background-attachment:scroll;
+    background-repeat:repeat-x;
+    font:12px Helvetica,Arial,sans-serif;
+    color: #333332;
+}
+
+body, img, h1, h2, h3, h4, h5, ul, ol, li, form, blockquote {
+    margin: 0px;
+    padding: 0px;
+}
+h1 {
+    font-size: 22px;
+    font-weight: bold;
+    color: #333332;
+    margin:0px 0px 15px 0px;
+    padding:0px 0px 4px 0px;
+}
+h2 {
+    font-size: 15px;
+    font-weight: bold;
+    color: #333332;
+    margin:0px 0px 2px 0px;
+}
+h2 a {
+    color:#333332;
+    text-decoration: none;
+}
+h2 a:hover {
+    color:#0179a5;
+    text-decoration: none;
+}
+h3 {
+    font-size: 12px;
+    font-weight: bold;
+    color: #333332;
+}
+h3 a {
+    color:#333332;
+    text-decoration: none;
+}
+h3 a:hover {
+    color:#0179a5;
+    text-decoration: none;
+}
+p {
+    line-height: 19px;
+    padding-bottom:15px;    
+}
+ul, ol {
+    list-style: none;
+}
+
+a {
+    color: #0179a5;
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+#sidebar {
+    margin-top:5px;
+}
+blockquote, q{
+    font:13px Georgia;
+    font-style:italic;
+    line-height: 24px;
+    padding:20px 25px 20px 25px;
+    margin-bottom: 15px;
+    background-color:#f7f6f4;
+    border-top: dotted 1px #939391;
+    border-bottom: dotted 1px #939391;
+}
+blockquote p{
+    margin:0px;
+    padding:0px;
+}
+
+.thumbnail img {
+        float:left;
+        position:absolute;
+        top:-140px;
+        left:-50px;
+}
+.thumbnail {
+    display:block;
+    float:left;
+    width:220px;
+    height:146px;
+    line-height:100px;
+    overflow:hidden;
+    position:relative;
+    z-index:1;      
+}
+
+/*Main Navigation */
+#navbar {
+    height: 45px;
+    border-top: dotted 1px #939391;
+    border-bottom: dotted 1px #939391;
+    margin: 30px 0px 0px 0px;
+    background: white;
+    padding-left: 10px;
+
+}
+#logo{
+    padding: 7px 0px 0px 0px; 
+}
+#titles{
+    font-size: 9px;
+    font-weight:bold;
+    line-height: 12px;
+    margin-top:20px;
+    text-transform: uppercase;
+}
+#mainmenu{
+    padding: 15px 0px 0px 0px;
+    float: right;
+}
+#mainmenu ul{
+    float: left;
+    color: #333332;
+    padding:0px;
+}
+#mainmenu ul li{
+    display: inline;
+    padding:0px 26px 0px 0px;   
+}
+#mainmenu ul li a{
+    color:#333332;
+    font: 17px Helvetica,Arial,sans-serif;
+    font-weight: bold;
+}
+#mainmenu ul li a:visited {
+    color: #333332;
+}
+#mainmenu ul li a:hover {
+    color: #0179a5;
+    text-decoration:none;
+}
+
