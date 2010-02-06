@@ -40,6 +40,10 @@
                 include $page; 
             }
         ?>
+        <div id="footer" class="grid_12 omega">
+            <span class="info">Spring 2010 Design Project</span>
+        </div>
     </div>
 </body>
+
 </html>
