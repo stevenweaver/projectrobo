@@ -1,0 +1,284 @@
+<?xml version="1.0"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:o="urn:schemas-microsoft-com:office:office"
+ xmlns:x="urn:schemas-microsoft-com:office:excel"
+ xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:html="http://www.w3.org/TR/REC-html40">
+ <DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">
+  <Author>steven</Author>
+  <LastAuthor>steven</LastAuthor>
+  <Created>2010-01-27T22:33:33Z</Created>
+  <LastSaved>2010-02-11T05:31:30Z</LastSaved>
+  <Company>Indiana University</Company>
+  <Version>11.5606</Version>
+ </DocumentProperties>
+ <ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel">
+  <WindowHeight>13605</WindowHeight>
+  <WindowWidth>24915</WindowWidth>
+  <WindowTopX>360</WindowTopX>
+  <WindowTopY>135</WindowTopY>
+  <ProtectStructure>False</ProtectStructure>
+  <ProtectWindows>False</ProtectWindows>
+ </ExcelWorkbook>
+ <Styles>
+  <Style ss:ID="Default" ss:Name="Normal">
+   <Alignment ss:Vertical="Bottom"/>
+   <Borders/>
+   <Font/>
+   <Interior/>
+   <NumberFormat/>
+   <Protection/>
+  </Style>
+  <Style ss:ID="s21" ss:Name="Hyperlink">
+   <Font ss:Color="#0000FF" ss:Underline="Single"/>
+  </Style>
+  <Style ss:ID="s22">
+   <Font x:Family="Swiss" ss:Bold="1"/>
+  </Style>
+  <Style ss:ID="s27" ss:Parent="s21">
+   <Font/>
+  </Style>
+  <Style ss:ID="s28">
+   <Font x:Family="Swiss"/>
+  </Style>
+  <Style ss:ID="s29" ss:Parent="s21">
+   <Font ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="s32">
+   <NumberFormat ss:Format="Standard"/>
+  </Style>
+  <Style ss:ID="s33">
+   <Font x:Family="Swiss" ss:Bold="1"/>
+   <NumberFormat ss:Format="Standard"/>
+  </Style>
+  <Style ss:ID="s34">
+   <Font x:Family="Swiss" ss:Size="9" ss:Color="#808080" ss:Bold="1"/>
+   <NumberFormat ss:Format="Standard"/>
+  </Style>
+  <Style ss:ID="s35">
+   <Font x:Family="Swiss"/>
+   <NumberFormat ss:Format="Standard"/>
+  </Style>
+  <Style ss:ID="s36">
+   <NumberFormat ss:Format="Fixed"/>
+  </Style>
+ </Styles>
+ <Worksheet ss:Name="Sheet1">
+  <Table ss:ExpandedColumnCount="6" ss:ExpandedRowCount="38" x:FullColumns="1"
+   x:FullRows="1">
+   <Column ss:Width="336.75"/>
+   <Column ss:AutoFitWidth="0" ss:Width="56.25"/>
+   <Column ss:Width="67.5"/>
+   <Column ss:StyleID="s36" ss:AutoFitWidth="0" ss:Width="61.5"/>
+   <Column ss:Width="682.5"/>
+   <Column ss:Width="327"/>
+   <Row>
+    <Cell><Data ss:Type="String">Parts List</Data></Cell>
+    <Cell><Data ss:Type="String">Price</Data></Cell>
+    <Cell><Data ss:Type="String">Quantity</Data></Cell>
+    <Cell><Data ss:Type="String">Total</Data></Cell>
+    <Cell><Data ss:Type="String">Link</Data></Cell>
+   </Row>
+   <Row>
+    <Cell ss:Index="2" ss:StyleID="s32"/>
+   </Row>
+   <Row>
+    <Cell ss:StyleID="s22"><Data ss:Type="String">Locomotion and Mobility</Data></Cell>
+    <Cell ss:StyleID="s33"/>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String">Motors and Motor Drive Circuits</Data></Cell>
+    <Cell ss:StyleID="s32"/>
+    <Cell ss:Index="5"><Data ss:Type="String">From Mr. Kennedy</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String">Wheel Encoders</Data></Cell>
+    <Cell ss:StyleID="s32"/>
+    <Cell ss:Index="5"><Data ss:Type="String">I think this has to do with the H-Bridge we were talking about in the meeting today, see locomotion</Data></Cell>
+   </Row>
+   <Row>
+    <Cell ss:Index="2" ss:StyleID="s32"/>
+   </Row>
+   <Row>
+    <Cell ss:StyleID="s22"><Data ss:Type="String">Obstacle Avoidance</Data></Cell>
+    <Cell ss:StyleID="s33"/>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String">IR Proximity Sensors</Data></Cell>
+    <Cell ss:StyleID="s34"><Data ss:Type="Number">14.95</Data></Cell>
+    <Cell><Data ss:Type="Number">2</Data></Cell>
+    <Cell ss:Formula="=RC[-2]*RC[-1]"><Data ss:Type="Number">29.9</Data></Cell>
+    <Cell ss:StyleID="s21" ss:HRef="http://www.sparkfun.com/commerce/product_info.php?products_id=8958"><Data
+      ss:Type="String">http://www.sparkfun.com/commerce/product_info.php?products_id=8958</Data></Cell>
+    <Cell ss:StyleID="s21" ss:HRef="http://www.sparkfun.com/commerce/product_info.php?products_id=8733"><Data
+      ss:Type="String">http://www.sparkfun.com/commerce/product_info.php?products_id=8733</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String">Ultra Sonic Ranging</Data></Cell>
+    <Cell ss:StyleID="s32"/>
+    <Cell ss:Index="5" ss:StyleID="s27"><Data ss:Type="String">From Mr Kennedy?</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String">Flex Sensors</Data></Cell>
+    <Cell ss:StyleID="s32"><Data ss:Type="Number">12.95</Data></Cell>
+    <Cell><Data ss:Type="Number">2</Data></Cell>
+    <Cell ss:Formula="=RC[-2]*RC[-1]"><Data ss:Type="Number">25.9</Data></Cell>
+    <Cell ss:StyleID="s21" ss:HRef="http://www.sparkfun.com/commerce/product_info.php?products_id=8606"><Data
+      ss:Type="String">http://www.sparkfun.com/commerce/product_info.php?products_id=8606</Data></Cell>
+   </Row>
+   <Row>
+    <Cell ss:Index="2" ss:StyleID="s32"/>
+   </Row>
+   <Row>
+    <Cell ss:StyleID="s22"><Data ss:Type="String">Navigation Systems</Data></Cell>
+    <Cell ss:StyleID="s33"/>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String">GPS Receiver</Data></Cell>
+    <Cell ss:StyleID="s32"><Data ss:Type="Number">59.95</Data></Cell>
+    <Cell><Data ss:Type="Number">1</Data></Cell>
+    <Cell ss:Formula="=RC[-2]*RC[-1]"><Data ss:Type="Number">59.95</Data></Cell>
+    <Cell ss:StyleID="s21" ss:HRef="http://www.sparkfun.com/commerce/product_info.php?products_id=8975"><Data
+      ss:Type="String">http://www.sparkfun.com/commerce/product_info.php?products_id=8975</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String">Electronic Compass</Data></Cell>
+    <Cell ss:StyleID="s32"><Data ss:Type="Number">34.95</Data></Cell>
+    <Cell><Data ss:Type="Number">1</Data></Cell>
+    <Cell ss:Formula="=RC[-2]*RC[-1]"><Data ss:Type="Number">34.95</Data></Cell>
+    <Cell ss:StyleID="s21" ss:HRef="http://www.sparkfun.com/commerce/product_info.php?products_id=7915"><Data
+      ss:Type="String">http://www.sparkfun.com/commerce/product_info.php?products_id=7915</Data></Cell>
+    <Cell><Data ss:Type="String">(Does this actually come with the compass, or is it just the module?)</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String">Beacon Triangulation</Data></Cell>
+    <Cell ss:StyleID="s32"/>
+    <Cell ss:Index="5"><Data ss:Type="String">Some parts from Mr. Kennedy? Also a microcontroller will be needed</Data></Cell>
+   </Row>
+   <Row>
+    <Cell ss:Index="2" ss:StyleID="s32"/>
+   </Row>
+   <Row>
+    <Cell ss:StyleID="s22"><Data ss:Type="String">Microcontrollers</Data></Cell>
+    <Cell ss:StyleID="s33"/>
+   </Row>
+   <Row>
+    <Cell ss:StyleID="s28"><Data ss:Type="String">PIC18F's should do</Data></Cell>
+    <Cell ss:StyleID="s35"/>
+    <Cell ss:Index="5"><Data ss:Type="String">We can get samples of them at the microchip website</Data></Cell>
+   </Row>
+   <Row>
+    <Cell ss:StyleID="s22"/>
+    <Cell ss:StyleID="s33"/>
+    <Cell ss:Index="5"><Data ss:Type="String">These will interface with the Beagleboard somehow via i2c. The beagleboard will send/receive commands to the pics and figure out what to do with them</Data></Cell>
+   </Row>
+   <Row>
+    <Cell ss:Index="2" ss:StyleID="s32"/>
+   </Row>
+   <Row>
+    <Cell ss:Index="2" ss:StyleID="s32"/>
+   </Row>
+   <Row>
+    <Cell ss:StyleID="s22"><Data ss:Type="String">Central Control</Data></Cell>
+    <Cell ss:StyleID="s33"/>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String">Beagle Board</Data></Cell>
+    <Cell ss:StyleID="s32"><Data ss:Type="Number">149.95</Data></Cell>
+    <Cell><Data ss:Type="Number">1</Data></Cell>
+    <Cell ss:Formula="=RC[-2]*RC[-1]"><Data ss:Type="Number">149.95</Data></Cell>
+    <Cell ss:StyleID="s21" ss:HRef="http://search.digikey.com/scripts/DkSearch/dksus.dll?lang=en&amp;site=US&amp;KeyWords=296-23428-ND"><Data
+      ss:Type="String">http://search.digikey.com/scripts/DkSearch/dksus.dll?lang=en&amp;site=US&amp;KeyWords=296-23428-ND</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String">HDMI Female to DVI male(Not sure if we really need this)</Data></Cell>
+    <Cell ss:StyleID="s32"><Data ss:Type="Number">3.5</Data></Cell>
+    <Cell><Data ss:Type="Number">1</Data></Cell>
+    <Cell ss:Formula="=RC[-2]*RC[-1]"><Data ss:Type="Number">3.5</Data></Cell>
+    <Cell ss:StyleID="s21" ss:HRef="http://www.amazon.com/RiteAV-HDMI-Female-Male-Adapter/dp/B000V1O1JO"><Data
+      ss:Type="String">http://www.amazon.com/RiteAV-HDMI-Female-Male-Adapter/dp/B000V1O1JO</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String">USB hub</Data></Cell>
+    <Cell ss:StyleID="s32"><Data ss:Type="Number">24</Data></Cell>
+    <Cell><Data ss:Type="Number">1</Data></Cell>
+    <Cell ss:Formula="=RC[-2]*RC[-1]"><Data ss:Type="Number">24</Data></Cell>
+    <Cell ss:StyleID="s21" ss:HRef="http://www.amazon.com/D-Link-DUB-H4-High-Speed-4-Port/dp/B00006B7DA/ref=dp_cp_ob_e_title_0"><Data
+      ss:Type="String">http://www.amazon.com/D-Link-DUB-H4-High-Speed-4-Port/dp/B00006B7DA/ref=dp_cp_ob_e_title_0</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String">SD card</Data></Cell>
+    <Cell ss:StyleID="s32"/>
+    <Cell ss:Index="4" ss:Formula="=RC[-2]*RC[-1]"><Data ss:Type="Number">0</Data></Cell>
+    <Cell ss:StyleID="s29" ss:HRef="http://www.amazon.com/Kingston-SD-Flash-Memory-2GB/dp/B000EOMXM0"><Data
+      ss:Type="String">Have an extra</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String">Cable</Data></Cell>
+    <Cell ss:StyleID="s32"/>
+    <Cell ss:Index="5"><Data ss:Type="String">Have an extra</Data></Cell>
+   </Row>
+   <Row>
+    <Cell ss:Index="2" ss:StyleID="s32"/>
+   </Row>
+   <Row>
+    <Cell ss:Index="2" ss:StyleID="s32"/>
+   </Row>
+   <Row>
+    <Cell ss:Index="2" ss:StyleID="s32"/>
+   </Row>
+   <Row>
+    <Cell ss:StyleID="s22"><Data ss:Type="String">*NOTE*</Data></Cell>
+    <Cell ss:StyleID="s33"/>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String">I think for the ultrasonic sensors… we need to mount one on a servo.</Data></Cell>
+    <Cell ss:StyleID="s32"/>
+   </Row>
+   <Row>
+    <Cell ss:Index="3" ss:StyleID="s32"/>
+   </Row>
+   <Row>
+    <Cell ss:Index="3" ss:StyleID="s32"/>
+   </Row>
+   <Row ss:Index="36">
+    <Cell ss:Index="3" ss:StyleID="s22"><Data ss:Type="String">TOTAL:</Data></Cell>
+    <Cell ss:Formula="=SUM(R[-34]C:R[-4]C)"><Data ss:Type="Number">328.15</Data></Cell>
+   </Row>
+   <Row ss:Index="38">
+    <Cell ss:Index="3" ss:StyleID="s22"><Data ss:Type="String">FUNDS LEFT:</Data></Cell>
+    <Cell ss:Formula="=750-R[-2]C"><Data ss:Type="Number">421.85</Data></Cell>
+   </Row>
+  </Table>
+  <WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">
+   <Print>
+    <ValidPrinterInfo/>
+    <HorizontalResolution>-3</HorizontalResolution>
+    <VerticalResolution>0</VerticalResolution>
+   </Print>
+   <Selected/>
+   <Panes>
+    <Pane>
+     <Number>3</Number>
+     <ActiveRow>29</ActiveRow>
+     <ActiveCol>4</ActiveCol>
+    </Pane>
+   </Panes>
+   <ProtectObjects>False</ProtectObjects>
+   <ProtectScenarios>False</ProtectScenarios>
+  </WorksheetOptions>
+ </Worksheet>
+ <Worksheet ss:Name="Sheet2">
+  <WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">
+   <ProtectObjects>False</ProtectObjects>
+   <ProtectScenarios>False</ProtectScenarios>
+  </WorksheetOptions>
+ </Worksheet>
+ <Worksheet ss:Name="Sheet3">
+  <WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">
+   <ProtectObjects>False</ProtectObjects>
+   <ProtectScenarios>False</ProtectScenarios>
+  </WorksheetOptions>
+ </Worksheet>
+</Workbook>
