@@ -1,11 +1,10 @@
-.main{ -moz-border-radius:1em;margin:25px 0px 0px 0px; padding:10px;background: white; } 
-.projects{ margin-left: 120px; } 
+.main{ -moz-border-radius:1em;margin:25px 0px 0px 0px; padding:10px;background: white; min-height: 500px; } 
+.projects{ margin-left: 120px; padding-top: 20px;} 
 .project-row{ margin: 0px 0px 20px 0px; } 
 .project-thumb img{ padding: 0px 0px 0px 0px; } 
 .project-thumb h2 { padding: 15px 0px 0px 0px; } 
 .project-thumb h2 a{ cursor:pointer; } 
 .project-thumb p { font-size: 11px; line-height:15px; } 
-
 
 .content{ -moz-border-radius:1em;margin:25px 0px 0px 0px; padding:10px;background: white; } 
 
@@ -17,11 +16,13 @@
 /*---- Layout --*/
 
 body {
-    background:black;
+    /*background:#ffffbb;*/
+    background:#ffffbb;
     /*background:#e9e8e5*/;
-    background-image:url("http://www.windmillgames.com/artwork/showcase/1_pirate_wallpaper.jpg");
+    background-image:url("../Turtle_Love_by_drakkenfan.jpg");
     background-attachment:scroll;
-    background-repeat:repeat-x;
+    background-position:top right;
+    background-repeat:no-repeat;
     font:12px Helvetica,Arial,sans-serif;
     color: #333332;
 }
@@ -148,15 +149,34 @@ a:hover {
     height: 15px;
     border-top: dotted 1px #939391;
     border-bottom: dotted 1px #939391;
-    margin: 10px 0px 0px 0px;
+    margin: 10px 0px 10px 0px;
     background: white;
     padding-left: 10px;
     padding-right: 10px;
-    padding-top: 1px;
-    padding-bottom: 1px;
+    padding-top: 3px;
+    padding-bottom: 3px;
     clear:both;
 }
 
 .info {
     float: right;
 }
+
+.member_info {
+    margin-top: 15px; 
+}
+
+.about ul {
+    list-style-type: circle;
+    margin: 15px 25px 15px 15px;
+
+}
+
+.about li {
+    margin: 0px 0px 5px 0px;
+}
+
+.member img { float: left;}
+.member_info ul { float: left; padding: 20px;}
+.member_info li { margin: 15px;}
+

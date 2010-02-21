@@ -1,0 +1,4 @@
+# activate mod_rewrite
+RewriteEngine on
+
+RewriteRule !(.zip|.py|.txt|.js|.ico|.gif|.jpg|.png|.css|.html|.php|.crt|.cr1|.swf|/)$ index.php

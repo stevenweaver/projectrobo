@@ -7,7 +7,7 @@
     <div id="site" class="container_12">
         <div id="navbar" class="grid_12">
             <div id="titles" class="grid_2 alpha">
-               <a href="/">The Jolly Robo</a> 
+               <a href="/">Yertle the Turtle</a> 
             </div>
             <div id="mainmenu" class="grid_6">
                 <ul>
