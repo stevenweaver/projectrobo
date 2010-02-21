@@ -12,24 +12,25 @@
             <div id="mainmenu" class="grid_6">
                 <ul>
                     <li>
-                        <a href="about">About</a>
+                        <a href="/about">About</a>
                     </li>
                     <li>
-                        <a href="members">Members</a>
+                        <a href="/members">Members</a>
                     </li>
                     <li>
-                        <a href="designs">Designs</a>
+                        <a href="/designs">Designs</a>
                     </li>
                     <li>
-                        <a href="media">Media</a>
+                        <a href="/media">Media</a>
                     </li>
                     <li>
-                        <a href="contact">Contact</a>
+                        <a href="/contact">Contact</a>
                     </li>
                 </ul>
             </div>
         </div>
         <?php $uri = $_SERVER['REQUEST_URI'] !=  '/'? $_SERVER['REQUEST_URI'] : "/index" ?>
+        <?php $uri = str_replace('.php', '', $uri); ?>
         <?php $page = './pages' . $uri . '.html';?>
         <?php 
             if(file_exists($page)) { 
