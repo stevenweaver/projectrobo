@@ -1,0 +1,16 @@
+#summary Notes on the arduino code
+
+= Introduction =
+The arduino is surprisingly pleasant to work with. These are some notes for the code.
+
+
+= Details =
+
+The main code is in serial called serial.pde. This will interface with all of the sensors we are receiving.
+
+Some notes:
+The flex pin corresponds to Analog IN 0
+
+The sonar sensor corresponds to pin 7 of the PWM side. 
+
+For the compass. You must use pins 20 and 21 under Communication. pin 20 is for the data pin SDA and 21 is for SCL, as marked. 
