@@ -11,6 +11,15 @@ The main code is in serial called serial.pde. This will interface with all of th
 Some notes:
 The flex pin corresponds to Analog IN 0
 
+For the flex sensors, you need to use a voltage divider. (Very much like project 2 of the senior lab).
+
+Picture:
+http://mjpa.co.uk/screenshots/voltage_divider.png
+
+The flex sensor standing up is 8 Khz, bent it was something like 20k. 
+
+Please EE pick a good resistor to use.
+
 The sonar sensor corresponds to pin 7 of the PWM side. 
 
 For the compass. You must use pins 20 and 21 under Communication. pin 20 is for the data pin SDA and 21 is for SCL, as marked. 
