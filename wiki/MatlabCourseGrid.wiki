@@ -14,10 +14,9 @@ clf
 rgb = imread('beagle.png');
 imshow(rgb)
 hold on
-Warning: Image is too big to fit on screen; displaying at 67% 
-> In imuitools\private\initSize at 73
-  In imshow at 262
->>  M = size(rgb,1);
+
+
+M = size(rgb,1);
 N = size(rgb,2);
 
 for k = 1:25:M
