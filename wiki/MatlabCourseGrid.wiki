@@ -1,0 +1,37 @@
+#summary One-sentence summary of this page.
+
+= Introduction =
+
+How to make a grid in MatLab
+
+Save your photo from google earth in /Documents/Matlab/
+
+I saved mine as beagle.png
+
+= Code =
+
+clf
+rgb = imread('beagle.png');
+imshow(rgb)
+hold on
+Warning: Image is too big to fit on screen; displaying at 67% 
+> In imuitools\private\initSize at 73
+  In imshow at 262
+>>  M = size(rgb,1);
+N = size(rgb,2);
+
+for k = 1:25:M
+    x = [1 N];
+    y = [k k];
+    plot(x,y,'Color','w','LineStyle','-');
+    plot(x,y,'Color','k','LineStyle',':');
+end
+
+for k = 1:25:N
+    x = [k k];
+    y = [1 M];
+    plot(x,y,'Color','w','LineStyle','-');
+    plot(x,y,'Color','k','LineStyle',':');
+end
+
+hold off
