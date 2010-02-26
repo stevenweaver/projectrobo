@@ -9,7 +9,7 @@ Save your photo from google earth in /Documents/Matlab/
 I saved mine as beagle.png
 
 = Code =
-`
+{{{
 clf
 rgb = imread('beagle.png');
 imshow(rgb)
@@ -35,4 +35,4 @@ for k = 1:25:N
 end
 
 hold off
-`
+}}}
