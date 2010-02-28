@@ -45,7 +45,7 @@ hold off
   * We need better, accurate plot points, we need "points of interest" to correctly calibrate the beagleboard during the course. 
 
   * We need to figure out either to 1) spit out the piecewise linear functions from matlab to use in python or 2) figure out how to do piecewise linear functions in python.(preferably the latter)
-  **http://www.scipy.org/Cookbook/Interpolation
+    * http://www.scipy.org/Cookbook/Interpolation
 
   * Preferably switch to cubic spline interpolation instead of piecewise linear interpolation for a smoother function
 
