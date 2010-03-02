@@ -1,0 +1,28 @@
+#summary One-sentence summary of this page.
+
+= Introduction =
+
+We'll use xml
+
+
+= Details =
+
+===From Arduino===
+{{{
+
+<sensor>
+  <gps>rawdata</gps>
+  <compass>degree</compass>
+  <flex>number</flex>
+  <ultrasonic>inches</ultrasonic>
+  <beacon>???</beacon>
+  <wheelencoder>???</wheelencoder>
+</sensor>
+
+}}}
+
+=== To Arduino ===
+
+{{{
+  <direction>right,left,forward,reverse</direction>
+}}}
