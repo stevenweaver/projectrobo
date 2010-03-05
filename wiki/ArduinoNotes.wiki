@@ -16,8 +16,6 @@ For the flex sensors, you need to use a voltage divider. (Very much like project
 Picture:
 http://mjpa.co.uk/screenshots/voltage_divider.png
 
-
-For the noobs: the equation is (Vref)*(R2/R1+R2)
 The flex sensor standing up is 8k, bent it was something like 20k. 
 
 using 15k resistor
