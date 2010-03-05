@@ -8,7 +8,7 @@ The arduino is surprisingly pleasant to work with. These are some notes for the 
 
 The main code is in serial called serial.pde. This will interface with all of the sensors we are receiving.
 
-Some notes:
+===FLEX===
 The flex pin corresponds to Analog IN 0
 
 For the flex sensors, you need to use a voltage divider. (Very much like project 2 of the senior lab).
@@ -20,6 +20,30 @@ The flex sensor standing up is 8k, bent it was something like 20k.
 
 Please EE pick a good resistor to use.
 
+flex sensor
+using 15k resistor
+
+flex 1:
+
+653 standing up
+
+<570 means something bad happening
+
+<500 EMERGENCY
+
+<450 OMG WTF we're dead
+
+flex 2:
+
+603 standing up
+<530 something bad happening
+<450 EMERGENCY
+<400 OMG WTF we're dead
+
+
+===SONAR===
+
 The sonar sensor corresponds to pin 7 of the PWM side. 
 
+===COMPASS===
 For the compass. You must use pins 20 and 21 under Communication. pin 20 is for the data pin SDA and 21 is for SCL, as marked. 
