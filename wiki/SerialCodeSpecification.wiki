@@ -7,25 +7,11 @@ compass information is in degrees
 
 flex information is based on voltage information
 
-flex 1:
 
-653 standing up
+|| *Flex* || *standing up* || *something bad is happening* ||*emergency* || *OMG WTF we're dead* ||
+|| 1 || 653 || <570 || <500 || <450 ||
+|| 2 || 603 || <530 || <450 || <400 ||
 
-<570 means something bad happening
-
-<500 EMERGENCY
-
-<450 OMG WTF we're dead
-
-flex 2:
-
-603 standing up
-
-<530 something bad happening
-
-<450 EMERGENCY
-
-<400 OMG WTF we're dead 
 
 
 ultrasonic is in inches
