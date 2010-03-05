@@ -16,7 +16,7 @@ For the flex sensors, you need to use a voltage divider. (Very much like project
 Picture:
 http://mjpa.co.uk/screenshots/voltage_divider.png
 
-The flex sensor standing up is 8 Khz, bent it was something like 20k. 
+The flex sensor standing up is 8k, bent it was something like 20k. 
 
 Please EE pick a good resistor to use.
 
