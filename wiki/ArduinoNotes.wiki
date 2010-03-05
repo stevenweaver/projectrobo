@@ -18,9 +18,6 @@ http://mjpa.co.uk/screenshots/voltage_divider.png
 
 The flex sensor standing up is 8k, bent it was something like 20k. 
 
-Please EE pick a good resistor to use.
-
-flex sensor
 using 15k resistor
 
 flex 1:
@@ -36,8 +33,11 @@ flex 1:
 flex 2:
 
 603 standing up
+
 <530 something bad happening
+
 <450 EMERGENCY
+
 <400 OMG WTF we're dead
 
 
