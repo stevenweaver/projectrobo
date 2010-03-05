@@ -21,8 +21,8 @@ The flex sensor standing up is 8k, bent it was something like 20k.
 using 15k resistor
 
 || *Flex* || *standing up* || *something bad is happening* ||*Emergency* || *OMG WTF we're dead* ||
-|| 1 || 653 || <570 || <500 || <450
-|| 2 || 603 || <530 || <450 || <400
+|| 1 || 653 || <570 || <500 || <450 ||
+|| 2 || 603 || <530 || <450 || <400 ||
 
 
 ===SONAR===
