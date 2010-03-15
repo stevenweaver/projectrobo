@@ -7,3 +7,4 @@
 
 = Details =
   * Try using analog input for beacon sensors. It should read something like 0 compared to something like 500. I must have somehow made a mistake the last time i tried it. 
+  * Having a slight problem with parsing NMEA data from ali. need to figure out wtf. 
