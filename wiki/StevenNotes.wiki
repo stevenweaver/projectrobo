@@ -1,0 +1,9 @@
+#Personal notes for steven, don't peek!
+
+= Introduction =
+
+
+
+
+= Details =
+* Try using analog input for beacon sensors. It should read something like 0 compared to something like 500. I must have somehow made a mistake the last time i tried it. 
