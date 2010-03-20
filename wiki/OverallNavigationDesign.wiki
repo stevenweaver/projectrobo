@@ -25,4 +25,4 @@ Please leave comments/ask questions if something does not make sense or raises c
 
   * In short, if we are completely lost, and none of our calculations from the sensor data vs. what we should be seeing on the bot are adding up, we will need to rely on the beacon to guide us. 
  
-  * The robot will work completely linearly. That is, it will never move at an angle. This is to simplify coding/remove possibilities for error. I see no reason to potentially jeopardize our algorithms in an attempt to shave off a few seconds when the other teams' robots are going to have chicken without head syndrome.
+  * The robot will work completely linearly. That is, it will never move at an angle. This is to simplify coding/remove possibilities for error. I see no reason to potentially jeopardize our algorithms in an attempt to shave off a few seconds.
