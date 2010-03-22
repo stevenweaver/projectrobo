@@ -17,9 +17,9 @@
 
 body {
     /*background:#ffffbb;*/
-    background:#ffffbb;
+    background:#d8f1f9;
     /*background:#e9e8e5*/;
-    background-image:url("../Turtle_Love_by_drakkenfan.jpg");
+    background-image:url("../yertletheturtle.jpg");
     background-attachment:scroll;
     background-position:top right;
     background-repeat:no-repeat;
@@ -81,6 +81,9 @@ a:hover {
     text-decoration: underline;
 }
 
+.flyer img {
+        width:940px;
+}
 .thumbnail img {
         float:left;
         position:absolute;
@@ -96,6 +99,77 @@ a:hover {
     overflow:hidden;
     position:relative;
     z-index:1;      
+}
+
+.thumbnail_phone img {
+        float:left;
+        position:absolute;
+        width:220px;
+        top:-40px;
+}
+.thumbnail_phone {
+    display:block;
+    float:left;
+    width:220px;
+    height:146px;
+    line-height:100px;
+    overflow:hidden;
+    position:relative;
+    z-index:1;      
+}
+.thumbnail_pat img {
+        float:left;
+        position:absolute;
+        top:-30px;
+        left:-90px;
+}
+.thumbnail_pat {
+    display:block;
+    float:left;
+    width:220px;
+    height:146px;
+    line-height:100px;
+    overflow:hidden;
+    position:relative;
+    z-index:1;      
+}
+
+.thumbnail_jad img {
+        float:left;
+        position:absolute;
+        top:-110px;
+        left:-90px;
+}
+.thumbnail_jad {
+    display:block;
+    float:left;
+    width:220px;
+    height:146px;
+    line-height:100px;
+    overflow:hidden;
+    position:relative;
+    z-index:1;      
+}
+
+.thumbnail_mem img {
+    width:220px;
+    /*height:146px;*/
+}
+
+.thumbnail_mem {
+    display:block;
+    float:left;
+    width:220px;
+    height:146px;
+    line-height:100px;
+    overflow:hidden;
+    position:relative;
+    z-index:1;      
+}
+
+.heading {
+    left: 170px;
+
 }
 
 /*Main Navigation */
@@ -162,9 +236,6 @@ a:hover {
     float: right;
 }
 
-.member_info {
-    margin-top: 15px; 
-}
 
 .about ul {
     list-style-type: circle;
@@ -177,6 +248,5 @@ a:hover {
 }
 
 .member img { float: left;}
-.member_info ul { float: left; padding: 20px;}
-.member_info li { margin: 15px;}
+.member_info li { margin-bottom: 15px;}
 
