@@ -1,6 +1,8 @@
 //This uses a voltage divider. Put into analog
-const int FLEX_PIN = 0;  // select the input pin for flex sensor 
-const int ULTRASONIC_PIN = 7;    // select the input pin for ultransonic range sensor 
+const int FLEX_PIN = 8;  // select the input pin for flex sensor 
+const int FLEX_PIN_2 = 9;  // select the input pin for flex sensor 
+const int ULTRASONIC_PIN = 0;    // select the input pin for 
+const int ULTRASONIC_PIN_2 = 1; //ultransonic range sensor 
 const int MAXLEN = 255;
 const int HMC6352Address = 0x42;
 
@@ -29,17 +31,19 @@ void setup() {
 
 void loop() {
     int us_val, flex_val,compass_val = 0;
-    
+    int us_val_2, flex_val_2= 0;
     //To use an interrupt: 
     //http://www.arduino.cc/en/Reference/AttachInterrupt
     //attachInterrupt(0, blink, CHANGE);
 
     if (serialMetro.check() == 1) { // check if the metro has passed it's interval .
       //send information
-      //us_val = ultrasonic();
-      //flex_val = flex();
-      //compass_val = compass();
-      sendSerialInfo(us_val, flex_val,compass_val);
+      us_val = ultrasonic(ULTRASONIC_PIN);
+      flex_val = flex(FLEX_PIN);
+      us_val_2 = ultrasonic(ULTRASONIC_PIN_2);
+      flex_val_2 = flex(FLEX_PIN_2);
+      compass_val = compass();
+      sendSerialInfo(us_val, flex_val,us_val_2, flex_val_2,compass_val);
       serialMetro.reset();
     }
     
@@ -61,23 +65,23 @@ void loop() {
     }
   }
 
-int ultrasonic() {
+int ultrasonic(int pin) {
     //Used to read in the pulse that is being sent by the MaxSonar device.
     //Pulse Width representation with a scale factor of 147 uS per Inch.
     //Will package in Inches for now
     long pulse, inches;
     
-    pinMode(ULTRASONIC_PIN, INPUT);
-    pulse = pulseIn(ULTRASONIC_PIN, HIGH);
+    pinMode(pin, INPUT);
+    pulse = pulseIn(pin, HIGH);
     inches = pulse/147;
 
     return inches;
 }
 
-int flex() {
+int flex(int pin) {
     int sensor_value = 0;
     // read the value from the sensor:
-    sensor_value = analogRead(FLEX_PIN);       
+    sensor_value = analogRead(pin);       
     return sensor_value;
 }
 
@@ -110,7 +114,7 @@ int compass() {
     return heading_value;
 }
 
-void sendSerialInfo(int us_val, int flex_val,int compass_val)
+void sendSerialInfo(int us_val, int flex_val,int us_val_2, int flex_val_2,int compass_val)
 {
   //This is an absolutely disgusting way of doing it, but to do it right takes too long, i couldn't find an xml-rpc lib, and this works. 
   //Serial.println("Content-Type: text/xml");
@@ -129,8 +133,14 @@ void sendSerialInfo(int us_val, int flex_val,int compass_val)
   Serial.print("<flex>");
   Serial.print(flex_val);
   Serial.println("</flex>");
+  Serial.print("<flex>");
+  Serial.print(flex_val_2);
+  Serial.println("</flex>");
   Serial.print("<ultrasonic>");
   Serial.print(us_val);
+  Serial.println("</ultrasonic>");
+  Serial.print("<ultrasonic>");
+  Serial.print(us_val_2);
   Serial.println("</ultrasonic>");
   Serial.print("<beacon>");
   Serial.print("???");
@@ -142,3 +152,4 @@ void sendSerialInfo(int us_val, int flex_val,int compass_val)
   Serial.println("");
   return;
 }
+
