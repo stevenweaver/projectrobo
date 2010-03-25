@@ -33,7 +33,7 @@ ultrasonic is in inches
     <left></left>
     <right></right>
   </ultrasonic>
-  <beacon>???</beacon>
+  <beacon>(forward,left,right, NA)</beacon>
   <wheelencoder>???</wheelencoder>
 </sensor>
 
