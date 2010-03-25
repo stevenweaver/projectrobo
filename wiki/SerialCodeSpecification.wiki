@@ -25,8 +25,14 @@ ultrasonic is in inches
 <sensor>
   <gps>rawdata</gps>
   <compass>degree</compass>
-  <flex>number</flex>
-  <ultrasonic>inches</ultrasonic>
+  <flex>
+    <left></left>
+    <right></right>
+  </flex>
+  <ultrasonic>
+    <left></left>
+    <right></right>
+  </ultrasonic>
   <beacon>???</beacon>
   <wheelencoder>???</wheelencoder>
 </sensor>
