@@ -1,69 +1,106 @@
-//This uses a voltage divider. Put into analog
-const int FLEX_PIN = 8;  // select the input pin for flex sensor 
-const int FLEX_PIN_2 = 9;  // select the input pin for flex sensor 
-const int ULTRASONIC_PIN = 0;    // select the input pin for 
-const int ULTRASONIC_PIN_2 = 1; //ultransonic range sensor 
-const int MAXLEN = 255;
-const int HMC6352Address = 0x42;
-
-
 #include <Wire.h>
 #include <string.h>
 #include <Servo.h> 
 #include <Metro.h> 
 
-// This is calculated in the setup() function, therefore global
+//*********GLOBAL CONSTANTS*******************//
+//ARDUINO PINS
+const int LEFT_FLEX_PIN = 8;  
+const int RIGHT_FLEX_PIN = 9;  
+const int LEFT_ULTRASONIC_PIN= 6;   
+const int RIGHT_ULTRASONIC_PIN = 7;
+
+const int LEFT_BEACON_INT  = 0;   
+const int RIGHT_BEACON_INT = 1; 
+
+//Servo Constants
+const int SERVO_PIN = 9;
+const int HMC6352Address = 0x42;
+
+//Beacon Constants
+const int NA = -1;
+const int STRAIGHT = 0;
+const int LEFT = 1;
+const int RIGHT = 2;
+
+
+//*******************GLOBAL VARIABLES*****************// 
+
+//For the compass
 int slave_address;
+
+//For the servo
 Servo myservo;
-Metro serialMetro = Metro(250);
-Metro servoMetro = Metro(10);
+
+//Servo Variables
+//Should take out of global
 int pos,back = 50;
 
+//Beacon Specific Variables
+int left_time, right_time = 0;
+int beacon_dir;
+
+//Our "protothreading"
+Metro serialMetro = Metro(250);
+Metro servoMetro = Metro(10);
+
 void setup() {
+  //Serial Communication
   Serial.begin(9600);  
+
   // Shift the device's documented slave address (0x42) 1 bit right
   // This compensates for how the TWI library only wants the
   // 7 most significant bits (with the high bit padded with 0)
   slave_address = HMC6352Address >> 1;   // This results in 0x21 as the address to pass to TWI
+
+  //For the compass(I2C communication)
   Wire.begin();
-  myservo.attach(9);
+
+  //Telling which pin the servo is on. 
+  myservo.attach(SERVO_PIN);
+
+  //Interrupts for the Beacons. 
+  attachInterrupt(LEFT_BEACON_INT, left_beacon, CHANGE);
+  attachInterrupt(RIGHT_BEACON_INT, right_beacon, CHANGE);
 }
 
 void loop() {
-    int us_val, flex_val,compass_val = 0;
-    int us_val_2, flex_val_2= 0;
-    //To use an interrupt: 
-    //http://www.arduino.cc/en/Reference/AttachInterrupt
-    //attachInterrupt(0, blink, CHANGE);
+    int left_us_val, left_flex_val, right_us_val, right_flex_val,compass_val = 0;
 
     if (serialMetro.check() == 1) { // check if the metro has passed it's interval .
-      //send information
-      us_val = ultrasonic(ULTRASONIC_PIN);
-      flex_val = flex(FLEX_PIN);
-      us_val_2 = ultrasonic(ULTRASONIC_PIN_2);
-      flex_val_2 = flex(FLEX_PIN_2);
-      compass_val = compass();
-      sendSerialInfo(us_val, flex_val,us_val_2, flex_val_2,compass_val);
-      serialMetro.reset();
+        //get information
+        left_us_val       = ultrasonic(LEFT_ULTRASONIC_PIN);
+        right_us_val      = ultrasonic(RIGHT_ULTRASONIC_PIN);
+        left_flex_val     = flex(LEFT_FLEX_PIN);
+        right_flex_val    = flex(RIGHT_FLEX_PIN);
+        compass_val       = compass();
+
+        //send serial info
+        sendSerialInfo(left_us_val, left_flex_val,right_us_val, right_flex_val,compass_val);
+
+        serialMetro.reset();
     }
     
     if (servoMetro.check() == 1) { // check if the metro has passed it's interval .
-      if(pos >= 180) {
-       back = 1; 
-      }
-      else if(pos <= 0) {
-       back = 0; 
-      }
-      if(back == 0)
-        pos = pos+1;     
-      else
-        pos = pos-1;    
-      Serial.print("pos: ");
-      Serial.println(pos);
-      myservo.write(pos);              // tell servo to go to position in variable 'pos'    
-      servoMetro.reset();
+        //This needs fixed up
+        if(pos >= 180) {
+            back = 1; 
+        }
+        else if(pos <= 0) {
+            back = 0; 
+        }
+
+        if(back == 0)
+        pos = pos+1;   
+
+        else
+        pos = pos-1;  
+
+        myservo.write(pos);              // tell servo to go to position in variable 'pos'    
+
+        servoMetro.reset();
     }
-  }
+}
 
 int ultrasonic(int pin) {
     //Used to read in the pulse that is being sent by the MaxSonar device.
@@ -114,9 +151,8 @@ int compass() {
     return heading_value;
 }
 
-void sendSerialInfo(int us_val, int flex_val,int us_val_2, int flex_val_2,int compass_val)
+void sendSerialInfo(int us_val, int flex_val,int right_us_val, int right_flex_val,int compass_val)
 {
-  //This is an absolutely disgusting way of doing it, but to do it right takes too long, i couldn't find an xml-rpc lib, and this works. 
   //Serial.println("Content-Type: text/xml");
   //Serial.println("Content-length: 83");
   Serial.println("<?xml version=\"1.0\"?>");
@@ -131,19 +167,23 @@ void sendSerialInfo(int us_val, int flex_val,int us_val_2, int flex_val_2,int co
   Serial.print(compass_val);
   Serial.println("</compass>");
   Serial.print("<flex>");
-  Serial.print(flex_val);
-  Serial.println("</flex>");
-  Serial.print("<flex>");
-  Serial.print(flex_val_2);
+  Serial.print("<left>");
+  Serial.print(left_flex_val);
+  Serial.print("</left>");
+  Serial.print("<right>");
+  Serial.print(right_flex_val);
+  Serial.print("</right>");
   Serial.println("</flex>");
   Serial.print("<ultrasonic>");
-  Serial.print(us_val);
-  Serial.println("</ultrasonic>");
-  Serial.print("<ultrasonic>");
-  Serial.print(us_val_2);
+  Serial.print("<left>");
+  Serial.print(left_us_val);
+  Serial.print("</left>");
+  Serial.print("<right>");
+  Serial.print(right_us_val);
+  Serial.print("    </right>");
   Serial.println("</ultrasonic>");
   Serial.print("<beacon>");
-  Serial.print("???");
+  Serial.print(beacon_dir);
   Serial.println("</beacon>");
   Serial.print("<wheelencoder>");
   Serial.print("???");
@@ -153,3 +193,36 @@ void sendSerialInfo(int us_val, int flex_val,int us_val_2, int flex_val_2,int co
   return;
 }
 
+void left_beacon() {
+	int diff;
+	left_time = millis();
+	beacon_dir = NA;
+	if(right_time) {
+		if((left_time - right_time) > 100) {  
+			beacon_dir = RIGHT;
+		}
+		else {
+			beacon_dir = STRAIGHT;
+		}
+
+		right_time = 0;
+		left_time = 0;
+	}
+}
+
+void right_beacon() {
+	int diff;
+	right_time = millis();
+	beacon_dir = NA;
+	if(left_time){
+		if((right_time - left_time) > 100) {
+			beacon_dir = LEFT;
+		}		
+		else {
+			beacon_dir = STRAIGHT;
+		}	
+
+		left_time = 0;
+		right_time = 0;
+	}
+}	
