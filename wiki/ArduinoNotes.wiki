@@ -67,6 +67,5 @@ void blink()
 
 }}}
 
-
-
+The led labeled 13 on the arduino will turn off once you trip the sensor. 
 
