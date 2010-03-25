@@ -1,8 +1,8 @@
 <sensor>
 <gps>rawdata</gps>
 <compass>degree</compass>
-<flex>number</flex>
-<ultrasonic>inches</ultrasonic>
+<flex><left>17</left><right>19</right></flex>
+<ultrasonic><left>10</left><right>20</right></ultrasonic>
 <beacon>???</beacon>
 <wheelencoder>???</wheelencoder>
 </sensor>
