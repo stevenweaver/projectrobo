@@ -7,11 +7,11 @@
 
 = Details =
 
-  *TX: 8n1, 19200 bps
-  *RF INT: Low pulse on RF interrupt
-  *RSSI PWM: 1.960 kHz
-  *ID2-ID0: Binary Beacon Value 1-5
-  *VCC: 5-9V regulated to 3.3V
+  * TX: 8n1, 19200 bps
+  * RF INT: Low pulse on RF interrupt
+  * RSSI PWM: 1.960 kHz
+  * ID2-ID0: Binary Beacon Value 1-5
+  * VCC: 5-9V regulated to 3.3V
 
 Pin 8 TX: This is the serial data, this may be the optimum way of reading the information from the RSSI receiver. It will have a hexadecimal number indicating how far the beacon is, and what the beacon number is. We probably should hook this up straight to the beagleboard. 
 
