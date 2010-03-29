@@ -1,6 +1,6 @@
 import serial
 
-ser = serial.SerialPort('/dev/ttyUSB0', 9600)
+ser = serial.Serial('/dev/ttyUSB0', 9600)
 #print ser.readline()
 
 #Control the servo
