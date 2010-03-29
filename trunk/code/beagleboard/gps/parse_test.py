@@ -1,12 +1,13 @@
 #!/usr/bin/python
 import NMEA 
+import serial
+import time 
 
 nmea = NMEA.NMEA()
 
-f = open('./gps_sample_data/4-3/1.txt', 'r+')
-
-gps_data = f.readlines()
-
-
-#for raw in gps_data:
-print nmea.handle_line(gps_data[0].lstrip('"'))
+while(1):
+    gps_serial = serial.Serial('/dev/ttyUSB0', 9600)
+    gps_data = gps_serial.readline()
+    nmea.handle_line(gps_data)
+    print nmea.lat, nmea.lon
+    print nmea.time
