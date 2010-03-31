@@ -74,6 +74,7 @@ ul, ol {
     list-style: none;
 }
 
+
 a {
     color: #0179a5;
     text-decoration: none;
@@ -282,7 +283,8 @@ thumbnail_med img {
     padding: 7px 0px 0px 0px; 
 }
 #titles{
-    font-size: 9px;
+    overflow:visible;
+    font-size: 30px;
     font-weight:bold;
     line-height: 12px;
     margin-top:20px;
@@ -346,3 +348,11 @@ thumbnail_med img {
 .member img { float: left;}
 .member_info li { margin-bottom: 15px;}
 
+.overview {
+    list-style-type: circle;
+    margin: 15px 25px 15px 15px;
+}
+
+.overview li { margin-bottom: 2px;}
+
+.member_foot h1 {float: left; margin-left: 100px;}
