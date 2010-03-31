@@ -1,0 +1,4 @@
+udevadm info -a -p $(udevadm info -q path -n /dev/ttyUSB0) > info
+put these files in /etc/udev/rules.d/
+restart udev
+sudo services udev restart
