@@ -101,6 +101,8 @@ a:hover {
     z-index:1;      
 }
 
+
+
 .thumbnail_phone img {
         float:left;
         position:absolute;
@@ -117,6 +119,24 @@ a:hover {
     position:relative;
     z-index:1;      
 }
+
+.thumbnail_gnoc img {
+        float:left;
+        position:absolute;
+        top:-80px;
+        left:-90px;
+}
+.thumbnail_gnoc {
+    display:block;
+    float:left;
+    width:220px;
+    height:146px;
+    line-height:100px;
+    overflow:hidden;
+    position:relative;
+    z-index:1;      
+}
+
 .thumbnail_pat img {
         float:left;
         position:absolute;
@@ -133,6 +153,7 @@ a:hover {
     position:relative;
     z-index:1;      
 }
+
 
 .thumbnail_jad img {
         float:left;
@@ -167,6 +188,7 @@ a:hover {
     position:relative;
     z-index:1;      
 }
+
 .thumbnail_mem img {
     width:220px;
     /*height:146px;*/
@@ -182,6 +204,63 @@ a:hover {
     position:relative;
     z-index:1;      
 }
+
+.thumbnail_des img {
+    width:320px;
+    float:left;
+    position:absolute;
+    top:05px;
+    left:0px;
+    /*height:146px;*/
+}
+
+.thumbnail_des {
+    display:block;
+    float:left;
+    width:220px;
+    height:146px;
+    line-height:100px;
+    overflow:hidden;
+    position:relative;
+    z-index:1;      
+}
+
+thumbnail_fly img {
+    width:320px;
+    float:left;
+    position:absolute;
+    top:05px;
+    left:0px;
+    /*height:146px;*/
+}
+
+.thumbnail_fly {
+    display:block;
+    float:left;
+    width:220px;
+    height:146px;
+    line-height:100px;
+    overflow:hidden;
+    position:relative;
+    z-index:1;      
+}
+
+thumbnail_med img {
+    width:220px;
+    /*height:146px;*/
+}
+
+.thumbnail_med {
+    display:block;
+    float:left;
+    width:220px;
+    height:146px;
+    line-height:100px;
+    overflow:hidden;
+    position:relative;
+    z-index:1;      
+}
+
 
 .heading {
     left: 170px;
