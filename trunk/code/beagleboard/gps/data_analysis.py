@@ -5,9 +5,11 @@ from numpy import *
 def toDec(num):
     #parse first, ick
     a = math.floor(num/100)
-    b = math.floor(num) % 100
-    c = ((num * 10000) % 10000)/100 
-    return a + (b * 1/60) + (c * 1/60 * 1/60)
+    b = ((num * 10000) % 1000000)/10000 
+    print num
+    print a
+    print b
+    return a + (b * 1/60)
 
 
 def havDistance(pnt1, pnt2):
@@ -108,4 +110,3 @@ for i in range(len(gps_data) - 1):
     #print i[0]
 
 print havDistance(gps_data[0][0],gps_data[0][1])
-#print gps_data[0][0],gps_data[0][1]
