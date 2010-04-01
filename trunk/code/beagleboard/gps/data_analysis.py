@@ -2,6 +2,23 @@
 import math
 from numpy import *
 
+def toDec(num):
+    #parse first, ick
+    a = math.floor(num/100)
+    b = math.floor(num) % 100
+    c = ((num * 10000) % 10000)/100 
+    return a + (b * 1/60) + (c * 1/60 * 1/60)
+
+
+def havDistance(pnt1, pnt2):
+    dLat = pnt2[0] - pnt1[0]
+    dLon = pnt2[1] - pnt1[1]
+    a = math.sin(dLat / 2) * math.sin(dLat / 2) \
+        + math.cos(pnt1[0]) * math.cos(pnt2[0]) \
+        * math.sin(dLon / 2) * math.sin(dLon / 2);
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+    return 3963.19245606 * c * 5280
+ 
 
 day_one = [(3246.6417,11704.2338),
 (3246.6531,11704.2099),
@@ -59,22 +76,36 @@ gps_data.append(day_three)
 gps_data.append(day_four)
 gps_data.append(day_five)
 
+dec_gps_data = []
+tmp = []
+
+#change from degrees to decimal ugh
+for i in range(len(gps_data) - 1):
+    for j in range(len(gps_data[i]) - 1):
+        tmp.append((toDec(gps_data[i][j][0]),toDec(gps_data[i][j][1]))) 
+    dec_gps_data.append(tmp)
+    tmp = []
+
+gps_data = dec_gps_data
+
 #We need standard deviation, distance calculation, standard deviation of that, degree difference, standard deviation of that
 #First we need the differences between points for each date and points
-diff = gps_data[0][0][1] - gps_data[0][1][1] 
-west = []
-north = []
+#print gps_data[0][0][0] - gps_data[0][1][0],gps_data[1][0][0] - gps_data[1][1][0] 
 
-for i in gps_data:
-    north.append(i[0][0] - i[1][0])
-    west.append(i[0][1] - i[1][1])
+diff_table = [] 
+big_diff_table = [] 
 
-w = array(west)
-n = array(north)
-print n 
-print w 
+for i in range(len(gps_data) - 1):
+    for j in range(len(gps_data[i]) - 1):
+        diff_table.append([(gps_data[i][j][0] - gps_data[i][j+1][0],gps_data[i][j][1] - gps_data[i][j+1][1])])
 
+    big_diff_table.append(diff_table)
+    diff_table = []
 
+#print big_diff_table[0][0], big_diff_table[1][0]
 
+#for i in big_diff_table:
+    #print i[0]
 
-
+print havDistance(gps_data[0][0],gps_data[0][1])
+#print gps_data[0][0],gps_data[0][1]
