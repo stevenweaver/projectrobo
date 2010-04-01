@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import math
+from numpy import *
 
 
 day_one = [(3246.6417,11704.2338),
@@ -60,4 +61,20 @@ gps_data.append(day_five)
 
 #We need standard deviation, distance calculation, standard deviation of that, degree difference, standard deviation of that
 #First we need the differences between points for each date and points
-print gps_data
+diff = gps_data[0][0][1] - gps_data[0][1][1] 
+west = []
+north = []
+
+for i in gps_data:
+    north.append(i[0][0] - i[1][0])
+    west.append(i[0][1] - i[1][1])
+
+w = array(west)
+n = array(north)
+print n 
+print w 
+
+
+
+
+
