@@ -19,6 +19,10 @@ void Forward();
 
 void Backward();
 
+void Right();
+
+void Left();
+
 
 void Stop();
 
