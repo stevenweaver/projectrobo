@@ -2,14 +2,18 @@
 import math
 from numpy import *
 
-def toDec(num):
-    #parse first, ick
+def toDeg(num):
     a = math.floor(num/100)
     b = ((num * 10000) % 1000000)/10000 
-    print num
-    print a
-    print b
-    return a + (b * 1/60)
+    #convert b to minutes and seconds
+    c = math.floor(b) 
+    d = ((b * 10000) % 10000)/100
+    d = (d * 60)/100
+    a = [a, c, d]
+    return toDec(a)
+
+def toDec(a):
+    return a[0] + (a[1] * 1/60) + (a[2] * 1/60 * 1/60)
 
 
 def havDistance(pnt1, pnt2):
@@ -84,16 +88,17 @@ tmp = []
 #change from degrees to decimal ugh
 for i in range(len(gps_data) - 1):
     for j in range(len(gps_data[i]) - 1):
-        tmp.append((toDec(gps_data[i][j][0]),toDec(gps_data[i][j][1]))) 
+        tmp.append((toDeg(gps_data[i][j][0]),toDeg(gps_data[i][j][1]))) 
     dec_gps_data.append(tmp)
     tmp = []
 
 gps_data = dec_gps_data
+print gps_data
+quit()
 
 #We need standard deviation, distance calculation, standard deviation of that, degree difference, standard deviation of that
 #First we need the differences between points for each date and points
 #print gps_data[0][0][0] - gps_data[0][1][0],gps_data[1][0][0] - gps_data[1][1][0] 
-
 diff_table = [] 
 big_diff_table = [] 
 
@@ -109,4 +114,4 @@ for i in range(len(gps_data) - 1):
 #for i in big_diff_table:
     #print i[0]
 
-print havDistance(gps_data[0][0],gps_data[0][1])
+print havDistance(gps_data[0][0],gps_data[1][0])
