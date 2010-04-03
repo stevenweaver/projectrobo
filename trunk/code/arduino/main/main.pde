@@ -179,13 +179,12 @@ void loop() {
         }
 
         if(back == 0)
-        pos = pos+1;   
+            pos = pos+1;   
 
         else
-        pos = pos-1;  
+            pos = pos-1;  
 
         myservo.write(pos);              // tell servo to go to position in variable 'pos'    
-
         servoMetro.reset();
     }
 
