@@ -80,11 +80,11 @@ void loop()
         if(millis()-StartTime<2200)
    {
   PID_A.SetOutputLimits(20,60);
-    PID_B.SetOutputLimits(20,54);
+    PID_B.SetOutputLimits(15,50);
    }
    else  {
-     PID_A.SetOutputLimits(15,140);
-  PID_B.SetOutputLimits(15,123);
+     PID_A.SetOutputLimits(20,140);
+  PID_B.SetOutputLimits(10,120);
    }
 
 
