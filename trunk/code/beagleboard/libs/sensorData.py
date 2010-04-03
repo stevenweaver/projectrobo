@@ -45,7 +45,7 @@ class sensorData:
 
 if __name__ == '__main__':
     # Self-testing code goes here.
-    sxml= "<sensor><gps>rawdata</gps><compass>degree</compass><flex><left>number</left><right>number</right></flex><ultrasonic><left>number</left><right>number</right></ultrasonic><beacon>???</beacon><wheelencoder>???</wheelencoder></sensor>"
+    sxml= "<sensor><compass>degree</compass><flex><left>number</left><right>number</right></flex><ultrasonic><left>number</left><right>number</right></ultrasonic><beacon>???</beacon><wheelencoder>???</wheelencoder></sensor>"
     sd = sensorData(sxml)
     print sd.flex['left']
     print sd.flex['right']

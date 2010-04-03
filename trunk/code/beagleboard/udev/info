@@ -1,0 +1,113 @@
+
+Udevadm info starts with the device specified by the devpath and then
+walks up the chain of parent devices. It prints for every device
+found, all possible attributes in the udev rules key format.
+A rule to match, can be composed by the attributes of the device
+and the attributes from one single parent device.
+
+  looking at device '/devices/pci0000:00/0000:00:1d.0/usb5/5-1/5-1:1.0/ttyUSB0/tty/ttyUSB0':
+    KERNEL=="ttyUSB0"
+    SUBSYSTEM=="tty"
+    DRIVER==""
+
+  looking at parent device '/devices/pci0000:00/0000:00:1d.0/usb5/5-1/5-1:1.0/ttyUSB0':
+    KERNELS=="ttyUSB0"
+    SUBSYSTEMS=="usb-serial"
+    DRIVERS=="ftdi_sio"
+    ATTRS{latency_timer}=="1"
+    ATTRS{port_number}=="0"
+
+  looking at parent device '/devices/pci0000:00/0000:00:1d.0/usb5/5-1/5-1:1.0':
+    KERNELS=="5-1:1.0"
+    SUBSYSTEMS=="usb"
+    DRIVERS=="ftdi_sio"
+    ATTRS{bInterfaceNumber}=="00"
+    ATTRS{bAlternateSetting}==" 0"
+    ATTRS{bNumEndpoints}=="02"
+    ATTRS{bInterfaceClass}=="ff"
+    ATTRS{bInterfaceSubClass}=="ff"
+    ATTRS{bInterfaceProtocol}=="ff"
+    ATTRS{modalias}=="usb:v0403p6001d0600dc00dsc00dp00icFFiscFFipFF"
+    ATTRS{supports_autosuspend}=="0"
+    ATTRS{interface}=="FT232R USB UART"
+
+  looking at parent device '/devices/pci0000:00/0000:00:1d.0/usb5/5-1':
+    KERNELS=="5-1"
+    SUBSYSTEMS=="usb"
+    DRIVERS=="usb"
+    ATTRS{configuration}==""
+    ATTRS{bNumInterfaces}==" 1"
+    ATTRS{bConfigurationValue}=="1"
+    ATTRS{bmAttributes}=="a0"
+    ATTRS{bMaxPower}==" 90mA"
+    ATTRS{urbnum}=="15"
+    ATTRS{idVendor}=="0403"
+    ATTRS{idProduct}=="6001"
+    ATTRS{bcdDevice}=="0600"
+    ATTRS{bDeviceClass}=="00"
+    ATTRS{bDeviceSubClass}=="00"
+    ATTRS{bDeviceProtocol}=="00"
+    ATTRS{bNumConfigurations}=="1"
+    ATTRS{bMaxPacketSize0}=="8"
+    ATTRS{speed}=="12"
+    ATTRS{busnum}=="5"
+    ATTRS{devnum}=="3"
+    ATTRS{version}==" 2.00"
+    ATTRS{maxchild}=="0"
+    ATTRS{quirks}=="0x0"
+    ATTRS{authorized}=="1"
+    ATTRS{manufacturer}=="FTDI"
+    ATTRS{product}=="FT232R USB UART"
+    ATTRS{serial}=="A900adD2"
+
+  looking at parent device '/devices/pci0000:00/0000:00:1d.0/usb5':
+    KERNELS=="usb5"
+    SUBSYSTEMS=="usb"
+    DRIVERS=="usb"
+    ATTRS{configuration}==""
+    ATTRS{bNumInterfaces}==" 1"
+    ATTRS{bConfigurationValue}=="1"
+    ATTRS{bmAttributes}=="e0"
+    ATTRS{bMaxPower}=="  0mA"
+    ATTRS{urbnum}=="53"
+    ATTRS{idVendor}=="1d6b"
+    ATTRS{idProduct}=="0001"
+    ATTRS{bcdDevice}=="0206"
+    ATTRS{bDeviceClass}=="09"
+    ATTRS{bDeviceSubClass}=="00"
+    ATTRS{bDeviceProtocol}=="00"
+    ATTRS{bNumConfigurations}=="1"
+    ATTRS{bMaxPacketSize0}=="64"
+    ATTRS{speed}=="12"
+    ATTRS{busnum}=="5"
+    ATTRS{devnum}=="1"
+    ATTRS{version}==" 1.10"
+    ATTRS{maxchild}=="2"
+    ATTRS{quirks}=="0x0"
+    ATTRS{authorized}=="1"
+    ATTRS{manufacturer}=="Linux 2.6.31-20-generic uhci_hcd"
+    ATTRS{product}=="UHCI Host Controller"
+    ATTRS{serial}=="0000:00:1d.0"
+    ATTRS{authorized_default}=="1"
+
+  looking at parent device '/devices/pci0000:00/0000:00:1d.0':
+    KERNELS=="0000:00:1d.0"
+    SUBSYSTEMS=="pci"
+    DRIVERS=="uhci_hcd"
+    ATTRS{vendor}=="0x8086"
+    ATTRS{device}=="0x2830"
+    ATTRS{subsystem_vendor}=="0x1028"
+    ATTRS{subsystem_device}=="0x01f1"
+    ATTRS{class}=="0x0c0300"
+    ATTRS{irq}=="20"
+    ATTRS{local_cpus}=="ff"
+    ATTRS{local_cpulist}=="0-7"
+    ATTRS{modalias}=="pci:v00008086d00002830sv00001028sd000001F1bc0Csc03i00"
+    ATTRS{broken_parity_status}=="0"
+    ATTRS{msi_bus}==""
+
+  looking at parent device '/devices/pci0000:00':
+    KERNELS=="pci0000:00"
+    SUBSYSTEMS==""
+    DRIVERS==""
+
