@@ -27,18 +27,42 @@ const int LEFT = 1;
 const int RIGHT = 2;
 
 //MOTORS
-// enable for motor A = 9
+
 MOTOR_A_ENABLE = 9;
 MOTOR_A_CONTROL1 = 8;
 MOTOR_A_CONTROL2 = 10;
-MOTOR_A_ENCODER = 0; //PIN 2
+//MOTOR_A_ENCODER = 2; //INT 0 (no need to define
+// wont be used directly)
 
 MOTOR_B_ENABLE = 12;
 MOTOR_B_CONTROL1 = 11;
 MOTOR_B_CONTROL2 = 13;
-MOTOR_B_ENCODER = 1; //PIN 3
+//MOTOR_B_ENCODER = 3; //INT 1
 
-//*******************GLOBAL VARIABLES*****************// 
+// PID parameters for each motor
+// might have morse set for different situations
+PID_P_A   30
+PID_I_A   0
+PID_D_A   0.4
+PID_P_B   30
+PID_I_B   0
+PID_D_B   0.4
+
+// range of input = ticks and output = pwm 
+PID_A_INPUT_MIN    0
+PID_A_INPUT_MAX    20000
+PID_A_OUTPUT_MIN   20
+PID_A_OUTPUT_MAX   255
+PID_B_INPUT_MIN    0
+PID_B_INPUT_MAX    20000
+PID_B_OUTPUT_MIN   20
+PID_B_OUTPUT_MAX   255
+
+// the desired distance in ticks 
+// can be converted 197 ticks = 1 revolution = 2 feet
+SETPOINT   1000
+
+/*******************GLOBAL VARIABLES*****************// 
 
 //For the compass
 int slave_address;
