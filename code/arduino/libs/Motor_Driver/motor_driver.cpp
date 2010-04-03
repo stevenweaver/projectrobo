@@ -48,11 +48,11 @@ Motor_Driver:: Motor_Driver(int enable_a , int control_1_a, int  control_2_a,
 
 void Motor_Driver:: Forward()
 {
-	analogWrite(enable_pin_a,0);    
+	//analogWrite(enable_pin_a,0);    
 	analogWrite(control_1_pin_a,0);    
 	analogWrite(control_2_pin_a,255);
 
-    analogWrite(enable_pin_b,0);    
+  //  analogWrite(enable_pin_b,0);    
 	analogWrite(control_1_pin_b,0);    
 	analogWrite(control_2_pin_b,255);
 
@@ -61,11 +61,34 @@ void Motor_Driver:: Forward()
 
 void Motor_Driver:: Backward()
 {
-	analogWrite(enable_pin_a,0);    
+	//analogWrite(enable_pin_a,0);    
 	analogWrite(control_1_pin_a,255);    
 	analogWrite(control_2_pin_a,0);
 
-    analogWrite(enable_pin_b,0);    
+   // analogWrite(enable_pin_b,0);    
+	analogWrite(control_1_pin_b,255);    
+	analogWrite(control_2_pin_b,0);
+}
+
+void Motor_Driver:: Right()
+{
+	//analogWrite(enable_pin_a,0);    
+	analogWrite(control_1_pin_a,255);    
+	analogWrite(control_2_pin_a,0);
+
+  //  analogWrite(enable_pin_b,0);    
+	analogWrite(control_1_pin_b,0);    
+	analogWrite(control_2_pin_b,255);
+}
+
+
+void Motor_Driver:: Left()
+{
+	//analogWrite(enable_pin_a,0);    
+	analogWrite(control_1_pin_a,0);    
+	analogWrite(control_2_pin_a,255);
+
+   // analogWrite(enable_pin_b,0);    
 	analogWrite(control_1_pin_b,255);    
 	analogWrite(control_2_pin_b,0);
 }
@@ -75,11 +98,11 @@ void Motor_Driver::  Stop()
 {
 
 
-    analogWrite(enable_pin_a,0);    
+   // analogWrite(enable_pin_a,0);    
 	analogWrite(control_1_pin_a,0);    
 	analogWrite(control_2_pin_a,0);
 
-    analogWrite(enable_pin_b,0);    
+   // analogWrite(enable_pin_b,0);    
 	analogWrite(control_1_pin_b,0);    
 	analogWrite(control_2_pin_b,0);
   
