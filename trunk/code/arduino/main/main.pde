@@ -41,26 +41,26 @@ MOTOR_B_CONTROL2 = 13;
 
 // PID parameters for each motor
 // might have morse set for different situations
-PID_P_A   30
-PID_I_A   0
-PID_D_A   0.4
-PID_P_B   30
-PID_I_B   0
-PID_D_B   0.4
+PID_P_A = 30
+PID_I_A = 0
+PID_D_A = 0.4
+PID_P_B = 30
+PID_I_B = 0
+PID_D_B = 0.4
 
 // range of input = ticks and output = pwm 
-PID_A_INPUT_MIN    0
-PID_A_INPUT_MAX    20000
-PID_A_OUTPUT_MIN   20
-PID_A_OUTPUT_MAX   255
-PID_B_INPUT_MIN    0
-PID_B_INPUT_MAX    20000
-PID_B_OUTPUT_MIN   20
-PID_B_OUTPUT_MAX   255
+PID_A_INPUT_MIN =  0
+PID_A_INPUT_MAX =  20000
+PID_A_OUTPUT_MIN = 20
+PID_A_OUTPUT_MAX = 255
+PID_B_INPUT_MIN =  0
+PID_B_INPUT_MAX =  20000
+PID_B_OUTPUT_MIN = 20
+PID_B_OUTPUT_MAX = 255
 
 // the desired distance in ticks 
 // can be converted 197 ticks = 1 revolution = 2 feet
-SETPOINT   1000
+SETPOINT = 1000
 
 /*******************GLOBAL VARIABLES*****************// 
 
@@ -164,7 +164,7 @@ void loop() {
         compass_val       = compass();
 
         //send serial info
-        sendSerialInfo(left_us_val, left_flex_val,right_us_val, right_flex_val,compass_val);
+        sendSerialInfo(left_us_val, left_flex_val,right_us_val, right_flex_val,compass_val, clicks_a, clicks_b);
 
         serialMetro.reset();
     }
@@ -285,7 +285,7 @@ int compass() {
 
 
 //*************CREATE XML FOR BEAGLEBOARD************//
-void sendSerialInfo(int us_val, int flex_val,int right_us_val, int right_flex_val,int compass_val)
+void sendSerialInfo(int us_val, int flex_val,int right_us_val, int right_flex_val,int compass_val, int clicks_a, int clicks_b)
 {
   //Serial.println("Content-Type: text/xml");
   //Serial.println("Content-length: 83");
@@ -317,7 +317,12 @@ void sendSerialInfo(int us_val, int flex_val,int right_us_val, int right_flex_va
   Serial.print(beacon_dir);
   Serial.println("</beacon>");
   Serial.print("<wheelencoder>");
-  Serial.print("???");
+  Serial.print("<motor_a>");
+  Serial.print(clicks_a);
+  Serial.print("</motor_a>");
+  Serial.print("<motor_b>");
+  Serial.print(clicks_b);
+  Serial.print("</motor_b>");
   Serial.println("</wheelencoder>");
   Serial.println("</sensor>");
   Serial.println("");
