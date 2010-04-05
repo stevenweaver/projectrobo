@@ -19,13 +19,6 @@ class sendData:
 if __name__ == '__main__':
     while(1):
         ser = serial.Serial('/dev/arduino', 9600)
-        #Beacon Constants
-        NA = -1
-        STRAIGHT = 0
-        LEFT = 1
-        RIGHT = 2
-        STOP = 3
-
         # Self-testing code goes here.
         sxml= "<sensor><compass>140</compass><flex><left>500</left><right>300</right></flex><ultrasonic><left>10</left><right>10</right></ultrasonic><beacon>???</beacon><wheelencoder>???</wheelencoder></sensor>"
         sd = sensorData(sxml)

@@ -1,0 +1,4 @@
+STOP = -1 
+FORWARD = 0
+LEFT = 1
+RIGHT = 2
