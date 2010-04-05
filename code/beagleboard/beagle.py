@@ -1,6 +1,14 @@
 import serial
 
 ser = serial.Serial('/dev/ttyUSB0', 9600)
+
+#Beacon Constants
+NA = -1;
+STRAIGHT = 0;
+LEFT = 1;
+RIGHT = 2;
+
+
 #print ser.readline()
 
 #Control the servo
