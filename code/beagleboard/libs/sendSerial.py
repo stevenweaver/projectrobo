@@ -9,13 +9,11 @@ import time
 
 class sendData:
     def sendStr(self, direction, ticks):
-        data = "d"
-        data += str(direction)
-        data += "d"
-        data += "t"
+        data = str(direction)
+        data += ","
         data += str(ticks) 
-        data += "t"
         data += "\n"
+        data = data.zfill(9)
         return data 
 
 if __name__ == '__main__':
@@ -32,10 +30,5 @@ if __name__ == '__main__':
         sxml= "<sensor><compass>140</compass><flex><left>500</left><right>300</right></flex><ultrasonic><left>10</left><right>10</right></ultrasonic><beacon>???</beacon><wheelencoder>???</wheelencoder></sensor>"
         sd = sensorData(sxml)
         send = sendData()
-        print send.sendStr(3,200)        
-        print len(send.sendStr(3,200)) 
-        #quit()
-        #print ser.readline()
-        #ser.write(send.sendStr(3,200))
-        ser.write("stupid")
+        ser.write(send.sendStr(3,200))
         print ser.readline()
