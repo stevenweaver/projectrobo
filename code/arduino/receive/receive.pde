@@ -1,15 +1,17 @@
 #include <string.h>
 #include <Messenger.h>
-#define MAXSIZE 30 
+#define MAXSIZE 8 
+//Need a string
+
 
 Messenger message = Messenger(); 
-char string[MAXSIZE];
-
+char recvData[MAXSIZE];
+int incomingByte;
 
 void setup() {
   //Serial Communication
   Serial.begin(9600);  
-  message.attach(messageReady);
+  //message.attach(messageReady);
 }
 
 void loop() {
@@ -19,17 +21,22 @@ void loop() {
 
 
 void receiveData() {
-  while ( Serial.available() )  message.process(Serial.read () );
-}
-
-void messageReady() {
-    int pin = 0;
-       // Loop through all the available elements of the message
-       while ( message.available() ) {
-         message.copyString(string,MAXSIZE);
-         Serial.print(string);
-         Serial.println();
-       }
+        int count = 0;
+        int flag = 0;
+        memset(recvData, 0, 8);       
+        while(count <= 8) {
+  	  while (Serial.available() > 0) {
+		// read the incoming byte:
+		incomingByte = Serial.read();
+                recvData[count] = byte(incomingByte);
+                count++;
+                flag  = 1;
+	  }
+        }
+        if(flag){
+          Serial.println(recvData);
+        }
+        Serial.flush();
 }
 
 
