@@ -1,5 +1,6 @@
 from sendSerial import *
 from sensorData import *
+from defines import *
 import serial
 import time 
 
@@ -18,17 +19,17 @@ while 1:
 
     if sd.us['right'] < 5 and sd.us['right'] < 5:
         print "getting close to something so stop" 
-        ser.send(send.createXml("stop"))
+        ser.send(send.sendStr(STOP))
 
     elif sd.us['right'] < 5:
         #Turn left
         print "something is on the right"
-        ser.send(send.createXml("left"))
+        ser.send(send.sendStr(LEFT))
 
     elif sd.us['left'] < 5:
         #Turn right 
         print "something is on the left"
-        ser.send(send.createXml("right"))
+        ser.send(send.sendStr(RIGHT))
 
     #time.sleep(.001)
     time.sleep(1)

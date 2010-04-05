@@ -6,6 +6,9 @@
 
 Messenger message = Messenger(); 
 char recvData[MAXSIZE];
+char direction_command[MAXSIZE];
+char number_ticks_command[MAXSIZE];
+
 int incomingByte;
 
 void setup() {
@@ -33,11 +36,30 @@ void receiveData() {
                 flag  = 1;
 	  }
         }
+        
         if(flag){
           Serial.println(recvData);
+          //We need to parse our information here
+          parseRecvdData(recvData);
         }
+        
         Serial.flush();
 }
 
-
+void parseRecvdData(char* recvData){
+    int i,j = 0;
+    
+    while(recvData[i] != ',' || i <= MAXSIZE){
+      direction_command[i] = recvData[i];
+      i++;
+    }
+    while(recvData[i] != ' ' || i <= MAXSIZE){
+      number_ticks_command[j] = recvData[i];
+      i++;
+      j++;
+    }
+  
+  Serial.println(direction_command);
+  Serial.println(number_ticks_command);
+}
 

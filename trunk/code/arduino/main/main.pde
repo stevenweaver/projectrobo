@@ -26,43 +26,47 @@ const int STRAIGHT = 0;
 const int LEFT = 1;
 const int RIGHT = 2;
 
+//Direction Constants
+const int STOP = -1;
+const int FORWARD = 0;
+const int LEFT = 1;
+const int RIGHT = 2;
+
 //MOTORS
+const int MOTOR_A_ENABLE = 9;
+const int MOTOR_A_CONTROL1 = 8;
+const int MOTOR_A_CONTROL2 = 10;
+const int MOTOR_A_ENCODER = 2; //INT 0 (no need to define// wont be used directly)
 
-MOTOR_A_ENABLE = 9;
-MOTOR_A_CONTROL1 = 8;
-MOTOR_A_CONTROL2 = 10;
-//MOTOR_A_ENCODER = 2; //INT 0 (no need to define
-// wont be used directly)
-
-MOTOR_B_ENABLE = 12;
-MOTOR_B_CONTROL1 = 11;
-MOTOR_B_CONTROL2 = 13;
-//MOTOR_B_ENCODER = 3; //INT 1
+const int MOTOR_B_ENABLE = 12;
+const int MOTOR_B_CONTROL1 = 11;
+const int MOTOR_B_CONTROL2 = 13;
+const int MOTOR_B_ENCODER = 3; //INT 1
 
 // PID parameters for each motor
 // might have morse set for different situations
-PID_P_A = 30
-PID_I_A = 0
-PID_D_A = 0.4
-PID_P_B = 30
-PID_I_B = 0
-PID_D_B = 0.4
+const int PID_P_A = 30;
+const int PID_I_A = 0;
+const int PID_D_A = 0.4;
+const int PID_P_B = 30;
+const int PID_I_B = 0;
+const int PID_D_B = 0.4;
 
 // range of input = ticks and output = pwm 
-PID_A_INPUT_MIN =  0
-PID_A_INPUT_MAX =  20000
-PID_A_OUTPUT_MIN = 20
-PID_A_OUTPUT_MAX = 255
-PID_B_INPUT_MIN =  0
-PID_B_INPUT_MAX =  20000
-PID_B_OUTPUT_MIN = 20
-PID_B_OUTPUT_MAX = 255
+const int PID_A_INPUT_MIN =  0;
+const int PID_A_INPUT_MAX =  20000;
+const int PID_A_OUTPUT_MIN = 20;
+const int PID_A_OUTPUT_MAX = 255;
+const int PID_B_INPUT_MIN =  0;
+const int PID_B_INPUT_MAX =  20000;
+const int PID_B_OUTPUT_MIN = 20;
+const int PID_B_OUTPUT_MAX = 255;
 
 // the desired distance in ticks 
 // can be converted 197 ticks = 1 revolution = 2 feet
-SETPOINT = 1000
+const int SETPOINT = 1000;
 
-/*******************GLOBAL VARIABLES*****************// 
+/*******************GLOBAL VARIABLES*****************/
 
 //For the compass
 int slave_address;
@@ -103,7 +107,7 @@ Metro goRightMetro = Metro(10000);
 Metro motorMetro = Metro(2200);
 
 
-//*******************SETUP*****************// 
+/*******************SETUP*****************/
 void setup() {
   //Serial Communication
   Serial.begin(9600);  
@@ -151,7 +155,7 @@ void setup() {
   Setpoint = 1000;
 }
 
-//*******************MAIN*****************// 
+/*******************MAIN*****************/
 void loop() {
     int left_us_val, left_flex_val, right_us_val, right_flex_val,compass_val = 0;
 
@@ -232,7 +236,7 @@ void loop() {
    }
 }
 
-//***************SENSOR FUNCTIONS***************//
+/***************SENSOR FUNCTIONS***************/
 
 int ultrasonic(int pin) {
     //Used to read in the pulse that is being sent by the MaxSonar device.
@@ -284,8 +288,8 @@ int compass() {
 }
 
 
-//*************CREATE XML FOR BEAGLEBOARD************//
-void sendSerialInfo(int us_val, int flex_val,int right_us_val, int right_flex_val,int compass_val, int clicks_a, int clicks_b)
+/*************CREATE XML FOR BEAGLEBOARD************/
+void sendSerialInfo(int left_us_val, int left_flex_val,int right_us_val, int right_flex_val,int compass_val, int clicks_a, int clicks_b)
 {
   //Serial.println("Content-Type: text/xml");
   //Serial.println("Content-length: 83");
@@ -311,7 +315,7 @@ void sendSerialInfo(int us_val, int flex_val,int right_us_val, int right_flex_va
   Serial.print("</left>");
   Serial.print("<right>");
   Serial.print(right_us_val);
-  Serial.print("    </right>");
+  Serial.print("</right>");
   Serial.println("</ultrasonic>");
   Serial.print("<beacon>");
   Serial.print(beacon_dir);
@@ -328,6 +332,27 @@ void sendSerialInfo(int us_val, int flex_val,int right_us_val, int right_flex_va
   Serial.println("");
   return;
 }
+
+void receiveData() {
+  int count = 0;
+  int flag = 0;
+  memset(recvData, 0, 8);       
+  while(count <= 8) {
+    while (Serial.available() > 0) {
+      // read the incoming byte:
+      incomingByte = Serial.read();
+      recvData[count] = byte(incomingByte);
+      count++;
+      flag  = 1;
+    }
+  }
+  if(flag){
+    //We need to parse our information here
+    Serial.println(recvData);
+  }
+  Serial.flush();
+}
+
 
 
 //INTERRUPTS//
@@ -366,12 +391,11 @@ void right_beacon() {
 }
 
 
-void motor_a_tick() 
-{   
+void motor_a_tick() {   
   clicks_a++; 
 }   
 
-void motor_b_tick() 
-{ 
+void motor_b_tick() { 
   clicks_b++;        
 }
+
