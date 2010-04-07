@@ -91,6 +91,9 @@ a:hover {
 .flyer img {
         width:940px;
 }
+
+
+
 .thumbnail img {
         float:left;
         position:absolute;
@@ -287,12 +290,19 @@ thumbnail_med img {
 #logo{
     padding: 7px 0px 0px 0px; 
 }
+
+.header {
+    width:200px;
+
+}
+
 #titles{
     overflow:visible;
     font-size: 30px;
     font-weight:bold;
     line-height: 12px;
     margin-top:20px;
+    top:-10px;
     text-transform: uppercase;
 }
 #mainmenu{
