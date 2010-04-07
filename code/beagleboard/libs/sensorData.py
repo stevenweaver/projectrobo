@@ -7,7 +7,7 @@ class sensorData:
         self.compass = int(self.get_data('compass'))
         self.flex = self.get_flex()
         self.us = self.get_us()
-        self.beacon = self.get_data('beacon')
+        self.beacon = int(self.get_data('beacon'))
         self.wheelencoder = self.get_data('wheelencoder')
 
     def update(self,xml):
@@ -43,7 +43,7 @@ class sensorData:
 
 if __name__ == '__main__':
     # Self-testing code goes here.
-    sxml= "<sensor><compass>140</compass><flex><left>500</left><right>300</right></flex><ultrasonic><left>10</left><right>10</right></ultrasonic><beacon>???</beacon><wheelencoder>???</wheelencoder></sensor>"
+    sxml= "<sensor><compass>140</compass><flex><left>500</left><right>300</right></flex><ultrasonic><left>10</left><right>10</right></ultrasonic><beacon>0</beacon><wheelencoder>???</wheelencoder></sensor>"
     sd = sensorData(sxml)
     print sd.flex['left']
     print sd.flex['right']
