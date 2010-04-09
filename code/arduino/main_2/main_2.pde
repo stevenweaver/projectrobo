@@ -9,15 +9,15 @@
 //*********GLOBAL CONSTANTS*******************//
 //ARDUINO PINS
 const int LEFT_FLEX_PIN = 8;  
-const int RIGHT_FLEX_PIN = 9;  
+const int RIGHT_FLEX_PIN = 99;  
 const int LEFT_ULTRASONIC_PIN= 6;   
 const int RIGHT_ULTRASONIC_PIN = 7;
 
-const int LEFT_BEACON_INT  = 0;  //Interrupt 0 
-const int RIGHT_BEACON_INT = 1;  //Interrupt 1  
+const int LEFT_BEACON_INT  = 4;  //Interrupt 0 
+const int RIGHT_BEACON_INT = 5;  //Interrupt 1  
 
 //Servo Constants
-const int SERVO_PIN = 9;
+const int SERVO_PIN = 5;
 const int HMC6352Address = 0x42;
 
 //Beacon Constants
@@ -36,15 +36,16 @@ const int FORWARD = 0;
 const int MOTOR_A_ENABLE = 9;
 const int MOTOR_A_CONTROL1 = 8;
 const int MOTOR_A_CONTROL2 = 10;
-const int MOTOR_A_ENCODER = 2; //INT 0 (no need to define// wont be used directly)
+const int MOTOR_A_ENCODER = 0; //INT 0 (no need to define// wont be used directly)
 
 const int MOTOR_B_ENABLE = 12;
 const int MOTOR_B_CONTROL1 = 11;
 const int MOTOR_B_CONTROL2 = 13;
-const int MOTOR_B_ENCODER = 3; //INT 1
+const int MOTOR_B_ENCODER = 1; //INT 1
 
 //Receive data
 #define MAXSIZE 8 
+#define MAX_STRING 255 
 
 // PID parameters for each motor
 // might have morse set for different situations
@@ -114,6 +115,8 @@ Metro servoMetro = Metro(10);
 Metro goRightMetro = Metro(10000);
 Metro motorMetro = Metro(2200);
 
+char xml[MAX_STRING];
+
 
 /*******************SETUP*****************/
 void setup() {
@@ -130,14 +133,18 @@ void setup() {
 
   //Telling which pin the servo is on. 
   myservo.attach(SERVO_PIN);
+  
+  //Set up US pins
+  pinMode(LEFT_ULTRASONIC_PIN, INPUT);
+  pinMode(RIGHT_ULTRASONIC_PIN, INPUT);
 
   //Interrupts for the Beacons. 
   attachInterrupt(LEFT_BEACON_INT, left_beacon, CHANGE);
   attachInterrupt(RIGHT_BEACON_INT, right_beacon, CHANGE);
 
   //Interrupts for Wheel encoders
-  attachInterrupt(MOTOR_A_ENCODER, motor_a_tick, FALLING);    
-  attachInterrupt(MOTOR_B_ENCODER, motor_b_tick, FALLING); 
+  //attachInterrupt(MOTOR_A_ENCODER, motor_a_tick, FALLING);    
+  //attachInterrupt(MOTOR_B_ENCODER, motor_b_tick, FALLING); 
 
 
   //PID STUFF I NEED TO FIGURE OUT
@@ -169,8 +176,8 @@ void loop() {
 
     if (serialMetro.check() == 1) { // check if the metro has passed it's interval .
         //get information
-        left_us_val       = ultrasonic(LEFT_ULTRASONIC_PIN);
-        right_us_val      = ultrasonic(RIGHT_ULTRASONIC_PIN);
+        //left_us_val       = ultrasonic(LEFT_ULTRASONIC_PIN);
+        //right_us_val      = ultrasonic(RIGHT_ULTRASONIC_PIN);
         left_flex_val     = flex(LEFT_FLEX_PIN);
         right_flex_val    = flex(RIGHT_FLEX_PIN);
         compass_val       = compass();
@@ -182,21 +189,46 @@ void loop() {
     }
     
     if (servoMetro.check() == 1) { // check if the metro has passed it's interval .
-        //This needs fixed up
+      //This needs fixed up
+      if(beacon_dir == LEFT) {
         if(pos >= 180) {
-            back = 1; 
+           beacon_dir = NA; 
+           right_time = 0;
+           left_time = 0;
         }
+        pos++;
+        delay(10);
+      }
+      else if(beacon_dir == RIGHT) {
+        if(pos <= 0) {
+           beacon_dir = NA; 
+           right_time = 0;
+           left_time = 0;
+        }
+        pos--;
+        delay(10);
+      }
+      else if(beacon_dir == STRAIGHT) {
+        //do nothing
+      }
+      //Else beacon_dir is unavailable... sweep
+      else {
+        if(pos >= 180) {
+          back = 1; 
+        }
+        
         else if(pos <= 0) {
-            back = 0; 
+          back = 0; 
         }
-
+      
         if(back == 0)
-            pos = pos+1;   
-
+          pos = pos+1;   
+      
         else
-            pos = pos-1;  
+          pos = pos-1;  
+      }
 
-        myservo.write(pos);              // tell servo to go to position in variable 'pos'    
+        myservo.write(pos);              // tell servo to go to position in variable 'pos'   
         servoMetro.reset();
     }
 
@@ -250,13 +282,11 @@ int ultrasonic(int pin) {
     //Used to read in the pulse that is being sent by the MaxSonar device.
     //Pulse Width representation with a scale factor of 147 uS per Inch.
     //Will package in Inches for now
-    long pulse, inches;
-    
-    pinMode(pin, INPUT);
-    pulse = pulseIn(pin, HIGH);
-    inches = pulse/147;
+    long pulse;
 
-    return inches;
+    pulse = pulseIn(pin, HIGH);
+    //inches = pulse/147;
+    return pulse;
 }
 
 int flex(int pin) {
@@ -275,7 +305,7 @@ int compass() {
     Wire.beginTransmission(slave_address);
     Wire.send("A");              // The "Get Data" command
     Wire.endTransmission();
-    delay(10);                   
+    //delay(10);                   
     
     // The HMC6352 needs at least a 70us (microsecond) delay
     // after this command.  Using 10ms just makes it safe
@@ -300,48 +330,11 @@ int compass() {
 void sendSerialInfo(int left_us_val, int left_flex_val,int right_us_val, int right_flex_val,int compass_val, int clicks_a, int clicks_b)
 {
 
-//Serial.println("Content-Type: text/xml");
-//Serial.println("Content-length: 83");
-  Serial.println(millis());
-  Serial.print("<?xml version=\"1.0\"?>");
-  Serial.print("<sensor>");
-  Serial.print("<compass>");
-  Serial.print(int (compass_val / 10));     // The whole number part of the heading
-  Serial.print(".");
-  Serial.print(int (compass_val % 10));     // The fractional part of the heading
-  Serial.print(compass_val);
-  Serial.print("</compass>");
-  Serial.print("<flex>");
-  Serial.print("<left>");
-  Serial.print(left_flex_val);
-  Serial.print("</left>");
-  Serial.print("<right>");
-  Serial.print(right_flex_val);
-  Serial.print("</right>");
-  Serial.print("</flex>");
-  Serial.print("<ultrasonic>");
-  Serial.print("<left>");
-  Serial.print(left_us_val);
-  Serial.print("</left>");
-  Serial.print("<right>");
-  Serial.print(right_us_val);
-  Serial.print("</right>");
-  Serial.print("</ultrasonic>");
-  Serial.print("<beacon>");
-  Serial.print(pos);
-  Serial.print("</beacon>");
-  Serial.print("<wheelencoder>");
-  Serial.print("<motor_a>");
-  Serial.print(clicks_a);
-  Serial.print("</motor_a>");
-  Serial.print("<motor_b>");
-  Serial.print(clicks_b);
-  Serial.print("</motor_b>");
-  Serial.print("</wheelencoder>");
-  Serial.print("</sensor>");
-  Serial.println("");
-  Serial.println(millis());
-  return;
+    Serial.println(millis());
+    sprintf(xml,"<?xml version=\"1.0\"?><sensor><c>%f</c><f><l>%d</l><r>%d</r></f><us><l>%d</l><r>%d</r></us><b>%d</b><we><a>%d</a><b>%d</b></we></sensor>", compass_val, left_flex_val, right_flex_val, left_us_val, right_us_val,pos, clicks_a, clicks_b); 
+    Serial.println(xml);
+    Serial.println(millis());
+    return;
 }
 
 void receiveData() {
@@ -368,39 +361,59 @@ void receiveData() {
 
 //INTERRUPTS//
 void left_beacon() {
-	int diff;
-	left_time = millis();
-	beacon_dir = NA;
-	if(right_time) {
-		if((left_time - right_time) > 100) {  
-			beacon_dir = RIGHT;
-		}
-		else {
-			beacon_dir = STRAIGHT;
-		}
+  int diff;
+  if(!left_time){
+    left_time = millis();
+    beacon_dir = NA;
+  }
 
-		right_time = 0;
-		left_time = 0;
-	}
+  Serial.print("Saw Left Interrupt! TIME: ");
+  Serial.println(left_time);
+  beacon_dir = NA;
+  if(right_time) {
+    if((left_time - right_time) > 1) {  
+      Serial.println("Beacon Right!");
+      beacon_dir = RIGHT;
+      right_time = 0;
+      left_time = 0;
+    }
+    else {
+      Serial.println("Beacon Straight!"); 
+      beacon_dir = STRAIGHT;
+      left_time = 0;
+      right_time = 0;
+    }
+  }
 }
 
 void right_beacon() {
-	int diff;
-	right_time = millis();
-	beacon_dir = NA;
-	if(left_time){
-		if((right_time - left_time) > 100) {
-			beacon_dir = LEFT;
-		}		
-		else {
-			beacon_dir = STRAIGHT;
-		}	
+  int diff;
+  
+  if(!right_time){
+    right_time = millis();
+    beacon_dir = NA;
+  }
 
-		left_time = 0;
-		right_time = 0;
-	}
-}
+  Serial.print("Saw Right Interrupt! TIME: ");
+  Serial.println(right_time);
 
+  if(left_time){
+    if((right_time - left_time) > 1) {
+      Serial.println("Beacon Left!");
+      beacon_dir = LEFT;
+      left_time = 0;
+      right_time = 0;
+    }    
+    else {
+      Serial.println("Beacon Straight!");
+      beacon_dir = STRAIGHT;
+      left_time = 0;
+      right_time = 0;
+    }  
+
+
+  }
+}  
 
 void motor_a_tick() {   
   clicks_a++; 
