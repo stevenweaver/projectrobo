@@ -22,19 +22,18 @@ void loop() {
     receiveData();
 }
 
-
 void receiveData() {
         int count = 0;
         int flag = 0;
         memset(recvData, 0, 8);       
         while(count <= 8) {
-  	  while (Serial.available() > 0) {
-		// read the incoming byte:
-		incomingByte = Serial.read();
-                recvData[count] = byte(incomingByte);
-                count++;
-                flag  = 1;
-	  }
+          while (Serial.available() > 0) {
+            // read the incoming byte:
+            incomingByte = Serial.read();
+                    recvData[count] = byte(incomingByte);
+                    count++;
+                    flag  = 1;
+          }
         }
         
         if(flag){
@@ -48,18 +47,26 @@ void receiveData() {
 
 void parseRecvdData(char* recvData){
     int i,j = 0;
+    int comma_flag = 0;
     
-    while(recvData[i] != ',' || i <= MAXSIZE){
-      direction_command[i] = recvData[i];
-      i++;
-    }
-    while(recvData[i] != ' ' || i <= MAXSIZE){
-      number_ticks_command[j] = recvData[i];
-      i++;
-      j++;
+    Serial.println("lol");
+    
+    for(i=0;i <= MAXSIZE; i++){
+      if(recvData[i] == ',') {
+        i++;
+        comma_flag = 1;
+      }
+      
+      if(!comma_flag) {
+        direction_command[i] = recvData[i];
+      }
+
+      else {
+        number_ticks_command[j] = recvData[i];
+        j++;
+      }
     }
   
   Serial.println(direction_command);
   Serial.println(number_ticks_command);
 }
-

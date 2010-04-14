@@ -33,19 +33,22 @@ const int FORWARD = 0;
 //const int RIGHT = 2;
 
 //MOTORS
-const int MOTOR_A_ENABLE = 9;
 const int MOTOR_A_CONTROL1 = 8;
+const int MOTOR_A_ENABLE = 9;
 const int MOTOR_A_CONTROL2 = 10;
 const int MOTOR_A_ENCODER = 1; //INT 0 (no need to define// wont be used directly)
 
-const int MOTOR_B_ENABLE = 6;
 const int MOTOR_B_CONTROL1 = 5;
+const int MOTOR_B_ENABLE = 6;
 const int MOTOR_B_CONTROL2 = 7;
 const int MOTOR_B_ENCODER = 0; //INT 1
 
 //Receive data
 #define MAXSIZE 8 
-#define MAX_STRING 255 
+char recvData[MAXSIZE];
+char direction_command[MAXSIZE];
+char number_ticks_command[MAXSIZE];
+int incomingByte;
 
 // PID parameters for each motor
 // might have morse set for different situations
@@ -119,8 +122,8 @@ Metro motorMetro = Metro(2200);
 
 char xml[MAX_STRING];
 
-#define TIMER_CLK_DIV1024 0x05; 
-#define TIMER_PRESCALE_MASK 0x07; 
+//#define TIMER_CLK_DIV1024 0x05; 
+//#define TIMER_PRESCALE_MASK 0x07; 
 
 
 /*******************SETUP*****************/
@@ -137,10 +140,10 @@ void setup() {
   Wire.begin();
    
   //TCCR0B = (TCCR0B & 0b11111000) | TIMER_CLK_DIV1024;
-  TCCR1B = (TCCR1B & 0b11111000) | TIMER_CLK_DIV1024;
-  TCCR2B = (TCCR2B & 0b11111000) | TIMER_CLK_DIV1024;
-  TCCR3B = (TCCR3B & 0b11111000) | TIMER_CLK_DIV1024;
-  TCCR4B = (TCCR4B & 0b11111000) | TIMER_CLK_DIV1024;
+//  TCCR1B = (TCCR1B & 0b11111000) | TIMER_CLK_DIV1024;
+//  TCCR2B = (TCCR2B & 0b11111000) | TIMER_CLK_DIV1024;
+//  TCCR3B = (TCCR3B & 0b11111000) | TIMER_CLK_DIV1024;
+//  TCCR4B = (TCCR4B & 0b11111000) | TIMER_CLK_DIV1024;
   //TCCR1B = (TCCR1B & ~TIMER_PRESCALE_MASK) | TIMER_CLK_DIV1024;
   //TCCR3B = (TCCR3B & ~TIMER_PRESCALE_MASK) | TIMER_CLK_DIV1024;
   //TCCR4B = (TCCR4B & ~TIMER_PRESCALE_MASK) | TIMER_CLK_DIV1024;
@@ -187,7 +190,8 @@ void setup() {
 /*******************MAIN*****************/
 void loop() {
     int left_us_val, left_flex_val, right_us_val, right_flex_val,compass_val = 0;
-Setpoint = 1000;
+    Setpoint = 1000;
+
     if (serialMetro.check() == 1) { // check if the metro has passed it's interval .
         //get information
         //left_us_val       = ultrasonic(LEFT_ULTRASONIC_PIN);
@@ -322,7 +326,6 @@ int compass() {
     // Read the 2 heading bytes, MSB first
     // The resulting 16bit word is the compass heading in 10th's of a degree
     // For example: a heading of 1345 would be 134.5 degrees
-    
     Wire.requestFrom(slave_address, 2);        // Request the 2 byte heading (MSB comes first)
     i = 0;
     
@@ -339,33 +342,58 @@ int compass() {
 /*************CREATE XML FOR BEAGLEBOARD************/
 void sendSerialInfo(int left_us_val, int left_flex_val,int right_us_val, int right_flex_val,int compass_val, int pos, int clicks_a, int clicks_b)
 {
-
     sprintf(xml,"<?xml version=\"1.0\"?><sensor><c>%f</c><f><l>%d</l><r>%d</r></f><us><l>%d</l><r>%d</r></us><b>%d</b><we><a>%d</a><b>%d</b></we></sensor>", compass_val, left_flex_val, right_flex_val, left_us_val, right_us_val,pos, clicks_a, clicks_b); 
     Serial.println(xml);
-    //Serial.println(millis());
     return;
 }
 
 void receiveData() {
-  int count = 0;
-  int flag = 0;
-  memset(recvData, 0, 8);       
-  while(count <= 8) {
-    while (Serial.available() > 0) {
-      // read the incoming byte:
-      incomingByte = Serial.read();
-      recvData[count] = byte(incomingByte);
-      count++;
-      flag  = 1;
+    int count = 0;
+    int flag = 0;
+    memset(recvData, 0, 8);       
+    while(count <= 8) {
+      while (Serial.available() > 0) {
+        // read the incoming byte:
+        incomingByte = Serial.read();
+                recvData[count] = byte(incomingByte);
+                count++;
+                flag  = 1;
+      }
     }
-  }
-  if(flag){
-    //We need to parse our information here
-    Serial.println(recvData);
-  }
-  Serial.flush();
+
+    if(flag){
+      Serial.println(recvData);
+      //We need to parse our information here
+      parseRecvdData(recvData);
+    }
+    Serial.flush();
 }
 
+void parseRecvdData(char* recvData){
+    int i,j = 0;
+    int comma_flag = 0;
+    
+    Serial.println("lol");
+    
+    for(i=0;i <= MAXSIZE; i++){
+      if(recvData[i] == ',') {
+        i++;
+        comma_flag = 1;
+      }
+      
+      if(!comma_flag) {
+        direction_command[i] = recvData[i];
+      }
+
+      else {
+        number_ticks_command[j] = recvData[i];
+        j++;
+      }
+    }
+  
+  Serial.println(direction_command);
+  Serial.println(number_ticks_command);
+}
 
 
 //INTERRUPTS//

@@ -7,7 +7,7 @@ import time
 #ser = serial.Serial('/dev/arduino', 9600)
 #print ser.readline()
 
-sxml= "<sensor><compass>140</compass><flex><left>500</left><right>300</right></flex><ultrasonic><left>3</left><right>10</right></ultrasonic><beacon>???</beacon><wheelencoder>???</wheelencoder></sensor>"
+sxml= "<sensor><compass>140</compass><flex><left>500</left><right>300</right></flex><ultrasonic><left>3</left><right>10</right></ultrasonic><beacon>2</beacon><wheelencoder>???</wheelencoder></sensor>"
 sd = sensorData(sxml)
 send = sendData()
 
