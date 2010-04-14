@@ -12,25 +12,25 @@ class RSSI:
             sline = line.split()
             self.RxNumber = sline[1]
             self.RxRSSI = sline[3]
-            self.distacne = int(sline[3],16)
+            self.distance = int(sline[3],16)
         else:
             return "Not RSSI"
         
-    def rx_distance(self, rx):
+    def rx_distance(self):
         #Under the beacon
-        if (rx > 230):
+        if (self.distance > 230):
             return 0
         #3 - 10 f withn the beacon
-        if (rx>160)&(rx<231):
+        if (self.distance>160)&(self.distance<231):
             return 1
         #10- 20 f withn the beacon
-        if (rx>140)&(rx<161):
+        if (self.distance>140)&(self.distance<161):
             return 2
         #20- 40 f withn the beacon
-        if (rx>100)&(rx<141):
+        if (self.distance>100)&(self.distance<141):
             return 3
         #more than 40 f
-        if (rx<100):
+        if (self.distance<100):
             return 4
         return
  
@@ -47,6 +47,5 @@ if __name__ == '__main__':
         rssi.handle_line(line)
     print rssi.RxNumber
     print rssi.RxRSSI
-    print rssi.distacne
-    print rssi.rx_distance(rssi.distacne)
-
+    print rssi.distance
+    print rssi.rx_distance()
