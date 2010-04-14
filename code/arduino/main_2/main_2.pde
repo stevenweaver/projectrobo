@@ -8,40 +8,40 @@
 
 //*********GLOBAL CONSTANTS*******************//
 //ARDUINO PINS
-const int LEFT_FLEX_PIN = 0;  
-const int RIGHT_FLEX_PIN = 1;  
-const int LEFT_ULTRASONIC_PIN= 5;   
-const int RIGHT_ULTRASONIC_PIN = 6;
+#define LEFT_FLEX_PIN 0
+#define RIGHT_FLEX_PIN 1  
+#define LEFT_ULTRASONIC_PIN 5 
+#define RIGHT_ULTRASONIC_PIN 6
 
-const int LEFT_BEACON_INT  = 4;  //Interrupt 0 
-const int RIGHT_BEACON_INT = 5;  //Interrupt 1  
+#define LEFT_BEACON_INT  4  //Interrupt 0 
+#define RIGHT_BEACON_INT 5  //Interrupt 1  
 
 //Servo Constants
-const int SERVO_PIN = 4;
-const int HMC6352Address = 0x42;
+#define SERVO_PIN 4
+#define HMC6352Address 0x42
 
 //Beacon Constants
-const int NA = -1;
-const int STRAIGHT = 0;
-const int LEFT = 1;
-const int RIGHT = 2;
+#define NA -1
+#define STRAIGHT 0
+#define LEFT 1
+#define RIGHT 2
 
 //Direction Constants
-const int STOP = -1;
-const int FORWARD = 0;
-//const int LEFT = 1;
-//const int RIGHT = 2;
+#define STOP -1
+#define FORWARD 0
+//#define LEFT 1
+//#define RIGHT 2
 
 //MOTORS
-const int MOTOR_RIGHT_ENABLE = 9;
-const int MOTOR_RIGHT_CONTROL1 = 8;
-const int MOTOR_RIGHT_CONTROL2 = 10;
-const int MOTOR_RIGHT_ENCODER = 1; //INT 0 (no need to define// wont be used directly)
+#define MOTOR_RIGHT_ENABLE 9
+#define MOTOR_RIGHT_CONTROL1 8
+#define MOTOR_RIGHT_CONTROL2 10
+#define MOTOR_RIGHT_ENCODER 1 //INT 0 (no need to define// wont be used directly)
 
-const int MOTOR_LEFT_ENABLE = 6;
-const int MOTOR_LEFT_CONTROL1 = 5;
-const int MOTOR_LEFT_CONTROL2 = 7;
-const int MOTOR_LEFT_ENCODER = 0; //INT 1
+#define MOTOR_LEFT_ENABLE 6
+#define MOTOR_LEFT_CONTROL1 5
+#define MOTOR_LEFT_CONTROL2 7
+#define MOTOR_LEFT_ENCODER 0 //INT 1
 
 //Receive data
 #define MAXSIZE 8 
@@ -49,30 +49,30 @@ const int MOTOR_LEFT_ENCODER = 0; //INT 1
 
 // PID parameters for each motor
 // might have morse set for different situations
-const int PID_P_RIGHT = 30;
-const int PID_I_RIGHT = 0;
-const int PID_D_RIGHT = 0.4;
-const int PID_P_LEFT = 30;
-const int PID_I_LEFT = 0;
-const int PID_D_LEFT = 0.4;
+#define PID_P_RIGHT 30
+#define PID_I_RIGHT 0
+#define PID_D_RIGHT 0.4
+#define PID_P_LEFT 30
+#define PID_I_LEFT 0
+#define PID_D_LEFT 0.4
 
 // range of input = ticks and output = pwm 
-const int PID_RIGHT_INPUT_MIN =  0;
-const int PID_RIGHT_INPUT_MAX =  20000;
-const int PID_RIGHT_OUTPUT_MIN = 0;
-const int PID_RIGHT_OUTPUT_MAX = 60;
-const int PID_LEFT_INPUT_MIN =  0;
-const int PID_LEFT_INPUT_MAX =  20000;
-const int PID_LEFT_OUTPUT_MIN = 0;
-const int PID_LEFT_OUTPUT_MAX = 60;
+#define PID_RIGHT_INPUT_MIN  0
+#define PID_RIGHT_INPUT_MAX  20000
+#define PID_RIGHT_OUTPUT_MIN 0
+#define PID_RIGHT_OUTPUT_MAX 60
+#define PID_LEFT_INPUT_MIN  0
+#define PID_LEFT_INPUT_MAX  20000
+#define PID_LEFT_OUTPUT_MIN 0
+#define PID_LEFT_OUTPUT_MAX 60
 
 // the desired distance in ticks 
 // can be converted 197 ticks = 1 revolution = 2 feet
-const int SETPOINT = 1000;
+#define SETPOINT 1000
 
 
-const int TIME_LIMIT_1 = 1900;
-const int TIME_LIMIT_2 = 5000;
+#define TIME_LIMIT_1 1900
+#define TIME_LIMIT_2 5000
 
 /*******************GLOBAL VARIABLES*****************/
 
@@ -436,4 +436,5 @@ void motor_RIGHT_tick() {
 void motor_LEFT_tick() { 
   clicks_LEFT++;        
 }
+
 
