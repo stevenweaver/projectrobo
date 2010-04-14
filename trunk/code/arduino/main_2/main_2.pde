@@ -70,6 +70,10 @@ const int PID_LEFT_OUTPUT_MAX = 60;
 // can be converted 197 ticks = 1 revolution = 2 feet
 const int SETPOINT = 1000;
 
+
+const int TIME_LIMIT_1 = 1900;
+const int TIME_LIMIT_2 = 5000;
+
 /*******************GLOBAL VARIABLES*****************/
 
 //For the compass
@@ -251,15 +255,15 @@ Setpoint = 1000;
     Input_LEFT = clicks_LEFT;
     wait_time = StartTime - millis();
     
-    if(wait_time > 1900 && wait_time < 5000)  { // check if the metro has passed it's interval .
-        PID_RIGHT.SetOutputLimits(0,60);
-        PID_LEFT.SetOutputLimits(0,50);
+    if(wait_time > TIME_LIMIT_1 && wait_time < TIME_LIMIT_2)  { // check if the metro has passed it's interval .
+      PID_RIGHT.SetOutputLimits(PID_RIGHT_INPUT_MIN,PID_RIGHT_INPUT_MAX);
+      PID_LEFT.SetOutputLimits(PID_LEFT_INPUT_MIN,PID_LEFT_INPUT_MAX);
         done = 1;
     }
    
     if(done) {
-      PID_RIGHT.SetOutputLimits(0,60);
-      PID_LEFT.SetOutputLimits(0,54);
+      PID_RIGHT.SetOutputLimits(PID_RIGHT_INPUT_MIN,PID_RIGHT_INPUT_MAX);
+      PID_LEFT.SetOutputLimits(PID_LEFT_INPUT_MIN,PID_LEFT_INPUT_MAX);
       done = 0;
     }
 
