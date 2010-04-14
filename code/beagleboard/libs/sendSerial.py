@@ -13,7 +13,7 @@ class sendData:
         data += ","
         data += str(ticks) 
         data += "\n"
-        data = data.zfill(10)
+        data = data.zfill(9)
         return data 
 
 if __name__ == '__main__':
@@ -24,5 +24,6 @@ if __name__ == '__main__':
         sd = sensorData(sxml)
         send = sendData()
         pis = send.sendStr(3,2000) 
-        ser.write(pis)
+        ser.write("@003,567!")
+        time.sleep(.200)
         print ser.readline()
