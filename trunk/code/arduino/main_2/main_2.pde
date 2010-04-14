@@ -36,12 +36,12 @@
 #define MOTOR_RIGHT_ENABLE 9
 #define MOTOR_RIGHT_CONTROL1 8
 #define MOTOR_RIGHT_CONTROL2 10
-#define MOTOR_RIGHT_ENCODER 1 //INT 0 (no need to define// wont be used directly)
+#define MOTOR_RIGHT_ENCODER 1 //INT 1 (no need to define// wont be used directly)
 
 #define MOTOR_LEFT_ENABLE 6
 #define MOTOR_LEFT_CONTROL1 5
 #define MOTOR_LEFT_CONTROL2 7
-#define MOTOR_LEFT_ENCODER 0 //INT 1
+#define MOTOR_LEFT_ENCODER 0 //INT 0
 
 //Receive data
 #define MAXSIZE 8 
@@ -431,7 +431,7 @@ void left_beacon() {
       left_time = 0;
     }
     else {
-      Serial.println("Beacon Straight!"); 
+     // Serial.println("Beacon Straight!"); 
       //delay(10);
       beacon_dir = STRAIGHT;
       left_time = 0;
