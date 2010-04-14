@@ -1,23 +1,23 @@
 #include <Wire.h>
+//#include <wiring.h>
 #include <string.h>
 #include <Servo.h> 
 #include <Metro.h> 
-
 #include <motor_driver.h>
 #include <PID_Beta6.h>
 
 //*********GLOBAL CONSTANTS*******************//
 //ARDUINO PINS
-const int LEFT_FLEX_PIN = 8;  
-const int RIGHT_FLEX_PIN = 99;  
-const int LEFT_ULTRASONIC_PIN= 6;   
-const int RIGHT_ULTRASONIC_PIN = 7;
+const int LEFT_FLEX_PIN = 0;  
+const int RIGHT_FLEX_PIN = 1;  
+const int LEFT_ULTRASONIC_PIN= 5;   
+const int RIGHT_ULTRASONIC_PIN = 6;
 
 const int LEFT_BEACON_INT  = 4;  //Interrupt 0 
 const int RIGHT_BEACON_INT = 5;  //Interrupt 1  
 
 //Servo Constants
-const int SERVO_PIN = 5;
+const int SERVO_PIN = 4;
 const int HMC6352Address = 0x42;
 
 //Beacon Constants
@@ -36,12 +36,12 @@ const int FORWARD = 0;
 const int MOTOR_A_ENABLE = 9;
 const int MOTOR_A_CONTROL1 = 8;
 const int MOTOR_A_CONTROL2 = 10;
-const int MOTOR_A_ENCODER = 0; //INT 0 (no need to define// wont be used directly)
+const int MOTOR_A_ENCODER = 1; //INT 0 (no need to define// wont be used directly)
 
-const int MOTOR_B_ENABLE = 12;
-const int MOTOR_B_CONTROL1 = 11;
-const int MOTOR_B_CONTROL2 = 13;
-const int MOTOR_B_ENCODER = 1; //INT 1
+const int MOTOR_B_ENABLE = 6;
+const int MOTOR_B_CONTROL1 = 5;
+const int MOTOR_B_CONTROL2 = 7;
+const int MOTOR_B_ENCODER = 0; //INT 1
 
 //Receive data
 #define MAXSIZE 8 
@@ -83,7 +83,7 @@ Servo myservo;
 int pos,back = 50;
 
 //Beacon Specific Variables
-int left_time, right_time = 0;
+volatile int left_time, right_time = 0;
 int beacon_dir;
 
 //Motors
@@ -93,10 +93,12 @@ Motor_Driver Motor_Driver(MOTOR_A_ENABLE, MOTOR_A_CONTROL1, MOTOR_A_CONTROL2,MOT
 volatile int clicks_a = 0; 
 volatile int clicks_b = 0; 
 
-int done = 0;
+
 
 //PID stuff
 double Setpoint, Input_A, Input_B, Output_A, Output_B;
+int wait_time = 0;
+int done = 0;
 
 //Please set constants, no magic numbers
 PID PID_A(&Input_A, &Output_A, &Setpoint,30,0,.4);
@@ -117,6 +119,9 @@ Metro motorMetro = Metro(2200);
 
 char xml[MAX_STRING];
 
+#define TIMER_CLK_DIV1024 0x05; 
+#define TIMER_PRESCALE_MASK 0x07; 
+
 
 /*******************SETUP*****************/
 void setup() {
@@ -130,6 +135,15 @@ void setup() {
 
   //For the compass(I2C communication)
   Wire.begin();
+   
+  //TCCR0B = (TCCR0B & 0b11111000) | TIMER_CLK_DIV1024;
+  TCCR1B = (TCCR1B & 0b11111000) | TIMER_CLK_DIV1024;
+  TCCR2B = (TCCR2B & 0b11111000) | TIMER_CLK_DIV1024;
+  TCCR3B = (TCCR3B & 0b11111000) | TIMER_CLK_DIV1024;
+  TCCR4B = (TCCR4B & 0b11111000) | TIMER_CLK_DIV1024;
+  //TCCR1B = (TCCR1B & ~TIMER_PRESCALE_MASK) | TIMER_CLK_DIV1024;
+  //TCCR3B = (TCCR3B & ~TIMER_PRESCALE_MASK) | TIMER_CLK_DIV1024;
+  //TCCR4B = (TCCR4B & ~TIMER_PRESCALE_MASK) | TIMER_CLK_DIV1024;
 
   //Telling which pin the servo is on. 
   myservo.attach(SERVO_PIN);
@@ -143,16 +157,16 @@ void setup() {
   attachInterrupt(RIGHT_BEACON_INT, right_beacon, CHANGE);
 
   //Interrupts for Wheel encoders
-  //attachInterrupt(MOTOR_A_ENCODER, motor_a_tick, FALLING);    
-  //attachInterrupt(MOTOR_B_ENCODER, motor_b_tick, FALLING); 
+  attachInterrupt(MOTOR_A_ENCODER, motor_a_tick, FALLING);    
+  attachInterrupt(MOTOR_B_ENCODER, motor_b_tick, FALLING); 
 
 
   //PID STUFF I NEED TO FIGURE OUT
   PID_A.SetInputLimits(0,20000);
-  PID_A.SetOutputLimits(20,255);
+  PID_A.SetOutputLimits(0,60);
   
   PID_B.SetInputLimits(0,20000);
-  PID_B.SetOutputLimits(20,255);
+  PID_B.SetOutputLimits(0,60);
   //  //initialize the variables we're linked to
   Input_A = clicks_a;
   Input_B = clicks_b;
@@ -173,7 +187,7 @@ void setup() {
 /*******************MAIN*****************/
 void loop() {
     int left_us_val, left_flex_val, right_us_val, right_flex_val,compass_val = 0;
-
+Setpoint = 1000;
     if (serialMetro.check() == 1) { // check if the metro has passed it's interval .
         //get information
         //left_us_val       = ultrasonic(LEFT_ULTRASONIC_PIN);
@@ -183,7 +197,7 @@ void loop() {
         compass_val       = compass();
 
         //send serial info
-        sendSerialInfo(left_us_val, left_flex_val,right_us_val, right_flex_val,compass_val, clicks_a, clicks_b);
+        sendSerialInfo(left_us_val, left_flex_val,right_us_val, right_flex_val,compass_val, pos, clicks_a, clicks_b);
 
         serialMetro.reset();
     }
@@ -232,48 +246,44 @@ void loop() {
         servoMetro.reset();
     }
 
-    if (goRightMetro.check() == 1 && done == 1) { // check if the metro has passed it's interval .
-        Motor_Driver.Right();
-        analogWrite(MOTOR_A_ENABLE, 60);
-        analogWrite(MOTOR_B_ENABLE, 60);
-    } 
 
-    else 
-    {
-        Input_A = clicks_a;
-        Input_B = clicks_b;
+    Input_A = clicks_a;
+    Input_B = clicks_b;
+    wait_time = StartTime - millis();
+    
+    if(wait_time > 1900 && wait_time < 5000)  { // check if the metro has passed it's interval .
+        PID_A.SetOutputLimits(0,60);
+        PID_B.SetOutputLimits(0,50);
+        done = 1;
+    }
+   
+    if(done) {
+      PID_A.SetOutputLimits(0,60);
+      PID_B.SetOutputLimits(0,54);
+      done = 0;
+    }
 
-        if (motorMetro.check() == 1 && done == 1) { // check if the metro has passed it's interval .
-            PID_A.SetOutputLimits(20,60);
-            PID_B.SetOutputLimits(15,50);
-        }
-        else  {
-            PID_A.SetOutputLimits(20,140);
-            PID_B.SetOutputLimits(10,120);
-        }
-
-        //Set Tuning Parameters based on how close we are to setpoint
-        //if(abs(Setpoint-Input_B)<200)  PID_B.SetOutputLimits(15,240);;  //aggressive
-        //else myPID.SetTunings(3,4,1); //comparatively moderate
-        PID_A.Compute();
-        PID_B.Compute();
+    //Set Tuning Parameters based on how close we are to setpoint
+    //if(abs(Setpoint-Input_B)<200)  PID_B.SetOutputLimits(15,240);;  //aggressive
+    //else myPID.SetTunings(3,4,1); //comparatively moderate
+    PID_A.Compute();
+    PID_B.Compute();
 
 
-        analogWrite(MOTOR_A_ENABLE, Output_A);
-        analogWrite(MOTOR_B_ENABLE, Output_B);
+    analogWrite(MOTOR_A_ENABLE, Output_A);
+    analogWrite(MOTOR_B_ENABLE, Output_B);
 
 
 //        Serial.print("Current input A: ");
 //        Serial.println(Input_A);
 //        Serial.print("Current output A: ");
 //        Serial.println(Output_A);
-//
-//
-//        Serial.print("Current input B: ");
-//        Serial.println(Input_B);
-//        Serial.print("Current output B: ");
-//        Serial.println(Output_B);
-   }
+////  //  //
+////  //  //
+//         Serial.print("Current input B: ");
+//         Serial.println(Input_B);
+//         Serial.print("Current output B: ");
+//         Serial.println(Output_B);
 }
 
 /***************SENSOR FUNCTIONS***************/
@@ -327,13 +337,12 @@ int compass() {
 
 
 /*************CREATE XML FOR BEAGLEBOARD************/
-void sendSerialInfo(int left_us_val, int left_flex_val,int right_us_val, int right_flex_val,int compass_val, int clicks_a, int clicks_b)
+void sendSerialInfo(int left_us_val, int left_flex_val,int right_us_val, int right_flex_val,int compass_val, int pos, int clicks_a, int clicks_b)
 {
 
-    Serial.println(millis());
     sprintf(xml,"<?xml version=\"1.0\"?><sensor><c>%f</c><f><l>%d</l><r>%d</r></f><us><l>%d</l><r>%d</r></us><b>%d</b><we><a>%d</a><b>%d</b></we></sensor>", compass_val, left_flex_val, right_flex_val, left_us_val, right_us_val,pos, clicks_a, clicks_b); 
     Serial.println(xml);
-    Serial.println(millis());
+    //Serial.println(millis());
     return;
 }
 
@@ -367,18 +376,19 @@ void left_beacon() {
     beacon_dir = NA;
   }
 
-  Serial.print("Saw Left Interrupt! TIME: ");
-  Serial.println(left_time);
+  //Serial.print("Saw Left Interrupt! TIME: ");
+  //Serial.println(left_time);
   beacon_dir = NA;
   if(right_time) {
-    if((left_time - right_time) > 1) {  
-      Serial.println("Beacon Right!");
+    if((left_time - right_time) > 500) {  
+      //Serial.println("Beacon Right!");
       beacon_dir = RIGHT;
       right_time = 0;
       left_time = 0;
     }
     else {
       Serial.println("Beacon Straight!"); 
+      //delay(10);
       beacon_dir = STRAIGHT;
       left_time = 0;
       right_time = 0;
@@ -394,23 +404,23 @@ void right_beacon() {
     beacon_dir = NA;
   }
 
-  Serial.print("Saw Right Interrupt! TIME: ");
-  Serial.println(right_time);
+  //Serial.print("Saw Right Interrupt! TIME: ");
+  //Serial.println(right_time);
 
   if(left_time){
-    if((right_time - left_time) > 1) {
-      Serial.println("Beacon Left!");
+    if((right_time - left_time) > 500) {
+      //Serial.println("Beacon Left!");
       beacon_dir = LEFT;
       left_time = 0;
       right_time = 0;
     }    
+    
     else {
-      Serial.println("Beacon Straight!");
+      //delay(10);
       beacon_dir = STRAIGHT;
       left_time = 0;
       right_time = 0;
     }  
-
 
   }
 }  
