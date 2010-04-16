@@ -10,8 +10,8 @@ http://arduino.cc/en/uploads/Main/ArduinoMega.jpg
 = Details =
 || Right Flex || Analog 0 ||
 || Left Flex || Analog 1 ||
-|| Right Ultrasonic Rangefinder|| PWM4 ||
-|| Left Ultrasonic Rangefinder || PWM5 ||
+|| Right Ultrasonic Rangefinder|| PWM11 ||
+|| Left Ultrasonic Rangefinder || PWM12 ||
 || Right Beacon Receiver || COMM18 ||
 || Left Beacon Receiver || COMM19 ||
 || Servo || PWM4 ||
