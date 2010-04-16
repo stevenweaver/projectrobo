@@ -1,17 +1,21 @@
+#First we need to include the new python path
+import sys
+#QA
+HOME = '/home/steven/projectrobo/code/beagleboard' 
+#BEAGLE
+#HOME = '/home/ubuntu/beagle' 
+sys.path.append(HOME + '/libs/') 
+
+
+#Import the modules we need
 import serial
+import defines
 
-ser = serial.Serial('/dev/ttyUSB0', 9600)
-
-#Beacon Constants
-NA = -1;
-STRAIGHT = 0;
-LEFT = 1;
-RIGHT = 2;
-
+#ser = serial.Serial('/dev/arduino', 9600)
+#ser = serial.Serial('/dev/gps', 9600)
+#ser = serial.Serial('/dev/rssi', 9600)
 
 #print ser.readline()
-
-#Control the servo
 
 #We're going to "package" all of the sensor data and send it in clumps over the serial.
 
@@ -29,17 +33,21 @@ def masterControl():
 
     #Based on the above curricula, we should have a direction we need to go in by now
     #setDirection()
+    return
 
 def calcObstacles():
     #Check if the obstacles are dangerously in the way
+    return
 
 def calcBeacons():
     #Check if the Beacons are within range
+    return
 
 def calcDirection():
     #calcPosition
     #calcNextPosition
     #Decide how to get there
+    return
  
 def calcPosition():
     #compass
@@ -64,4 +72,3 @@ def parseSerialInfo():
     #Parse serial information
     #Thought: we might want to do this in a separate thread to ensure we continually get fresh data?
     return
-
