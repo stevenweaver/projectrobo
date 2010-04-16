@@ -1,6 +1,5 @@
+import setup
 from sendSerial import *
-:q
-:q
 from sensorData import *
 import serial
 import time 
