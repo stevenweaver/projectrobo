@@ -1,3 +1,4 @@
+import setup
 from sendSerial import *
 from sensorData import *
 from defines import *
