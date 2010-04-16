@@ -35,16 +35,21 @@ while 1:
 
     if mean < 85 and std < 5:
         print "beacon is on the right, turn right" 
+        ser.write(send.sendStr(RIGHT))
+        print ser.readline()
         #ser.send(send.sendStr(RIGHT))
 
     elif mean > 95 and std < 5:
         #Turn left
         print "beacon is on the left, turn left"
+        ser.write(send.sendStr(LEFT))
+        print ser.readline()
         #ser.send(send.sendStr(LEFT))
 
     elif mean > 85 and mean < 95 and std < 5:
         #Turn right 
         print "beacon is on the forward, turn forward"
+        ser.write(send.sendStr(FORWARD))
         #ser.send(send.sendStr(FORWARD))
 
     

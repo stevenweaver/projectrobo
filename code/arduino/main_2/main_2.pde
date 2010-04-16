@@ -1,5 +1,4 @@
 #include <Wire.h>
-//#include <wiring.h>
 #include <string.h>
 #include <Servo.h> 
 #include <Metro.h> 
@@ -10,8 +9,8 @@
 //ARDUINO PINS
 #define LEFT_FLEX_PIN 0
 #define RIGHT_FLEX_PIN 1  
-#define LEFT_ULTRASONIC_PIN 5 
-#define RIGHT_ULTRASONIC_PIN 6
+#define LEFT_ULTRASONIC_PIN 11 
+#define RIGHT_ULTRASONIC_PIN 12
 
 #define LEFT_BEACON_INT  4  //Interrupt 0 
 #define RIGHT_BEACON_INT 5  //Interrupt 1  
@@ -27,8 +26,8 @@
 #define RIGHT 2
 
 //Direction Constants
-#define STOP -1
-#define FORWARD 0
+#define STOP 0
+#define FORWARD 3
 //#define LEFT 1
 //#define RIGHT 2
 
@@ -36,12 +35,12 @@
 #define MOTOR_RIGHT_ENABLE 9
 #define MOTOR_RIGHT_CONTROL1 8
 #define MOTOR_RIGHT_CONTROL2 10
-#define MOTOR_RIGHT_ENCODER 1 //INT 1 (no need to define// wont be used directly)
+#define MOTOR_RIGHT_ENCODER 1 //INT 0 (no need to define// wont be used directly)
 
 #define MOTOR_LEFT_ENABLE 6
 #define MOTOR_LEFT_CONTROL1 5
 #define MOTOR_LEFT_CONTROL2 7
-#define MOTOR_LEFT_ENCODER 0 //INT 0
+#define MOTOR_LEFT_ENCODER 0 //INT 1
 
 //Receive data
 #define MAXSIZE 8 
@@ -60,11 +59,11 @@
 #define PID_RIGHT_INPUT_MIN  0
 #define PID_RIGHT_INPUT_MAX  20000
 #define PID_RIGHT_OUTPUT_MIN 0
-#define PID_RIGHT_OUTPUT_MAX 60
+#define PID_RIGHT_OUTPUT_MAX 40
 #define PID_LEFT_INPUT_MIN  0
 #define PID_LEFT_INPUT_MAX  20000
 #define PID_LEFT_OUTPUT_MIN 0
-#define PID_LEFT_OUTPUT_MAX 60
+#define PID_LEFT_OUTPUT_MAX 40
 
 // the desired distance in ticks 
 // can be converted 197 ticks = 1 revolution = 2 feet
@@ -84,11 +83,13 @@ Servo myservo;
 
 //Servo Variables
 //Should take out of global
-int pos,back = 50;
+int back = 0;
+int pos = 90;
 
 //Beacon Specific Variables
 volatile int left_time, right_time = 0;
-int beacon_dir;
+int beacon_dir = NA;
+int compass_val = 0;
 
 //Motors
 Motor_Driver Motor_Driver(MOTOR_RIGHT_ENABLE, MOTOR_RIGHT_CONTROL1, MOTOR_RIGHT_CONTROL2,MOTOR_LEFT_ENABLE, MOTOR_LEFT_CONTROL1, MOTOR_LEFT_CONTROL2);
@@ -96,8 +97,6 @@ Motor_Driver Motor_Driver(MOTOR_RIGHT_ENABLE, MOTOR_RIGHT_CONTROL1, MOTOR_RIGHT_
 //Wheel Encoding
 volatile int clicks_RIGHT = 0; 
 volatile int clicks_LEFT = 0; 
-
-
 
 //PID stuff
 double Setpoint, Input_RIGHT, Input_LEFT, Output_RIGHT, Output_LEFT;
@@ -123,8 +122,9 @@ Metro motorMetro = Metro(2200);
 
 char xml[MAX_STRING];
 
-#define TIMER_CLK_DIV1024 0x05; 
-#define TIMER_PRESCALE_MASK 0x07; 
+char buff[]= "0000000000";
+int drive=0; 
+int ticks=0; 
 
 
 /*******************SETUP*****************/
@@ -139,15 +139,6 @@ void setup() {
 
   //For the compass(I2C communication)
   Wire.begin();
-   
- //TCCR0B = (TCCR0B & 0b11111000) | TIMER_CLK_DIV1024;
-//  TCCR1B = (TCCR1B & 0b11111000) | TIMER_CLK_DIV1024;
-//  TCCR2B = (TCCR2B & 0b11111000) | TIMER_CLK_DIV1024;
-//  TCCR3B = (TCCR3B & 0b11111000) | TIMER_CLK_DIV1024;
-//  TCCR4B = (TCCR4B & 0b11111000) | TIMER_CLK_DIV1024;
-  //TCCR1B = (TCCR1B & ~TIMER_PRESCALE_MASK) | TIMER_CLK_DIV1024;
-  //TCCR3B = (TCCR3B & ~TIMER_PRESCALE_MASK) | TIMER_CLK_DIV1024;
-  //TCCR4B = (TCCR4B & ~TIMER_PRESCALE_MASK) | TIMER_CLK_DIV1024;
 
   //Telling which pin the servo is on. 
   myservo.attach(SERVO_PIN);
@@ -184,14 +175,15 @@ void setup() {
   
   
   // we are in forward mode
-  Motor_Driver.Forward();
-  Setpoint = 1000;
+  //Motor_Driver.Forward();
+  Setpoint = 0;
 }
 
 /*******************MAIN*****************/
 void loop() {
     int left_us_val, left_flex_val, right_us_val, right_flex_val,compass_val = 0;
-Setpoint = 1000;
+    //Setpoint = 1000;
+    
     if (serialMetro.check() == 1) { // check if the metro has passed it's interval .
         //get information
         //left_us_val       = ultrasonic(LEFT_ULTRASONIC_PIN);
@@ -201,7 +193,7 @@ Setpoint = 1000;
         compass_val       = compass();
 
         //send serial info
-        sendSerialInfo(left_us_val, left_flex_val,right_us_val, right_flex_val,compass_val, pos, clicks_RIGHT, clicks_LEFT);
+        sendSerialInfo(left_us_val, left_flex_val, right_us_val, right_flex_val, compass_val, pos, clicks_RIGHT, clicks_LEFT);
 
         serialMetro.reset();
     }
@@ -246,7 +238,7 @@ Setpoint = 1000;
           pos = pos-1;  
       }
 
-        myservo.write(pos);              // tell servo to go to position in variable 'pos'   
+        myservo.write(pos);              // tell servo to go to position in variable 'pos'  
         servoMetro.reset();
     }
 
@@ -255,17 +247,17 @@ Setpoint = 1000;
     Input_LEFT = clicks_LEFT;
     wait_time = StartTime - millis();
     
-    if(wait_time > TIME_LIMIT_1 && wait_time < TIME_LIMIT_2)  { // check if the metro has passed it's interval .
-      PID_RIGHT.SetOutputLimits(PID_RIGHT_INPUT_MIN,PID_RIGHT_INPUT_MAX);
-      PID_LEFT.SetOutputLimits(PID_LEFT_INPUT_MIN,PID_LEFT_INPUT_MAX);
-        done = 1;
-    }
-   
-    if(done) {
-      PID_RIGHT.SetOutputLimits(PID_RIGHT_INPUT_MIN,PID_RIGHT_INPUT_MAX);
-      PID_LEFT.SetOutputLimits(PID_LEFT_INPUT_MIN,PID_LEFT_INPUT_MAX);
-      done = 0;
-    }
+//    if(wait_time > TIME_LIMIT_1 && wait_time < TIME_LIMIT_2)  { // check if the metro has passed it's interval .
+//      PID_RIGHT.SetOutputLimits(PID_RIGHT_INPUT_MIN,PID_RIGHT_INPUT_MAX);
+//      PID_LEFT.SetOutputLimits(PID_LEFT_INPUT_MIN,PID_LEFT_INPUT_MAX);
+//        done = 1;
+//    }
+//   
+//    if(done) {
+//      PID_RIGHT.SetOutputLimits(PID_RIGHT_INPUT_MIN,PID_RIGHT_INPUT_MAX);
+//      PID_LEFT.SetOutputLimits(PID_LEFT_INPUT_MIN,PID_LEFT_INPUT_MAX);
+//      done = 0;
+//    }
 
     //Set Tuning Parameters based on how close we are to setpoint
     //if(abs(Setpoint-Input_B)<200)  PID_B.SetOutputLimits(15,240);;  //aggressive
@@ -279,16 +271,6 @@ Setpoint = 1000;
 
     receiveData();
 
-//        Serial.print("Current input A: ");
-//        Serial.println(Input_A);
-//        Serial.print("Current output A: ");
-//        Serial.println(Output_A);
-////  //  //
-////  //  //
-//         Serial.print("Current input B: ");
-//         Serial.println(Input_B);
-//         Serial.print("Current output B: ");
-//         Serial.println(Output_B);
 }
 
 /***************SENSOR FUNCTIONS***************/
@@ -345,82 +327,58 @@ int compass() {
 void sendSerialInfo(int left_us_val, int left_flex_val,int right_us_val, int right_flex_val,int compass_val, int pos, int clicks_RIGHT, int clicks_LEFT)
 {
 
-    sprintf(xml,"<?xml version=\"1.0\"?><sensor><c>%f</c><f><l>%d</l><r>%d</r></f><us><l>%d</l><r>%d</r></us><b>%d</b><we><a>%d</a><b>%d</b></we></sensor>", compass_val, left_flex_val, right_flex_val, left_us_val, right_us_val,pos, clicks_RIGHT, clicks_LEFT); 
+    sprintf(xml,"<?xml version=\"1.0\"?><sensor><c>%d</c><f><l>%d</l><r>%d</r></f><us><l>%d</l><r>%d</r></us><b>%d</b><we><a>%d</a><b>%d</b></we></sensor>", compass_val, left_flex_val, right_flex_val, left_us_val, right_us_val, pos, clicks_RIGHT, clicks_LEFT); 
     Serial.println(xml);
-    //Serial.println(millis());
     return;
 }
 
 void receiveData() {
-    int count = 0;
-    int flag = 0;
-    memset(recvData, 0, 8);       
-    
-    if(Serial.available()) {
-      while(count <= 8) {
-        while (Serial.available() > 0) {
-          // read the incoming byte:
-          incomingByte = Serial.read();
-          recvData[count] = byte(incomingByte);
-          count++;
-          flag  = 1;
-        }
+  while (Serial.available()>0) {
+    for (int i=0; i<10; i++) {
+      buff[i]=buff[i+1];
+    }
+    buff[10]=Serial.read();
+    if (buff[10]=='D') {
+      drive=int(buff[9]);
+      drive -= 48;
+      if(drive == FORWARD) {
+          Motor_Driver.Forward();
       }
       
-      if(flag){
-        Serial.println(recvData);
-        //We need to parse our information here
-        parseRecvdData(recvData);
+      else if(drive == LEFT) {
+        Motor_Driver.Left();
+      }  
+      
+      else if(drive == RIGHT) {
+        Motor_Driver.Right();
       }
-    
+      
+      else if(drive == STOP) {
+        Motor_Driver.Stop();
+      }       
+      Serial.print("drive: ");
+      Serial.println(drive);
+    }
+    if (buff[10]=='T') {
+      ticks=int(buff[9]);
+      ticks-= 48;
+      ticks*=1000;
+      Setpoint = ticks;
+      Serial.print("tick: ");
+      Serial.println(ticks);
     }
 
-    //Serial.flush();
-}
-
-void parseRecvdData(char* recvData){
-    int i,j = 0;
-    int comma_flag = 0;
-    
-    //Serial.println("lol");
-    memset(direction_command, 0, 8);  
-    memset(number_ticks_command, 0, 8);  
-    
-    for(i=0;i <= MAXSIZE; i++){
-      if(recvData[i] == ',') {
-        i++;
-        comma_flag = 1;
-      }
-      
-      if(recvData[i] == '!') {
-        break;  
-      }
-      
-      if(!comma_flag) {
-        direction_command[i] = recvData[i];
-      }
-
-      else {
-        number_ticks_command[j] = recvData[i];
-        j++;
-      }
-
-    }
-    Serial.print("dir: ");
-    Serial.println(direction_command);
-    Serial.print("num_tix: ");
-    Serial.println(number_ticks_command);
+  }
 }
 
 //INTERRUPTS//
 void left_beacon() {
-  int diff;
   if(!left_time){
     left_time = millis();
     beacon_dir = NA;
   }
 
-  //Serial.print("Saw Left Interrupt! TIME: ");
+  Serial.print("Saw Left Interrupt! TIME: ");
   //Serial.println(left_time);
   beacon_dir = NA;
   if(right_time) {
@@ -431,8 +389,7 @@ void left_beacon() {
       left_time = 0;
     }
     else {
-     // Serial.println("Beacon Straight!"); 
-      //delay(10);
+      //Serial.println("Beacon Straight!"); 
       beacon_dir = STRAIGHT;
       left_time = 0;
       right_time = 0;
@@ -441,14 +398,12 @@ void left_beacon() {
 }
 
 void right_beacon() {
-  int diff;
-  
   if(!right_time){
     right_time = millis();
     beacon_dir = NA;
   }
-
-  //Serial.print("Saw Right Interrupt! TIME: ");
+  
+  Serial.print("Saw Right Interrupt! TIME: ");
   //Serial.println(right_time);
 
   if(left_time){
@@ -460,7 +415,6 @@ void right_beacon() {
     }    
     
     else {
-      //delay(10);
       beacon_dir = STRAIGHT;
       left_time = 0;
       right_time = 0;
@@ -476,5 +430,6 @@ void motor_RIGHT_tick() {
 void motor_LEFT_tick() { 
   clicks_LEFT++;        
 }
+
 
 
