@@ -58,12 +58,12 @@
 // range of input = ticks and output = pwm 
 #define PID_RIGHT_INPUT_MIN  0
 #define PID_RIGHT_INPUT_MAX  20000
-#define PID_RIGHT_OUTPUT_MIN 0
-#define PID_RIGHT_OUTPUT_MAX 40
+#define PID_RIGHT_OUTPUT_MIN 15
+#define PID_RIGHT_OUTPUT_MAX 80
 #define PID_LEFT_INPUT_MIN  0
 #define PID_LEFT_INPUT_MAX  20000
-#define PID_LEFT_OUTPUT_MIN 0
-#define PID_LEFT_OUTPUT_MAX 40
+#define PID_LEFT_OUTPUT_MIN 13
+#define PID_LEFT_OUTPUT_MAX 72
 
 // the desired distance in ticks 
 // can be converted 197 ticks = 1 revolution = 2 feet
@@ -181,7 +181,8 @@ void setup() {
 
 /*******************MAIN*****************/
 void loop() {
-    int left_us_val, left_flex_val, right_us_val, right_flex_val,compass_val = 0;
+    int left_us_val, left_flex_val, right_us_val, right_flex_val = 0;
+    int compass_val = 0;
     //Setpoint = 1000;
     
     if (serialMetro.check() == 1) { // check if the metro has passed it's interval .
@@ -295,7 +296,8 @@ int flex(int pin) {
 
 int compass() {
     byte heading_data[2];
-    int i, heading_value;
+    int i;
+    int heading_value;
     
     // Send a "A" command to the HMC6352
     // This requests the current heading data
@@ -324,9 +326,9 @@ int compass() {
 
 
 /*************CREATE XML FOR BEAGLEBOARD************/
-void sendSerialInfo(int left_us_val, int left_flex_val,int right_us_val, int right_flex_val,int compass_val, int pos, int clicks_RIGHT, int clicks_LEFT)
+void sendSerialInfo(int left_us_val, int left_flex_val,int right_us_val, int right_flex_val, int compass_val, int pos, int clicks_RIGHT, int clicks_LEFT)
 {
-
+    //  float compass =   (compass_val / 10) + (compass_val % 10); 
     sprintf(xml,"<?xml version=\"1.0\"?><sensor><c>%d</c><f><l>%d</l><r>%d</r></f><us><l>%d</l><r>%d</r></us><b>%d</b><we><a>%d</a><b>%d</b></we></sensor>", compass_val, left_flex_val, right_flex_val, left_us_val, right_us_val, pos, clicks_RIGHT, clicks_LEFT); 
     Serial.println(xml);
     return;
@@ -356,16 +358,16 @@ void receiveData() {
       else if(drive == STOP) {
         Motor_Driver.Stop();
       }       
-      Serial.print("drive: ");
-      Serial.println(drive);
+      //Serial.print("drive: ");
+      //Serial.println(drive);
     }
     if (buff[10]=='T') {
       ticks=int(buff[9]);
       ticks-= 48;
       ticks*=1000;
       Setpoint = ticks;
-      Serial.print("tick: ");
-      Serial.println(ticks);
+      //Serial.print("tick: ");
+      //Serial.println(ticks);
     }
 
   }

@@ -4,7 +4,7 @@ class sensorData:
     def __init__(self,xml):
         self.xml = xml
         self.dom = parseString(self.xml)
-        self.compass = float(self.get_data('c'))
+        self.compass = float(self.get_data('c')) / 10
         self.flex = self.get_flex()
         self.us = self.get_us()
         self.beacon = int(self.get_data('b'))
@@ -13,7 +13,7 @@ class sensorData:
     def update(self,xml):
         self.xml = xml
         self.dom = parseString(self.xml)
-        self.compass = float(self.get_data('c'))
+        self.compass = float(self.get_data('c')) / 10 
         self.flex = self.get_flex()
         self.us = self.get_us()
         self.beacon = self.get_data('b')
