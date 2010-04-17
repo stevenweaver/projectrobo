@@ -11,7 +11,7 @@ ser = serial.Serial('/dev/arduino', 9600)
 #    print ser.readline()
 sxml = ""
 
-while len(sxml) < 250:
+while sxml.find('<?xml version="1.0"?>') == -1:
     sxml = ser.readline()
 
 print sxml

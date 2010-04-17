@@ -1,30 +1,43 @@
 import setup
 from sendSerial import *
 from sensorData import *
+from defines import * 
 import serial
 import time 
 
 #Set up
-#ser = serial.Serial('/dev/arduino', 9600)
-#print ser.readline()
-
-sxml= "<sensor><compass>140</compass><flex><left>500</left><right>300</right></flex><ultrasonic><left>3</left><right>10</right></ultrasonic><beacon>2</beacon><wheelencoder>???</wheelencoder></sensor>"
-sd = sensorData(sxml)
+f = open('./log/compass_' + str(int(time.time())) , 'w')
+ser = serial.Serial('/dev/arduino', 9600)
 send = sendData()
+toturn = 180
+sxml = ""
 
+while sxml.find('<?xml version="1.0"?>') == -1:
+    sxml = ser.readline()
+
+sd = sensorData(sxml)
+start_compass = sd.compass
 motor_dir = "na"
 
+des_compass = (start_compass + 90) % 360
+f.write('des_compass' +  str(des_compass) + '\n')
+print des_compass
+
+#ser.write(send.sendStr(RIGHT))
+#ser.write("1T")
+
 while 1:
+    sxml = ser.readline()
+    print sxml
+    sd.update(sxml)
     print sd.compass
 
-    #keep turning right until we are facing north
-    if sd.compass is 0:
-        ser.send(send.createXml("stop"))
-    else:
-        print "going right"
-        if motor_dir != "right":
-            motor_dir = "right"
-            #ser.send(send.createXml(motor_dir))
+    diff = des_compass - sd.compass
+    print diff
+    f.write('diff = ' + str(diff) + ' current: ' + str(sd.compass) + '\n')
 
+    #keep turning right until we are facing north
+    if (abs(diff)-360)%360 < 10:
+        print "hit it"
+        #ser.write(send.sendStr(STOP))
     #time.sleep(.001)
-    time.sleep(1)
