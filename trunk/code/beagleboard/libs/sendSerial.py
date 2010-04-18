@@ -1,4 +1,3 @@
-from xml.dom.minidom import Document
 from sensorData import *
 from defines import *
 import serial
@@ -9,8 +8,8 @@ import time
 #<direction>right,left,forward,reverse</direction>
 
 class sendData:
-    def sendStr(self, direction):
-        data = str(direction)
+    def sendStr(self, command):
+        data = str(command)
         #data += "\n"
         data = data.zfill(10)
         return data 

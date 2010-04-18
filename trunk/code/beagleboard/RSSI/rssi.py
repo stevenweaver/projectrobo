@@ -2,10 +2,11 @@ import string
 import math
 
 class RSSI:
-    def __init__(self):
+    def __init__(self, line):
         self.RxNumber = 0.0
         self.RxRSSI = 0x00
         self.distance = 0
+        self.handle_line(line)
 
     def handle_line(self, line):
         if line[0] == 'B':
@@ -39,13 +40,14 @@ class RSSI:
 
 if __name__ == '__main__':
     # Self-testing code goes here.
-    rssi = RSSI()
+    rssi = [] 
     lines = [
         "BeaconRxNumber: 01    BeaconRxRSSI: 0xE0",
     ]
     for line in lines:
-        rssi.handle_line(line)
-    print rssi.RxNumber
-    print rssi.RxRSSI
-    print rssi.distance
-    print rssi.rx_distance()
+        rssi.append(RSSI(line))
+
+    print rssi[0].RxNumber
+    print rssi[0].RxRSSI
+    print rssi[0].distance
+    print rssi[0].rx_distance()

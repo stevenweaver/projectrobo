@@ -2,13 +2,14 @@ import string
 import math
 
 class NMEA:
-    def __init__(self):
+    def __init__(self, line):
         self.time = '?'
         self.lat = 0.0
         self.lon = 0.0
         self.satellites = 0 
         self.track = 0.0
         self.speed = 0.0
+        self.handle_line(line)
 
     #Making assumptions I'm in the northern, western hemisphere.
     def processGPGGA(self,words):
@@ -32,13 +33,19 @@ class NMEA:
 
 if __name__ == '__main__':
     # Self-testing code goes here.
-    nmea = NMEA()
+    nmea = [] 
     lines = [
+        "$GPGGA,180227.933,3246.6682,N,11704.3135,W,1,03,10.3,30.1,M,-34.8,M,,0000*66\n",
         "$GPGGA,180227.933,3246.6682,N,11704.3135,W,1,03,10.3,30.1,M,-34.8,M,,0000*66\n",
     ]
     for line in lines:
-        nmea.handle_line(line)
-    print nmea.lat
-    print nmea.lon
-    print nmea.satellites
-    print nmea.time
+        nmea.append(NMEA(line))
+
+    print nmea[0].lat
+    print nmea[0].lon
+    print nmea[0].satellites
+    print nmea[0].time
+    print nmea[1].lat
+    print nmea[1].lon
+    print nmea[1].satellites
+    print nmea[1].time
