@@ -67,8 +67,13 @@
 
 // the desired distance in ticks 
 // can be converted 197 ticks = 1 revolution = 2 feet
-#define SETPOINT 3000
+#define SETPOINT 135
 
+
+// turns
+// 135 ticks    180 degrees
+// 300 ticks    360 degrees
+//slips in lab but ok outdoors
 
 #define TIME_LIMIT_1 1900
 #define TIME_LIMIT_2 5000
@@ -209,7 +214,7 @@ PID_LEFT.SetMode(AUTO);
 
   
   // we are in forward mode
-   Motor_Driver.Forward();
+   Motor_Driver.Left();
   Setpoint = SETPOINT;
   
   PID_RIGHT.SetSampleTime(300);
@@ -253,7 +258,11 @@ void loop() {
       pw_RIGHT = 0;
       
     
-    
+    if(pw_LEFT > 255 )
+      pw_LEFT = 255;
+      
+        if(pw_RIGHT > 255 )
+      pw_RIGHT = 255;
       
     analogWrite(MOTOR_RIGHT_ENABLE, pw_RIGHT);
     analogWrite(MOTOR_LEFT_ENABLE, pw_LEFT);
