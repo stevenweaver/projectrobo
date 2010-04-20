@@ -37,72 +37,44 @@ def main():
     #keep the time since we've started, could be useful to use along with wheel encoder information if we know how fast yertle goes ;)
     time_started = time.time()
     while(1):
-        #This whole function desperately needs more thinking
-        
+        updateEverything()
+
         #Check if there are obstacles
         #If there are obstacles, move out of the way. Once we feel safe, update new point on map and recreate interpolation to include new point where we sit.
         #If obstacle, stop. Figure out which way to go, then try to go in the right direction again. 
-        isObstacle = calcObstacles()
-        #if isObstacle:
+        if obstacle():
+            moveOutTheWay()
 
         #Check if there are Beacons
         #Change direction to accommodate going through the beacon.
+        #Use rssi for proximity and override main path 
+        elif beacon():
+           goTowardsBeacon() 
+
+        #Otherwise continue going about our way
 
         #Check Directions
         #if calcNextPosition==calcPosition goto: calcDirection
 
-        #Based on the above curricula, we should have a direction we need to go in by now
-        #setDirection()
-
     return
 
-def calcObstacles():
+def obstacle():
     #Check if the obstacles are dangerously in the way
-    #Ultrasonic Sensors
-
-    if sd.us['right'] < 5 and sd.us['right'] < 5:
-        print "getting close to something so stop" 
-
-    elif sd.us['right'] < 5:
-        #Turn left
-        print "something is a smigeon on the right"
-
-    elif sd.us['left'] < 5:
-        #Turn right 
-        print "something is a smigeon to the left"
-
-    #Flex Sensors
-
-    #Check right side
-    if sd.flex['right'] < 450:
-        #Turn right 
-        print "we are running against a right wall"
-
-    elif sd.flex['right'] < 500: 
-        #Turn right 
-        print "we are scrapping against a right wall"
-
-    elif sd.flex['right'] < 653:
-        #Turn right 
-        print "we are hitting against a right wall"
-
-    #Check left side
-    if sd.flex['left'] < 400:
-        #Turn left
-        print "we are running against a left wall"
-        #WE might need to stop and reverse
-
-    elif sd.flex['left'] < 450: 
-        #Turn left 
-        print "we are scrapping against a left wall"
-
-    elif sd.flex['left'] < 603:
-        #Turn left 
-        print "we are hitting against a left wall"
+    if sd.us['right'] < RANGE_LIMIT or sd.us['left'] or sd.flex['left'] < LEFT_HITTING or sd.flex['right'] < RIGHT_HITTING:
+        return 1
 
     return 0
 
-def calcBeacons():
+def moveOutTheWay():
+    #Check for flex first
+    flex()
+
+    #Then check for ultrasonics
+    range_finders()
+
+    return 1
+
+def goTowardsBeacon():
     #Check if the Beacons are within range
     pos.append(sd.beacon)
     arr = np.array(pos)
@@ -110,18 +82,29 @@ def calcBeacons():
     std = arr.std()
 
     if mean < 85 and std < 5:
-        print "beacon is on the right, turn right" 
+        turn(right, mean)
+        goDir(FORWARD)
 
     elif mean > 95 and std < 5:
         #Turn left
-        print "beacon is on the left, turn left"
+        turn(left, mean - 90)
+        goDir(FORWARD)
 
     elif mean > 85 and mean < 95 and std < 5:
         #Turn right 
-        print "beacon is on the forward, turn forward"
+        goDir(FORWARD)
 
     if len(pos) > 10:
         del pos[0]
+
+    return 1
+
+
+def beacon():
+    if rssi[0].rx_distance() == 1
+        return 1
+
+    return 0
 
 def calcDirection():
     #this gets called when we need to calculate the next stop we should go to
@@ -170,21 +153,23 @@ def calcPosition():
 
     return
 
-def setDirection(command, type):
+def goFeet(command):
     #send direction to serial port
-    if type == "feet"
-        #97 ticks equals a foot 
-        ticks = command * 97;
-        ard_ser.write(send.sendStr(str(ticks) + 'T')
+    #97 ticks equals a foot 
+    ticks = command * 97;
+    ard_ser.write(send.sendStr(str(ticks) + 'T')
+    return 1
 
-    elif type == "direction"
-        ard_ser.write(send.sendStr(command))
+def goDir(command):
+    ard_ser.write(send.sendStr(command))
+    return 1
 
-    return
+def turn(dir, degrees):
+    return 1
+
 
 def updateSensors():
     #Parse serial information
-
     #Check to make sure we have a nice string
     sxml = ard_ser.readline()
     while sxml.find('<?xml version="1.0"?>') not 0:
@@ -194,7 +179,6 @@ def updateSensors():
 
 def updateGps():
     #Parse serial information
-
     #probably need error checking
     gps_data = gps_ser.readline()
     nmea.insert(0,NMEA(gps_data))
@@ -203,10 +187,15 @@ def updateGps():
 def updateRssi():
     #Parse serial information
     #Check to make sure we have a nice string
-
     #probably need error checking
     rssi_data = rssi_ser.readline()
     rssi.insert(0,RSSI(rssi_data))
+    return
+
+def updateEverything():
+    updateSensors()       
+    updateGps()
+    updateRssi()
     return
 
 def computeCourse(): 
@@ -229,3 +218,54 @@ def computeCourse():
             else:
                 yc = y[i] + j
             xc = x[i] + (yc-y[i])*(x[i+1] - x[i])/(y[i+1] - y[i]) 
+
+def flex():
+    #Flex Sensors
+
+    #Check right side
+    if sd.flex['right'] < RIGHT_HITTING:
+        turn(left, 15)
+
+    elif sd.flex['right'] < RIGHT_SCRAPPING: 
+        turn(left, 45)
+
+    elif sd.flex['right'] < RIGHT_DANGEROUS:
+        goDir(STOP)
+        goDir(REVERSE)
+        goFeet(4)
+        turn(left, 45)
+        goDir(FORWARD)
+
+    #Check left side
+    elif sd.flex['left'] < LEFT_HITTING:
+        turn(right, 15)
+
+    elif sd.flex['left'] < LEFT_SCRAPPING: 
+        turn(left, 45)
+
+    elif sd.flex['left'] < LEFT_DANGEROUS:
+        goDir(STOP)
+        goDir(REVERSE)
+        goFeet(4)
+        turn(left, 45)
+        goDir(FORWARD)
+
+def range_finders():
+    if sd.us['right'] < RANGE_LIMIT and sd.us['right'] < RANGE_LIMIT:
+        goDir(STOP)
+        turn(left, 90)
+        goFeet(1)
+        goDir(FORWARD)
+        goDir(STOP)
+        turn(right, 90)
+        goDir(FORWARD)
+
+    elif sd.us['right'] < RANGE_LIMIT:
+        #Turn left a little bit, then straighten out
+        turn(left, 15)
+        goDir(FORWARD)
+
+    elif sd.us['left'] < RANGE_LIMIT:
+        #Turn right a little bit, then straigten out 
+        turn(right, 15)
+        goDir(FORWARD)
