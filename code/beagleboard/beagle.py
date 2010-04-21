@@ -2,7 +2,7 @@
 import setup
 import serial
 import NMEA 
-import RSSI
+import rssi 
 from defines import * 
 from sendSerial import *
 from sensorData import *
@@ -22,6 +22,7 @@ current_position = []
 position_list = []
 
 waypoint_count = 0
+beacon_count = 0
 
 #Set up serial connections
 ard_ser = serial.Serial('/dev/arduino', 9600)
@@ -29,8 +30,6 @@ gps_ser = serial.Serial('/dev/gps', 9600)
 rssi_ser = serial.Serial('/dev/rssi', 19200)
 
 #print ser.readline()
-#We're going to "package" all of the sensor data and send it in clumps over the serial.
-
 main()
 
 def main():
@@ -52,9 +51,10 @@ def main():
            goTowardsBeacon() 
 
         #Otherwise continue going about our way
-
-        #Check Directions
-        #if calcNextPosition==calcPosition goto: calcDirection
+        #wayPoint is the new calcPosition()
+        elif atWaypoint():
+            waypoint_count+=1
+            goTowardsNewDestination()
 
     return
 
@@ -101,52 +101,84 @@ def goTowardsBeacon():
 
 
 def beacon():
-    if rssi[0].rx_distance() == 1
+    if rssi[0].rx_distance() == 1:
         return 1
 
     return 0
 
-def calcDirection():
+def atWaypoint():
+    current_point = calcPosition()
+
+    if (current_point[0] + current_point[1]) > (next_waypoint[0] + next_waypoint[1]):
+        return 1
+
+    return 0
+
+def goTowardsNewDestination():
     #this gets called when we need to calculate the next stop we should go to
     #Decide how to get there
+    goDir(STOP)
+    current_point = calcPosition()
+    
+    #Find distance and bearing to next position
+    distance = (current_point, next_waypoint)
+    angle =(current_point, next_waypoint) 
+
+    goFeet(distance)
+    turn(angle)
+    goDir(FORWARD)
+
     return
+
+def calcDistance(pt1, pt2):
+    return math.sqrt(math.pow((pt2[0] - pt1[0]),2)+math.pow((pt2[1] - pt1[1]), 2))
  
+def calcAngle(pt1, pt2):
+    #now we need to find angle A, since we know sinA is height/distance we can just find the inverse sine 
+    distance = calcDistance(pt1, pt2)
+    if abs(pt2[0] - pt1[0]) > abs(pt2[1] - pt1[1]):
+        diff = pt2[1] - pt[1]
+    #Else we want to calculate the difference in x
+    else:
+        diff = pt2[0] - pt[0] 
+
+    #Calculate the angle
+    return math.asin(diff/distance) 
+
+
 def calcPosition():
     #we have to use dead reckoning and compass information in order to get a good idea of where we have gone
+    if abs(next_waypoint[0] - last_waypoint[0]) > abs(next_waypoint[1] - last_waypoint[1]):
+        rev_orientation = 0 
+    else:
+        rev_orientation = 1
 
     #we can guess at the direction we are going by just calculating the degree difference between our two points
-    last_waypoint = waypoints(waypoint_count)
-    next_waypoint = waypoints(waypoint_count + 1)
+    last_waypoint = waypoints[waypoint_count]
+    next_waypoint = waypoints[waypoint_count + 1]
 
     #calculate the distance 
-    distance = math.sqrt(math.pow((next_waypoint[0] - last_waypoint[0]),2)+math.pow((next_waypoint[1] - last_waypoint[1]), 2)
-    
-    #now we need to find angle A, since we know sinA is height/distance we can just find the inverse sine 
-    diff_y = next_waypoint[1] - last_waypoint[1]
-
-    #TODO:
-    #this angle needs figured out more, diff_y might not always be the arc_sin but rather the arc_cos OTZ
-    angle = math.asin(diff_y/distance) 
+    angle = calcAngle(next_waypoint, last_waypoint)
 
     #TODO:
     #ok we should match that angle with the angle that we have on our compass, and take note of any inconsistencies
     #cur_compass = sd[0].compass
-
    
-    
     #we know the hypotenuse is motor1_ft and we know the angle we should be going, so we should be able to estimate our point 
     #these should be more or less equal, so i'm going to use one for now
     motor1_ft = sd[0].dis_traveled['a']  
     motor2_ft = sd[0].dis_traveled['b']  
 
     #TODO:same deal as before
-    delta_y = math.sin(angle) * motor1_ft
-    delta_x = math.cos(angle) * motor1_ft
-    
+    if rev_orientation:
+        delta_x = math.sin(angle) * motor1_ft
+        delta_y = math.cos(angle) * motor1_ft
+    else:
+        delta_y = math.sin(angle) * motor1_ft
+        delta_x = math.cos(angle) * motor1_ft
+
     current_point = ((last_waypoint[0] + delta_x),(last_waypoint[0] + delta_y))
 
-    #TODO: Check to see if the current_point is greater than the next point, if so then we should increment waypoint_count
-   
     #TODO: 
     #check out the calculated information with the gps
     #gps
@@ -157,7 +189,7 @@ def goFeet(command):
     #send direction to serial port
     #97 ticks equals a foot 
     ticks = command * 97;
-    ard_ser.write(send.sendStr(str(ticks) + 'T')
+    ard_ser.write(send.sendStr(str(ticks) + 'T'))
     return 1
 
 def goDir(command):
@@ -167,12 +199,11 @@ def goDir(command):
 def turn(dir, degrees):
     return 1
 
-
 def updateSensors():
     #Parse serial information
     #Check to make sure we have a nice string
     sxml = ard_ser.readline()
-    while sxml.find('<?xml version="1.0"?>') not 0:
+    while sxml.find('<?xml version="1.0"?>') != 0:
         sxml = ser.readline()
     sd.insert(0,sensorData(sxml))
     return
@@ -193,15 +224,15 @@ def updateRssi():
     return
 
 def updateEverything():
-    updateSensors()       
+    updateSensors()
     updateGps()
     updateRssi()
     return
 
+#We can have this computed beforehand
 def computeCourse(): 
     #every point on the course
     #not sure if we need this, maybe for timing
-
     for i in range(len(x) - 1):
         if abs(x[i+1] - x[i]) > abs(y[i+1] - y[i]):
             for j in range(abs(x[i+1]-x[i])):
@@ -221,7 +252,6 @@ def computeCourse():
 
 def flex():
     #Flex Sensors
-
     #Check right side
     if sd.flex['right'] < RIGHT_HITTING:
         turn(left, 15)
@@ -251,7 +281,7 @@ def flex():
         goDir(FORWARD)
 
 def range_finders():
-    if sd.us['right'] < RANGE_LIMIT and sd.us['right'] < RANGE_LIMIT:
+    if sd.us['right'] < RANGE_LIMIT and sd.us['left'] < RANGE_LIMIT:
         goDir(STOP)
         turn(left, 90)
         goFeet(1)
