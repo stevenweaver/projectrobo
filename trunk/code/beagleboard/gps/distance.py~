@@ -50,15 +50,15 @@ def getCoor(p):
     coor = [x,y]
     return coor
 
-##p1 = [3246.6449, 11704.2028]
-##p2 = [3246.6531,11704.2099]
-##dp1 = toDec(p1)
-##dp2 = toDec(p2)
-##distance = havDistance(dp1, dp2)
-##coor = getCoor(p1)
-##
-##print "p1 To dec:" , dp1
-##print "p2 To dec:" , dp2
-##print "x,y = " ,coor
-##print "distance is: ",distance
-##print "Bearing is:",calcBearing(dp2, dp1)
+p1 = [3246.6449, 11704.2028]
+p2 = [3246.6531,11704.2099]
+dp1 = toDec(p1)
+dp2 = toDec(p2)
+distance = havDistance(dp1, dp2)
+coor = getCoor(p1)
+
+print "p1 To dec:" , dp1
+print "p2 To dec:" , dp2
+print "x,y = " ,coor
+print "distance is: ",distance
+print "Bearing is:",calcBearing(dp2, dp1)

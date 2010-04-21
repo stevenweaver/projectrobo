@@ -1,0 +1,19 @@
+#!/usr/bin/python
+import NMEA 
+import distance
+import serial
+import time 
+
+Goal = [3246.6448,11704.2041]
+
+while(1):
+    gps_serial = serial.Serial('/dev/ttyUSB0', 9600)
+    gps_data = gps_serial.readline()
+    nmea = NMEA.NMEA(gps_data)
+    positionA = [nmea.lat, nmea.lon]
+    dis = distance.havDistance(Goal, positionA)
+    #if the robot is moving find the bearing 
+    bearing = distance.calcBearing(positionA , Goal)
+    #we need compass info to find direction of Goal
+    print dis
+    print bearing
