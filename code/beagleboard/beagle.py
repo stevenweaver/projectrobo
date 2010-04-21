@@ -3,6 +3,7 @@ import setup
 import serial
 import NMEA 
 import rssi 
+import distance
 from defines import * 
 from sendSerial import *
 from sensorData import *
@@ -14,6 +15,11 @@ x = [125, 256, 294, 85, 85, 80, 75, 75, 60, 60, 16, 16, 8, 8, 48, 48, 10, 10, 44
 y = [170, 170, 66, 66, 55, 50, 50, 42, 42, 10, 10, 87, 87, 120, 127, 135, 135, 140, 150, 152, 167]
 waypoints = zip(x,y)
 
+gps_waypoints = [[3246.6417,11704.2338],
+                [3246.6428,11704.2037],
+                [3246.6350,11704.1956],
+                [3246.6224,11704.2317],
+                [3246.6306,11704.2410]]
 #initialization, our huge lists of information
 sd = []
 nmea = [] 
@@ -100,18 +106,24 @@ def goTowardsBeacon():
     return 1
 
 
-def beacon():
+def beaconDetect():
     if rssi[0].rx_distance() == 1:
         return 1
 
     return 0
 
-def atWaypoint():
+def atGpsWaypoint(gw):
+    updateGps()
+    if nmea.satellites > 6:
+        if distance.havDistance([nmea.lat,nmea.lon], gw) < 5  :
+            return 1
+        return 0
+    return -1
+
+def atWaypoint(wp):
     current_point = calcPosition()
-
-    if (current_point[0] + current_point[1]) > (next_waypoint[0] + next_waypoint[1]):
+    if math.hypot(current_point[0] + current_point[1]) == math.hypot(wp[0] + wp[1]):
         return 1
-
     return 0
 
 def goTowardsNewDestination():
@@ -130,8 +142,15 @@ def goTowardsNewDestination():
 
     return
 
-def calcDistance(pt1, pt2):
-    return math.sqrt(math.pow((pt2[0] - pt1[0]),2)+math.pow((pt2[1] - pt1[1]), 2))
+def calcGpsDistance(gw):
+    updateGps()
+    if nmea.satellites > 5:
+        return distance.havDistance([nmea.lat , nmea.lon], gps_waypoint[gw])
+    return -1
+
+def calcDistance(pt1, pt2, gw):
+    return  math.sqrt(math.pow((pt2[0] - pt1[0]),2)+math.pow((pt2[1] - pt1[1]), 2))
+    
  
 def calcAngle(pt1, pt2):
     #now we need to find angle A, since we know sinA is height/distance we can just find the inverse sine 
@@ -141,11 +160,10 @@ def calcAngle(pt1, pt2):
     #Else we want to calculate the difference in x
     else:
         diff = pt2[0] - pt[0] 
-
     #Calculate the angle
     return math.asin(diff/distance) 
 
-
+    
 def calcPosition():
     #we have to use dead reckoning and compass information in order to get a good idea of where we have gone
     if abs(next_waypoint[0] - last_waypoint[0]) > abs(next_waypoint[1] - last_waypoint[1]):
@@ -182,8 +200,15 @@ def calcPosition():
     #TODO: 
     #check out the calculated information with the gps
     #gps
-
-    return
+    updateGps()
+    if nmea.satellites > 6:
+        gps_point = distance.getCoor([nmea.lat , nmea.lon])
+        current_point_hypot = math.hypot(current_point[0],current_point[1])
+        gps_point_hypot = math.hypot(gps_point[0],gps_point[1])
+        point_diff = math.fabs(current_point_hypot - gps_point_hypot)
+        if point_diff > 20:
+            current_point = gps_point
+    return current_point
 
 def goFeet(command):
     #send direction to serial port
