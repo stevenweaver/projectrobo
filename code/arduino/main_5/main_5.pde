@@ -67,7 +67,7 @@
 
 // the desired distance in ticks 
 // can be converted 197 ticks = 1 revolution = 2 feet
-#define SETPOINT 135
+#define SETPOINT 300
 
 
 // turns
@@ -214,7 +214,7 @@ PID_LEFT.SetMode(AUTO);
 
   
   // we are in forward mode
-   Motor_Driver.Left();
+   Motor_Driver.Right();
   Setpoint = SETPOINT;
   
   PID_RIGHT.SetSampleTime(300);
@@ -231,7 +231,8 @@ void loop() {
     Input_LEFT = clicks_LEFT - previous_clicks_LEFT;
     Input_RIGHT = clicks_RIGHT - previous_clicks_RIGHT;
     
-
+    previous_clicks_LEFT = clicks_LEFT;
+    previous_clicks_RIGHT = clicks_RIGHT;
 
     PID_RIGHT.Compute();
     PID_LEFT.Compute();
@@ -270,8 +271,7 @@ void loop() {
     //    analogWrite(MOTOR_RIGHT_ENABLE, Output_RIGHT);
 //    analogWrite(MOTOR_LEFT_ENABLE, Output_LEFT);
     
-    previous_clicks_LEFT = clicks_LEFT;
-    previous_clicks_RIGHT = clicks_RIGHT;
+
                 Serial.println("input  RIGHT: ");
     Serial.println(Input_RIGHT);
     
