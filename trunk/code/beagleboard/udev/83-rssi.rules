@@ -1,1 +1,1 @@
-KERNEL=="ttyUSB?", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", ATTRS{serial}=="A8007Z1P", SYMLINK+="rssi"
+KERNEL=="ttyUSB?", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", ATTRS{serial}=="A600dZOH", SYMLINK+="rssi"
