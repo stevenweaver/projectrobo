@@ -6,6 +6,7 @@ class RSSI:
         self.RxNumber = 0.0
         self.RxRSSI = 0x00
         self.distance = 0
+        self.rx_distacne = 0
         self.handle_line(line)
 
     def handle_line(self, line):
@@ -14,6 +15,8 @@ class RSSI:
             self.RxNumber = int(sline[1])
             self.RxRSSI = sline[3]
             self.distance = int(sline[3],16)
+            self.rx_distance = rx_distance()
+            
         else:
             return "Not RSSI"
         
@@ -36,18 +39,18 @@ class RSSI:
         return
  
 
-
-
-if __name__ == '__main__':
-    # Self-testing code goes here.
-    rssi = [] 
-    lines = [
-        "BeaconRxNumber: 01    BeaconRxRSSI: 0xE0",
-    ]
-    for line in lines:
-        rssi.append(RSSI(line))
-
-    print rssi[0].RxNumber
-    print rssi[0].RxRSSI
-    print rssi[0].distance
-    print rssi[0].rx_distance()
+##
+##
+##if __name__ == '__main__':
+##    # Self-testing code goes here.
+##    rssi = [] 
+##    lines = [
+##        "BeaconRxNumber: 01    BeaconRxRSSI: 0xE0",
+##    ]
+##    for line in lines:
+##        rssi.append(RSSI(line))
+##
+##    print rssi[0].RxNumber
+##    print rssi[0].RxRSSI
+##    print rssi[0].distance
+##    print rssi[0].rx_distance()
