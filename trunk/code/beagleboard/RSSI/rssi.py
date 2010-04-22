@@ -11,7 +11,7 @@ class RSSI:
     def handle_line(self, line):
         if line[0] == 'B':
             sline = line.split()
-            self.RxNumber = sline[1]
+            self.RxNumber = int(sline[1])
             self.RxRSSI = sline[3]
             self.distance = int(sline[3],16)
         else:
