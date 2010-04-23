@@ -467,8 +467,13 @@ void motor_LEFT_tick() {
 void checkDone(){
  
  
-  if (SETPOINT - clicks_RIGHT < EPSILON ) 
-  done = 1;
+  if (SETPOINT - clicks_RIGHT < EPSILON ) {
+    
+   delay(500);
+   done = 1;
+  
+  StartTime = millis();
+  }
   else
   done = 0;
   
