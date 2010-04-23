@@ -234,9 +234,9 @@ PID_LEFT.SetMode(AUTO);
   
   PID_RIGHT.SetSampleTime(10);
   PID_LEFT.SetSampleTime(10);
-  Speed = 5; // ticks per unit time
+  Speed = 2; // ticks per unit time
   
-   MsTimer2::set(10, do_PID); // 500ms period
+   MsTimer2::set(20, do_PID); // 500ms period
    MsTimer2::start();
 }
 
@@ -297,8 +297,8 @@ void loop() {
 //            Serial.println("output RIGHT: ");
 //    Serial.println(Output_RIGHT);
 ////    
-//        Serial.println("clicks RIGHT: ");
-//    Serial.println(clicks_RIGHT);
+       Serial.println("clicks RIGHT: ");
+   Serial.println(clicks_RIGHT);
 //////      
 ////        Serial.println("PWM RIGHT: ");
 ////    Serial.println(pw_RIGHT);
@@ -308,8 +308,8 @@ void loop() {
 //    Serial.println(Input_LEFT);
 ////               Serial.println("output LEFT: ");
 ////    Serial.println(Output_LEFT);
-//             Serial.println("clicks LEFT: ");
-//   Serial.println(clicks_LEFT);
+            Serial.println("clicks LEFT: ");
+   Serial.println(clicks_LEFT);
 //////      
 //       Serial.println("PWM LEFT: ");
 //    Serial.println(pw_LEFT);
@@ -609,10 +609,10 @@ void do_PID(){
 
       if (Input_LEFT < Speed)
       
-      pw_LEFT = pw_LEFT + 4;    
+      pw_LEFT = pw_LEFT + 1;    
     
                 else if (Input_LEFT > Speed)
-                      pw_LEFT = pw_LEFT - 4;  
+                      pw_LEFT = pw_LEFT - 1;  
     }
     else
      pw_LEFT = 0;
@@ -623,9 +623,9 @@ void do_PID(){
 
          if (Input_RIGHT < Speed)
       
-            pw_RIGHT = pw_RIGHT + 5;  
+            pw_RIGHT = pw_RIGHT + 1;  
             else if (Input_RIGHT > Speed)
-                      pw_RIGHT = pw_RIGHT - 5; 
+                      pw_RIGHT = pw_RIGHT - 1; 
     }
     else
       pw_RIGHT = 0;
