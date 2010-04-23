@@ -133,8 +133,8 @@ def goTowardsNewDestination():
     current_point = calcPosition()
     
     #Find distance and bearing to next position
-    distance = (current_point, next_waypoint)
-    angle =(current_point, next_waypoint) 
+    distance = calcDistance(current_point, next_waypoint)
+    angle = calcAngle(current_point, next_waypoint) 
 
     goFeet(distance)
     turn(angle)
@@ -195,12 +195,23 @@ def calcPosition():
         delta_y = math.sin(angle) * motor1_ft
         delta_x = math.cos(angle) * motor1_ft
 
-    current_point = ((last_waypoint[0] + delta_x),(last_waypoint[0] + delta_y))
+    if rev_orientation:
+        if next_waypoint[1] < last_waypoint[1]: 
+            current_point = ((last_waypoint[0] + delta_x),(last_waypoint[1] - delta_y))
+        else:
+            current_point = ((last_waypoint[0] + delta_x),(last_waypoint[1] + delta_y))
+
+    else: 
+        if next_waypoint[0] < last_waypoint[0]: 
+            current_point = ((last_waypoint[0] - delta_x),(last_waypoint[1] - delta_y))
+        else:
+            current_point = ((last_waypoint[0] + delta_x),(last_waypoint[1] + delta_y))
 
     #TODO: 
     #check out the calculated information with the gps
-    #gps
+    #gps shouldn't just blatantly override the current_point yo
     updateGps()
+
     if nmea.satellites > 6:
         gps_point = distance.getCoor([nmea.lat , nmea.lon])
         current_point_hypot = math.hypot(current_point[0],current_point[1])
@@ -222,6 +233,8 @@ def goDir(command):
     return 1
 
 def turn(dir, degrees):
+    #Here we change the degrees into a compass reading
+    #According to http://code.google.com/p/projectrobo/wiki/Compass_Characterization
     return 1
 
 def updateSensors():
