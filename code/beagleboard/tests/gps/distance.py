@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import math
 
+
 #Convert Coor. to decimal
 def toDec(a):
     lat =  32 +((a[0]-3200.0)/60)
@@ -16,7 +17,18 @@ def calcBearing(p1, p2):
         - math.sin(p1[0]) * math.cos(p2[0]) * math.cos(dLon)
     a = math.atan2(y, x)
     r = math.degrees(a)
-    return r
+    bearing = math.fmod((r + 360.0), 360)
+    return bearing
+
+def calcRelBearing(bearing , heading):
+    
+    rel_bearing = bearing - heading
+    if rel_bearing > 180:
+        rel_bearing = bearing - (heading + 360)
+    elif rel_bearing < -180:
+        rel_bearing = bearing - (heading - 360)
+    return rel_bearing
+
 
 #lat2 and lon2 can always be the checkmarks
 def havDistance(dp1 , dp2):
@@ -50,8 +62,9 @@ def getCoor(p):
     coor = [x,y]
     return coor
 
-##p1 = [3246.6449, 11704.2028]
-##p2 = [3246.6531,11704.2099]
+
+##p1 = [3246.6417,11704.2338]
+##p2 = [3246.6428,11704.2037]
 ##dp1 = toDec(p1)
 ##dp2 = toDec(p2)
 ##distance = havDistance(dp1, dp2)
@@ -62,3 +75,4 @@ def getCoor(p):
 ##print "x,y = " ,coor
 ##print "distance is: ",distance
 ##print "Bearing is:",calcBearing(dp2, dp1)
+
