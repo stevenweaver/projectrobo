@@ -28,15 +28,19 @@ current_position = []
 position_list = []
 
 waypoint_count = 0
-beacon_count = 0
+beacon_count = 1
 
 #Set up serial connections
 ard_ser = serial.Serial('/dev/arduino', 9600)
 gps_ser = serial.Serial('/dev/gps', 9600)
-rssi_ser = serial.Serial('/dev/rssi', 19200)
+rssi_ser = serial.Serial('/dev/rssi', 115200)
 
 #print ser.readline()
 main()
+
+##############
+## MAIN CODE##
+##############
 
 def main():
     #keep the time since we've started, could be useful to use along with wheel encoder information if we know how fast yertle goes ;)
@@ -64,6 +68,10 @@ def main():
 
     return
 
+###################
+##OBJECT AVOIDING##
+###################
+
 def obstacle():
     #Check if the obstacles are dangerously in the way
     if sd.us['right'] < RANGE_LIMIT or sd.us['left'] or sd.flex['left'] < LEFT_HITTING or sd.flex['right'] < RIGHT_HITTING:
@@ -79,6 +87,11 @@ def moveOutTheWay():
     range_finders()
 
     return 1
+############END################
+
+####################
+## TRACKING BEACON##
+####################
 
 def goTowardsBeacon():
     #Check if the Beacons are within range
@@ -105,65 +118,38 @@ def goTowardsBeacon():
 
     return 1
 
-
+#FIND IF THE BEACON IN RANGE
+# RETURN 4 ~= 40FT, 3 ~=(20-40)FT, 2 ~= (10-20)FT, 1 ~= (3-10)FT
+#       0 IS UNDER THE BEACON, -1 IF NOT DETECTED
 def beaconDetect():
-    if rssi[0].rx_distance() == 1:
-        return 1
+    updataRssi()
+    if rssi_d.RxNumber == beacon_count:
+        return rssi.rx_distance()
+    return -1
+############END################
 
-    return 0
-
+####################################
+##LOCATING ROBOT AND DEAD-RECONING##
+####################################
+#WAYPOINT MATCHING USING GPS DATA
+#RETURN: 0 IF WITHIN 5FT, 1 WITHIN 10FT, 2 MORETHAN 10FT,AND -1 BAD DATA
 def atGpsWaypoint(gw):
     updateGps()
     if nmea.satellites > 6:
-        if distance.havDistance([nmea.lat,nmea.lon], gw) < 5  :
+        if distance.havDistance([nmea.lat,nmea.lon], gw) < 6  :
+            return 0
+        if distance.havDistance([nmea.lat,nmea.lon], gw) < 11  :
             return 1
-        return 0
+        return 2
     return -1
-
+#WAYPOINT MATCHING USING DEAD-RECONING
+#RETURN: 0 IF NOT, 1 IF AT WAYPOINT
 def atWaypoint(wp):
     current_point = calcPosition()
-    if math.hypot(current_point[0] + current_point[1]) == math.hypot(wp[0] + wp[1]):
+    if (math.hypot(current_point[0] + current_point[1]) == math.hypot(wp[0] + wp[1])):
         return 1
     return 0
 
-def goTowardsNewDestination():
-    #this gets called when we need to calculate the next stop we should go to
-    #Decide how to get there
-    goDir(STOP)
-    current_point = calcPosition()
-    
-    #Find distance and bearing to next position
-    distance = calcDistance(current_point, next_waypoint)
-    angle = calcAngle(current_point, next_waypoint) 
-
-    goFeet(distance)
-    turn(angle)
-    goDir(FORWARD)
-
-    return
-
-def calcGpsDistance(gw):
-    updateGps()
-    if nmea.satellites > 5:
-        return distance.havDistance([nmea.lat , nmea.lon], gps_waypoint[gw])
-    return -1
-
-def calcDistance(pt1, pt2, gw):
-    return  math.sqrt(math.pow((pt2[0] - pt1[0]),2)+math.pow((pt2[1] - pt1[1]), 2))
-    
- 
-def calcAngle(pt1, pt2):
-    #now we need to find angle A, since we know sinA is height/distance we can just find the inverse sine 
-    distance = calcDistance(pt1, pt2)
-    if abs(pt2[0] - pt1[0]) > abs(pt2[1] - pt1[1]):
-        diff = pt2[1] - pt1[1]
-    #Else we want to calculate the difference in x
-    else:
-        diff = pt2[0] - pt1[0] 
-    #Calculate the angle
-    return math.asin(diff/distance) 
-
-    
 def calcPosition():
     #we have to use dead reckoning and compass information in order to get a good idea of where we have gone
     if abs(next_waypoint[0] - last_waypoint[0]) > abs(next_waypoint[1] - last_waypoint[1]):
@@ -195,32 +181,73 @@ def calcPosition():
         delta_y = math.sin(angle) * motor1_ft
         delta_x = math.cos(angle) * motor1_ft
 
-    if rev_orientation:
-        if next_waypoint[1] < last_waypoint[1]: 
-            current_point = ((last_waypoint[0] + delta_x),(last_waypoint[1] - delta_y))
-        else:
-            current_point = ((last_waypoint[0] + delta_x),(last_waypoint[1] + delta_y))
+    current_point = ((last_waypoint[0] + delta_x),(last_waypoint[0] + delta_y))
+    return current_point
 
-    else: 
-        if next_waypoint[0] < last_waypoint[0]: 
-            current_point = ((last_waypoint[0] - delta_x),(last_waypoint[1] - delta_y))
-        else:
-            current_point = ((last_waypoint[0] + delta_x),(last_waypoint[1] + delta_y))
-
-    #TODO: 
-    #check out the calculated information with the gps
-    #gps shouldn't just blatantly override the current_point yo
+#ROBOT LOCATION FROM GPS
+#RETURN: POINT IF GOOD DATA, -1 IF BAD DATA
+def calcGpsPosition():
     updateGps()
-
     if nmea.satellites > 6:
         gps_point = distance.getCoor([nmea.lat , nmea.lon])
+        return gps_point
+    return -1
+#FIND DIFFERENCE BETWEEN GPS and DEAD RECONING
+#RERTURN: DIFFERENT IN FEET, -1 IF GPS DATA BAD
+def compairLoca():
+    gps_point = calcGpsPosition()
+    if gps_point != -1:
+        current_point = calcPosition()
         current_point_hypot = math.hypot(current_point[0],current_point[1])
         gps_point_hypot = math.hypot(gps_point[0],gps_point[1])
         point_diff = math.fabs(current_point_hypot - gps_point_hypot)
-        if point_diff > 20:
-            current_point = gps_point
-    return current_point
+        return point_diff
+    return -1
+############END################
 
+################################
+## DISTANCE ANGLE CALCULATIONS##
+################################
+#GPS DISTANCE CALCUATION
+def calcGpsDistance(gw):
+    updateGps()
+    if nmea.satellites > 5:
+        return distance.havDistance([nmea.lat , nmea.lon], gps_waypoint[gw])
+    return -1
+#TWO DEAD RECONING DISTANCE CALCUATION
+def calcDistance(pt1, pt2):
+    return  math.sqrt(math.pow((pt2[0] - pt1[0]),2)+math.pow((pt2[1] - pt1[1]), 2))
+ 
+def calcAngle(pt1, pt2):
+    #now we need to find angle A, since we know sinA is height/distance we can just find the inverse sine 
+    distance = calcDistance(pt1, pt2)
+    if abs(pt2[0] - pt1[0]) > abs(pt2[1] - pt1[1]):
+        diff = pt2[1] - pt[1]
+    #Else we want to calculate the difference in x
+    else:
+        diff = pt2[0] - pt[0] 
+    #Calculate the angle
+    return math.asin(diff/distance) 
+############END################
+
+##############################
+##ROBOT DRIVING INSTRUCTIONS##
+##############################
+def goTowardsNewDestination():
+    #this gets called when we need to calculate the next stop we should go to
+    #Decide how to get there
+    goDir(STOP)
+    current_point = calcPosition()
+    
+    #Find distance and bearing to next position
+    distance = (current_point, next_waypoint)
+    angle =(current_point, next_waypoint) 
+
+    goFeet(distance)
+    turn(angle)
+    goDir(FORWARD)
+
+    return
 def goFeet(command):
     #send direction to serial port
     #97 ticks equals a foot 
@@ -233,10 +260,12 @@ def goDir(command):
     return 1
 
 def turn(dir, degrees):
-    #Here we change the degrees into a compass reading
-    #According to http://code.google.com/p/projectrobo/wiki/Compass_Characterization
     return 1
+############END################
 
+###########################
+## UPDATAING FROM SENSORS##
+###########################
 def updateSensors():
     #Parse serial information
     #Check to make sure we have a nice string
@@ -266,6 +295,7 @@ def updateEverything():
     updateGps()
     updateRssi()
     return
+############END################
 
 #We can have this computed beforehand
 def computeCourse(): 
