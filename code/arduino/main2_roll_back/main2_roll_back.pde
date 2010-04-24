@@ -129,7 +129,7 @@ char xml[MAX_STRING];
 
 char buff[]= "0000000000";
 int drive=0; 
-int ticks=0; 
+int ticks_thousands= 0  ,  ticks_hundereds= 0, ticks_tens = 0 , ticks_ones = 0; 
 
 
 /*******************SETUP*****************/
@@ -279,16 +279,16 @@ void loop() {
     //else myPID.SetTunings(3,4,1); //comparatively moderate
     
     
-     Serial.println("Clicks Left: ");
-      Serial.println(clicks_LEFT);
-                 Serial.println("PWM Left: ");
-      Serial.println(Output_LEFT);
-           Serial.println("Clicks Right: ");
-      Serial.println(clicks_RIGHT);
+    // Serial.println("Clicks Left: ");
+   //   Serial.println(clicks_LEFT);
+   //              Serial.println("PWM Left: ");
+    //  Serial.println(Output_LEFT);
+   //        Serial.println("Clicks Right: ");
+   //   Serial.println(clicks_RIGHT);
       
 
-           Serial.println("PWM Right: ");
-      Serial.println(Output_RIGHT);
+      //     Serial.println("PWM Right: ");
+    //  Serial.println(Output_RIGHT);
       
     
     PID_RIGHT.Compute();
@@ -393,12 +393,23 @@ void receiveData() {
       Serial.println(drive);
     }
     if (buff[10]=='T') {
-      ticks=int(buff[9]);
-      ticks-= 48;
-      ticks*=1000;
-      Setpoint = ticks;
-      Serial.print("tick: ");
-      Serial.println(ticks);
+      ticks_ones = int(buff[9]);
+      ticks_ones -= 48;
+
+      ticks_tens = int(buff[8]);
+      ticks_tens -= 48;
+
+      ticks_hundereds = int(buff[7]);
+      ticks_hundereds -= 48;
+      ticks_thousands = int(buff[6]);
+      ticks_thousands -= 48;
+      
+      
+      Setpoint =( 1000 * ticks_thousands +  100 * ticks_hundereds + 10 * ticks_tens + ticks_ones);
+      //ticks*=1000;
+     // Setpoint = ticks;
+      Serial.print("serial setpoint ");
+      Serial.println(Setpoint);
     }
 
   }
