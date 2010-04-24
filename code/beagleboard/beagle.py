@@ -173,7 +173,6 @@ def calcPosition():
     motor1_ft = sd[0].dis_traveled['a']  
     motor2_ft = sd[0].dis_traveled['b']  
 
-    #TODO:same deal as before
     if rev_orientation:
         delta_x = math.sin(angle) * motor1_ft
         delta_y = math.cos(angle) * motor1_ft
@@ -181,8 +180,40 @@ def calcPosition():
         delta_y = math.sin(angle) * motor1_ft
         delta_x = math.cos(angle) * motor1_ft
 
-    current_point = ((last_waypoint[0] + delta_x),(last_waypoint[0] + delta_y))
-    return current_point
+    if rev_orientation:
+        if next_waypoint[1] < last_waypoint[1]: 
+            current_point = ((last_waypoint[0] + delta_x),(last_waypoint[1] - delta_y))
+        else:
+            current_point = ((last_waypoint[0] + delta_x),(last_waypoint[1] + delta_y))
+
+    else: 
+        if next_waypoint[0] < last_waypoint[0]: 
+            current_point = ((last_waypoint[0] - delta_x),(last_waypoint[1] - delta_y))
+        else:
+            current_point = ((last_waypoint[0] + delta_x),(last_waypoint[1] + delta_y))
+
+#Compaass
+def checkCompass(desired_degree):
+    #Make sure we have a decent sample rate
+    #Reply back with veering right, veering left, going straight
+    sum = 0
+    if abs(sd.compass[0] - desired_degree) > 10:
+        #TODO:Make sure it's not a blip
+        if len(sd) > 10: 
+            for i in range(10):
+                #Sum up the differences
+                sum+= (sd.compass[0] - desired_degree + 360) % 360
+
+            avg = sum/10
+            if avg > 180:
+                #Veering off left 
+                return "left"
+            elif avg > 3:
+                #Veering off right 
+                return "right"
+            else:
+                #Going straight enough
+                return "good"
 
 #ROBOT LOCATION FROM GPS
 #RETURN: POINT IF GOOD DATA, -1 IF BAD DATA
@@ -229,6 +260,7 @@ def calcAngle(pt1, pt2):
     #Calculate the angle
     return math.asin(diff/distance) 
 ############END################
+
 
 ##############################
 ##ROBOT DRIVING INSTRUCTIONS##
