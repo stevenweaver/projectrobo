@@ -163,6 +163,7 @@ def calcPosition():
 
     #calculate the distance 
     angle = calcAngle(next_waypoint, last_waypoint)
+    deg_angle = math.degree(angle)
 
     #TODO:
     #ok we should match that angle with the angle that we have on our compass, and take note of any inconsistencies
@@ -225,7 +226,7 @@ def calcGpsPosition():
     return -1
 #FIND DIFFERENCE BETWEEN GPS and DEAD RECONING
 #RERTURN: DIFFERENT IN FEET, -1 IF GPS DATA BAD
-def compairLoca():
+def compareLocation():
     gps_point = calcGpsPosition()
     if gps_point != -1:
         current_point = calcPosition()
