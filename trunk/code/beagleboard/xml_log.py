@@ -19,16 +19,18 @@ while sxml.find('<?xml version="1.0"?>') != 0:
 
 print sxml
 
-f = open('./log/xml_' + str(int(time.time())) , 'w')
+f = open(setup.HOME + '/log/xml_' + str(int(time.time())) , 'w')
+h = open(setup.HOME + '/log/xml_sensors_' + str(int(time.time())) , 'w')
 
 while 1:
     sxml = ser.readline()
     sd = sensorData(sxml)
     f.write(sxml + '\n')
 
-    print "right flex: " + str(sd.flex['right']) +'\n'
-    print "left flex: " + str(sd.flex['left']) +'\n'
+    h.write("right flex: " + str(sd.flex['right']) +'\n')
 
-    print "right ultrasonic: " + str(sd.us['right']) +'\n'
-    print "left ultrasonic: " + str(sd.us['left']) +'\n'
+    h.write("left flex: " + str(sd.flex['left']) +'\n')
+
+    h.write("right ultrasonic: " + str(sd.us['right']) +'\n')
+    h.write("left ultrasonic: " + str(sd.us['left']) +'\n')
     #print sxml
