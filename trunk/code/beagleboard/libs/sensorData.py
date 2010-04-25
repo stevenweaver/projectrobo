@@ -9,7 +9,6 @@ class sensorData:
         self.flex = self.get_flex()
         self.us = self.get_us()
         self.beacon = self.get_data('b')
-        self.dis_traveled = self.get_clicks()
 
     def get_data(self,text):
         return self.get_text(self.dom.getElementsByTagName(text)[0].childNodes)
@@ -41,12 +40,6 @@ class sensorData:
         right= int(self.get_text(us.getElementsByTagName('r')[0].childNodes))
         return dict(left=left,right=right)
 
-    def get_clicks(self):
-        we = self.dom.getElementsByTagName('we')[0]
-        a = int(self.get_text(we.getElementsByTagName('a')[0].childNodes)) 
-        b = int(self.get_text(we.getElementsByTagName('b')[0].childNodes))
-        return dict(a=a,b=b)
-
     def get_text(self,nodelist):
         rc = ""
         for node in nodelist:
@@ -56,7 +49,7 @@ class sensorData:
 
 if __name__ == '__main__':
     # Self-testing code goes here.
-    sxml= "<?xml version=\"1.0\"?><sensor><c>2563.9</c><f><l>497</l><r>400</r></f><us><l>80</l><r>79</r></us><b>87</b><we><a>2000</a><b>1998</b></we></sensor>"
+    sxml= "<?xml version=\"1.0\"?><sensor><c>2563.9</c><f><l>497</l><r>400</r></f><us><l>80</l><r>79</r></us><b>87</b></sensor>"
     sd = []
     sd.append(sensorData(sxml))
     sd.append(sensorData(sxml))
