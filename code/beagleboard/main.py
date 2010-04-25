@@ -1,14 +1,13 @@
 #Import the modules we need
 import setup
-import comm
 import motor
 import avoidance
 import beacon
 import path_find
+import comm
 from defines import * 
 import numpy as np
 import time
-
 
 #main loop 
 def main():
@@ -20,8 +19,11 @@ def main():
     current_position = [] 
     position_list = []
 
+    pf = pathFind.pathFind()
+
     #keep the time since we've started, could be useful to use along with wheel encoder information if we know how fast yertle goes ;)
     time_started = time.time()
+
     while(1):
         sd.insert(0,ser.updateSensors())
         gps_list.insert(0,ser.updateGps())
@@ -41,10 +43,9 @@ def main():
 
         #Otherwise continue going about our way
         #wayPoint is the new calcPosition()
-        elif pathFind.atWaypoint():
-            pathFind.waypoint_count+=1
-            pathFind.goTowardsNewDestination()
+        elif pf.atWaypoint(sd):
+            pf.waypoint_count+=1
+            pf.goTowardsNewDestination()
     return
 
 main()
-
