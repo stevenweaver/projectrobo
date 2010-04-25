@@ -18,7 +18,6 @@ def main():
     rssi_list = [] 
     current_position = [] 
     position_list = []
-
     pf = pathFind.pathFind()
 
     #keep the time since we've started, could be useful to use along with wheel encoder information if we know how fast yertle goes ;)
