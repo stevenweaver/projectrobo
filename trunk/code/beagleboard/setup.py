@@ -2,7 +2,7 @@
 import sys
 #QA
 HOME = '/home/steven/projectrobo/code/beagleboard' 
-
+QA = 1
 #HAPPYCAT
 #HOME = '/home/steven/share/school/senior_design/projectrobo/code/beagleboard' 
 
