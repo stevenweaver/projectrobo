@@ -1,0 +1,11 @@
+Beacon number:  1  Distance:  1
+Beacon number:  1  Distance:  1
+Beacon number:  1  Distance:  1
+Beacon number:  1  Distance:  3
+Beacon number:  1  Distance:  3
+Beacon number:  1  Distance:  1
+Beacon number:  1  Distance:  1
+Beacon number:  1  Distance:  3
+Beacon number:  1  Distance:  2
+Beacon number:  1  Distance:  2
+Beacon number:  1  Distance:  1
