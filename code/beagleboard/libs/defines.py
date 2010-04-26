@@ -15,3 +15,6 @@ RIGHT_DANGEROUS = 653
 
 #Ultrasonic Limit
 RANGE_LIMIT = 5
+
+#RSSI rx_distance Calc
+UNDER_BEACON = 0

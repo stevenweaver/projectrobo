@@ -1,13 +1,14 @@
+import setup
 import nmea
 
 class gps:
     def __init__(self):
-    #Import the modules we need
-    self.gps_waypoints = [[3246.6417,11704.2338],
-                [3246.6428,11704.2037],
-                [3246.6350,11704.1956],
-                [3246.6224,11704.2317],
-                [3246.6306,11704.2410]]
+        #Import the modules we need
+        self.gps_waypoints = [[3246.6417,11704.2338],
+                        [3246.6428,11704.2037],
+                        [3246.6350,11704.1956],
+                        [3246.6224,11704.2317],
+                        [3246.6306,11704.2410]]
 
     #ROBOT LOCATION FROM GPS
     #RETURN: POINT IF GOOD DATA, -1 IF BAD DATA
