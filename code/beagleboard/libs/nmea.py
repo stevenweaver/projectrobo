@@ -31,21 +31,4 @@ class nmea:
         else:
             return "Not NMEA"
 
-if __name__ == '__main__':
-    # Self-testing code goes here.
-    gps_list = [] 
-    lines = [
-        "$GPGGA,180227.933,3246.6682,N,11704.3135,W,1,03,10.3,30.1,M,-34.8,M,,0000*66\n",
-        "$GPGGA,180227.933,3246.6682,N,11704.3135,W,1,03,10.3,30.1,M,-34.8,M,,0000*66\n",
-    ]
-    for line in lines:
-        gps_list.append(NMEA(line))
 
-    print gps_list[0].lat
-    print gps_list[0].lon
-    print gps_list[0].satellites
-    print gps_list[0].time
-    print gps_list[1].lat
-    print gps_list[1].lon
-    print gps_list[1].satellites
-    print gps_list[1].time
