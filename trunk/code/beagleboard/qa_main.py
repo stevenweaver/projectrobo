@@ -41,14 +41,16 @@ def main():
         #Check if there are Beacons
         #Change direction to accommodate going through the beacon.
         #Use rssi for proximity and override main path, this needs to send the whole list instead of just one 
-        if beacon.beaconDetect(rssi_list[0]):
-           beacon.goTowardsBeacon(sensor_data[0]) 
+        #if beacon.beaconDetect(rssi_list[0]):
+        #   beacon.goTowardsBeacon(sensor_data[0]) 
 
         #Otherwise continue going about our way
         #wayPoint is the new calcPosition()
         #if pf.atWaypoint(sensor_data):
             #pf.waypoint_count+=1
             #pf.goTowardsNewDestination()
+
+        time.sleep(.02)
     return
 
 main()
