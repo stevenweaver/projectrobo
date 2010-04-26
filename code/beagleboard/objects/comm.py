@@ -26,7 +26,12 @@ class comm:
             sxml = self.ard_ser.readline()
             while sxml.find('<?xml version="1.0"?>') != 0:
                 sxml = self.ard_ser.readline()
-        return sensor.sensorData(sxml)
+
+        try:
+            return sensor.sensorData(sxml)
+        except:
+            #print "whoops! bad xml"
+            return 0
 
     def updateGps(self):
         #Parse serial information
@@ -41,5 +46,9 @@ class comm:
         rssi_data = self.rssi_ser.readline()
         return rssi.rssi(rssi_data)
 
-    def send(command):
-        ard_ser.write(send.sendStr(command))
+    def send(self,command):
+        if setup.QA:
+            print command
+        else:
+            ard_ser.write(send.sendStr(command))
+        return

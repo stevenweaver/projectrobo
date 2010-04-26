@@ -14,7 +14,8 @@ class sensorData:
         return self.get_text(self.dom.getElementsByTagName(text)[0].childNodes)
 
     def get_compass(self):
-        compass = float(self.get_data('c')) / 10 
+        #compass = float(self.get_data('c')) / 10 
+        compass = float(self.get_data('c')) 
 
         #compass convert according to http://code.google.com/p/projectrobo/wiki/Compass_Characterization
         #Within ~5 degrees of error

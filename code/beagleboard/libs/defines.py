@@ -1,4 +1,5 @@
 #Motor Constants
+REVERSE = "4D"
 STOP = "0D" 
 FORWARD = "3D"
 LEFT = "1D"
