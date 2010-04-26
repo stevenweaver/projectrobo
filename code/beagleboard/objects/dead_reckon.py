@@ -1,6 +1,8 @@
 import computations as comp
+import math
 
-def calcPosition(sd):
+def calcPosition(sd,waypoints, waypoint_count):
+
     #we can guess at the direction we are going by just calculating the degree difference between our two points
     last_waypoint = waypoints[waypoint_count]
     next_waypoint = waypoints[waypoint_count + 1]
@@ -13,7 +15,7 @@ def calcPosition(sd):
 
     #calculate the distance 
     angle = comp.calcAngle(next_waypoint, last_waypoint)
-    deg_angle = math.degree(angle)
+    deg_angle = math.degrees(angle)
 
     #we know the hypotenuse is motor1_ft and we know the angle we should be going, so we should be able to estimate our point 
     #these should be more or less equal, so i'm going to use one for now

@@ -16,7 +16,7 @@ class pathFind:
         #this gets called when we need to calculate the next stop we should go to
         #Decide how to get there
         motor.goDir(STOP)
-        dr_current_point = dead_reckon.calcPosition(sd)
+        dr_current_point = dead_reckon.calcPosition(sd,self.waypoints, self.waypoint_count)
         
         #Find distance and bearing to next position
         distance = (current_point, next_waypoint)
@@ -34,7 +34,7 @@ class pathFind:
         last_waypoint = self.waypoints[self.waypoint_count]
         next_waypoint = self.waypoints[self.waypoint_count + 1]
         #This is NOT the end all, be all to waypoint detection, this is the dead reckoning and compass portion. 
-        current_point = dead_reckon.calcPosition(sd)
+        current_point = dead_reckon.calcPosition(sd,self.waypoints, self.waypoint_count)
         #we have to use dead reckoning and compass information in order to get a good idea of where we have gone
         if abs(next_waypoint[0] - last_waypoint[0]) > abs(next_waypoint[1] - last_waypoint[1]):
             if current_point[0] > next_waypoint[0]:
