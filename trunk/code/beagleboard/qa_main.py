@@ -22,9 +22,13 @@ def main():
 
     #keep the time since we've started, could be useful to use along with wheel encoder information if we know how fast yertle goes ;)
     time_started = time.time()
-
     while(1):
-        sensor_data.insert(0,ser.updateSensors())
+        tmp_data = 0
+        while tmp_data == 0:
+            tmp_data = ser.updateSensors()
+
+        sensor_data.insert(0,tmp_data)
+
         #gps_list.insert(0,ser.updateGps())
         #rssi_list.insert(0,ser.updateRssi())
 
