@@ -5,7 +5,7 @@ class pathFind:
         #Points we are shooting for
         self.x = [125, 256, 294, 85, 85, 80, 75, 75, 60, 60, 16, 16, 8, 8, 48, 48, 10, 10, 44, 10, 33]
         self.y = [170, 170, 66, 66, 55, 50, 50, 42, 42, 10, 10, 87, 87, 120, 127, 135, 135, 140, 150, 152, 167]
-        self.waypoints = zip(x,y)
+        self.waypoints = zip(self.x,self.y)
 
         self.current_point = ()
 

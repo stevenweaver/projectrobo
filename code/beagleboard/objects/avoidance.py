@@ -11,10 +11,10 @@ def obstacle(sd):
 
 def moveOutTheWay(sd):
     #Check for flex first
-    self.flex(sd)
+    flex(sd)
 
     #Then check for ultrasonics
-    self.range_finders(sd)
+    range_finders(sd)
 
     return 1
 
