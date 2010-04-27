@@ -4,7 +4,12 @@ import motor
 
 def obstacle(sd):
     #Check if the obstacles are dangerously in the way
-    if sd.us['right'] < RANGE_LIMIT or sd.us['left'] or sd.flex['left'] < LEFT_HITTING or sd.flex['right'] < RIGHT_HITTING:
+    if sd.us['right'] < RANGE_LIMIT or sd.us['left'] < RANGE_LIMIT or sd.flex['left'] < LEFT_DANGEROUS or sd.flex['right'] < RIGHT_DANGEROUS:
+        if setup.QA:
+            print 'us right' + str(sd.us['right'])
+            print 'us left' + str(sd.us['left'])
+            print 'flex right' + str(sd.flex['right'])
+            print 'flex left' + str(sd.flex['left'])
         return 1
 
     return 0
