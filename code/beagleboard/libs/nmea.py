@@ -6,6 +6,7 @@ class nmea:
         self.time = '?'
         self.lat = 0.0
         self.lon = 0.0
+        self.coor = [self.lat,self.lon]
         self.satellites = 0 
         self.track = 0.0
         self.speed = 0.0
@@ -14,8 +15,9 @@ class nmea:
     #Making assumptions I'm in the northern, western hemisphere.
     def processGPGGA(self,words):
         self.time = words[0]
-        self.lat = words[1];
-        self.lon = words[3];
+        self.lat = float(words[1]);
+        self.lon = float(words[3]);
+        self.coor = [self.lat,self.lon]
         self.satellites = words[6] 
 
     def handle_line(self, line):
@@ -24,8 +26,8 @@ class nmea:
             line = string.split(line[1:-1], '*')
             if len(line) != 2: return
             words = string.split(line[0], ',')
-            if NMEA.__dict__.has_key('process'+words[0]):
-                NMEA.__dict__['process'+words[0]](self, words[1:])
+            if nmea.__dict__.has_key('process'+words[0]):
+                nmea.__dict__['process'+words[0]](self, words[1:])
             else:
                 return "Unknown sentence"
         else:

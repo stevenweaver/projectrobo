@@ -8,14 +8,14 @@ import send
 
 class comm:
     def __init__(self):
-        #Set up serial connections
-        if setup.QA:
-            #Read from file
-            self.f = open('./xml_test', 'r')
-        else:
-            self.ard_ser = serial.Serial('/dev/arduino', 9600)
+##        #Set up serial connections
+##        if setup.QA:
+##            #Read from file
+##            self.f = open('./xml_test', 'r')
+##        else:
+##            self.ard_ser = serial.Serial('/dev/arduino', 9600)
             self.gps_ser = serial.Serial('/dev/gps', 9600)
-            self.rssi_ser = serial.Serial('/dev/rssi', 115200)
+            #self.rssi_ser = serial.Serial('/dev/rssi', 115200)
 
     def updateSensors(self):
         #Parse serial information

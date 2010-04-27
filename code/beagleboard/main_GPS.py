@@ -1,49 +1,40 @@
-#!/usr/bin/python
+#Import the modules we need
 import setup
-import motor
-import avoidance
-import beacon
-import path_find
 import comm
 from defines import * 
 import numpy as np
 import time
-import NMEA 
-import distance
-import serial
-import time 
-
-Goals = [[3246.6420,11704.2315],
-        [3246.6420,11704.2035],
-        [3246.6273,11704.1990],
-        [3246.6255,11704.2302],
-        [3246.6204,11704.2400],]
-
-x = [125, 256, 294, 85, 85, 80, 75, 75, 60, 60, 16, 16, 8, 8, 48, 48, 10, 10, 44, 10, 33]
-y = [170, 170, 66, 66, 55, 50, 50, 42, 42, 10, 10, 87, 87, 120, 127, 135, 135, 140, 150, 152, 167]
-GoalNum = 0
-coor_fix = [0,0]
-Goal = distance.toDec(Goals[GoalNum])
+import gps
 
 
-while(1):
-    gps_serial = serial.Serial('/dev/gps', 9600)
-    gps_data = gps_serial.readline()
-    nmea = NMEA.NMEA(gps_data)
-    if nmea.satellites == "00":
-        print "No Satellite"
-    else:
-        position = [float(nmea.lat), float(nmea.lon)]
-        positionA = distance.toDec(position)
-        dis = distance.havDistance(Goal, positionA)
-        bearing = distance.calcBearing(positionA , Goal)
-        robot_Bearing = distance.calcRelBearing(bearing, 270)
-        coor_position = distance.getCoor([float(nmea.lat),float(nmea.lon)])
-        coor_position=[coor_position[0]+coor_fix[0],coor_position[1]+coor_fix[1]]
-        if (dis < 5):
-            xDiff = (x[GoalNum] - coor_position[0])
-            yDiff = (y[GoalNum] - coor_position[1])
-            coor_fix = [xDiff,yDiff]
-            GoalNum = GoalNum +1
-            Goal = distance.toDec(Goals[GoalNum])
-        print nmea.satellites,"  ",GoalNum ,"  ",dis,"  ",robot_Bearing,"  ",coor_position ,"  ", position
+#main loop 
+def main():
+    #initialization, our huge lists of information
+    ser = comm.comm()
+    sd = []
+    gps_list = [] 
+    rssi_list = [] 
+    current_position = [] 
+    position_list = []
+    #pf = pathFind.pathFind()
+
+    #keep the time since we've started, could be useful to use along with wheel encoder information if we know how fast yertle goes ;)
+    time_started = time.time()
+    gps_count = 0
+    heading = 0
+    distance = 0
+    while(1):
+        #rssi_list.insert(0,ser.updateRssi())
+        gps_list.insert(0,ser.updateGps())
+        if gps_count >3:
+            gps_data = gps.gps(1, gps_list[0].coor,gps_list[2].coor)
+            robot_heading = gps_data.robot_heading
+            heading = gps_data.direction
+            distance = gps_data.distance
+            gps_coor = gps_data.gps_coor
+            print gps_list[0].satellites," ",robot_heading," ",heading," ",distance," ",gps_coor
+        else:
+            gps_count = gps_count +1
+    return
+
+main()
