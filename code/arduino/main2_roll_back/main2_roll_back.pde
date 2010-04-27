@@ -70,7 +70,7 @@
 
 // the desired distance in ticks 
 // can be converted 197 ticks = 1 revolution = 2 feet
-#define SETPOINT 1000
+#define SETPOINT 20000
 
 
 #define TIME_LIMIT_1 2500
