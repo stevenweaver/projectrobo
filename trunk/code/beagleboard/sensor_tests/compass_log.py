@@ -23,6 +23,6 @@ f = open('./log/compass_' + str(int(time.time())) , 'w')
 while 1:
     sxml = ser.readline()
     print len(sxml)
-    sd.update(sxml)
+    sd = sensorData(sxml)
     f.write(str(sd.compass) + '\n')
     print str(sd.compass) + '\n'
