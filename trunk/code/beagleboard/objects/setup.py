@@ -1,8 +1,11 @@
 #First we need to include the new python path
 import sys
 #QA
-#HOME = '/home/steven/projectrobo/code/beagleboard' 
-HOME = '/home/alkuwari/projectrobo/code/beagleboard' 
+DEAD_RECKON_TEST = 1
+QA = 1
+
+HOME = '/home/steven/projectrobo/code/beagleboard' 
+#HOME = '/home/alkuwari/projectrobo/code/beagleboard' 
 #HAPPYCAT
 #HOME = '/home/steven/share/school/senior_design/projectrobo/code/beagleboard' 
 

@@ -1,12 +1,13 @@
 from xml.dom.minidom import parse, parseString
 
 #<?xml version=\"1.0\"?><motor><cl><r>%d<r><l>%d</l><cl><d><r>%d</r><l>%d</l></d></motor>
+TICKS_TO_FOOT = 1182
 
 class wheelParse:
     def __init__(self,xml):
         self.xml = xml
         self.dom = parseString(self.xml)
-        self.clicks = self.get_clicks() 
+        self.ft = self.get_clicks() 
         self.done_flags = self.get_done_flags()
 
     def get_data(self,text):
@@ -14,8 +15,8 @@ class wheelParse:
 
     def get_clicks(self):
         clicks = self.dom.getElementsByTagName('cl')[0]
-        left = int(self.get_text(clicks.getElementsByTagName('l')[0].childNodes))       
-        right= int(self.get_text(clicks.getElementsByTagName('r')[0].childNodes))
+        left = float(self.get_text(clicks.getElementsByTagName('l')[0].childNodes))/TICKS_TO_FOOT       
+        right= float(self.get_text(clicks.getElementsByTagName('r')[0].childNodes))/TICKS_TO_FOOT
         return dict(left=left,right=right)
  
     def get_done_flags(self):
@@ -37,7 +38,7 @@ if __name__ == '__main__':
     sd = []
     sd.append(wheelParse(sxml))
     sd.append(wheelParse(sxml))
-    print sd[0].clicks["right"]
-    print sd[0].clicks["left"]
+    print sd[0].ft["right"]
+    print sd[0].ft["left"]
     print sd[0].done_flags["right"]
     print sd[0].done_flags["left"]

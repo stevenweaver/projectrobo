@@ -19,8 +19,8 @@ def calcPosition(sd,waypoints, waypoint_count):
 
     #we know the hypotenuse is motor1_ft and we know the angle we should be going, so we should be able to estimate our point 
     #these should be more or less equal, so i'm going to use one for now
-    motor1_ft = sd[0].dis_traveled['a']  
-    motor2_ft = sd[0].dis_traveled['b']  
+    motor1_ft = sd[0].ft['right']  
+    motor2_ft = sd[0].ft['left']  
 
     if rev_orientation:
         delta_x = math.sin(angle) * motor1_ft
