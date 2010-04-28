@@ -4,7 +4,7 @@ def goFeet(command):
     ser = comm.comm()
     #send direction to serial port
     #97 ticks equals a foot 
-    ticks = command * 97;
+    ticks = command * 1182;
     ser.send(str(ticks) + 'T')
     return 1
 
@@ -14,4 +14,6 @@ def goDir(command):
     return 1
 
 def turn(dir, degrees):
+    print "dir " + dir 
+    print "degrees " + str(degrees) 
     return 1

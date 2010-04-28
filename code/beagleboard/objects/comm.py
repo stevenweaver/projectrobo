@@ -2,6 +2,7 @@
 import setup
 import serial
 import sensorData as sensor 
+import wheelParse
 import nmea 
 import rssi 
 import send
@@ -12,6 +13,9 @@ class comm:
         if setup.QA:
             #Read from file
             self.f = open('./xml_test', 'r')
+            self.fw = open('./wheel_test', 'r')
+        elif setup.DEAD_RECKON_TEST:
+            self.ard2_ser = serial.Serial('/dev/arduino', 9600)
         else:
             self.ard_ser = serial.Serial('/dev/arduino', 9600)
             self.gps_ser = serial.Serial('/dev/gps', 9600)
@@ -29,6 +33,22 @@ class comm:
 
         try:
             return sensor.sensorData(sxml)
+        except:
+            #print "whoops! bad xml"
+            return 0
+
+    def updateWheel(self):
+        #Parse serial information
+        #Check to make sure we have a nice string
+        if setup.QA: 
+            sxml = self.fw.readline()
+        else: 
+            sxml = self.ard2_ser.readline()
+            while sxml.find('<?xml version="1.0"?>') != 0:
+                sxml = self.ard_ser.readline()
+
+        try:
+            return wheelParse.wheelParse(sxml)
         except:
             #print "whoops! bad xml"
             return 0

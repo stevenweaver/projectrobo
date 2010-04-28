@@ -12,8 +12,26 @@ def calcAngle(pt1, pt2):
     #Else we want to calculate the difference in x
     else:
         diff = pt2[0] - pt1[0] 
-    #Calculate the angle
+
     return math.asin(diff/distance) 
+
+def calcAngle2(pt1, pt2):
+    #now we need to find angle A, since we know sinA is height/distance we can just find the inverse sine 
+    distance = calcDistance(pt1, pt2)
+    if abs(pt2[0] - pt1[0]) > abs(pt2[1] - pt1[1]):
+        diff = pt2[1] - pt1[1]
+        back = pt2[0] - pt1[0]
+    #Else we want to calculate the difference in x
+    else:
+        diff = pt2[0] - pt1[0] 
+        back = pt2[1] - pt1[1]
+    #Else we want to calculate the difference in x
+        print "diff" + str(diff)
+    #Calculate the angle
+    angle = math.degrees(math.asin(diff/distance))
+    if back < 0:
+        angle = angle + 180
+    return angle 
 
 #Unsure of the use of this
 #We can have this computed beforehand
