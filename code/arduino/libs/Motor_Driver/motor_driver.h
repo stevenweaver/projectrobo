@@ -11,8 +11,8 @@ class Motor_Driver
   public:
 
 
-Motor_Driver(int enable_pin_a , int control_1_pin_a, int  control_2_pin_a,
-			 int enable_pin_b , int control_1_pin_b, int  control_2_pin_b);
+Motor_Driver(int enable_pin_right , int control_1_pin_right, int  control_2_pin_right,
+			 int enable_pin_left , int control_1_pin_left, int  control_2_pin_left);
 
 
 void Forward();
@@ -27,12 +27,12 @@ void Left();
 void Stop();
 
 
-
+int pwm_pin_right, pwm_pin_left;
 
 
 private:
 
-	int enable_pin_a, control_1_pin_a, control_2_pin_a, enable_pin_b, control_1_pin_b, control_2_pin_b;
+	int enable_pin_right, control_1_pin_right, control_2_pin_right, enable_pin_left, control_1_pin_left, control_2_pin_left;
  
 
 };
