@@ -3,8 +3,8 @@
 import random
 
 f = open('./test_xml' , 'w')
-com = open('./sensor_tests/log/course1', 'r')
-for i in range(850):
+com = open('./sensor_tests/log/course2', 'r')
+for i in range(3000):
     sxml= '<?xml version="1.0"?><sensor><c>' + com.readline().rstrip('\n') + '</c><f><l>700</l><r>700</r></f><us><l>80</l><r>80</r></us><b>' + str(((i + 5) % 180))  + '</b></sensor>'
     if i > 500 and i < 550: 
         #Scrape against the left hand side

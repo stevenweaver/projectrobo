@@ -13,7 +13,7 @@ matplotlib.use('TkAgg') # do this before importing pylab
 #pylab.plot(x, y)
 fig = pylab.figure()
 ax = fig.add_subplot(111)
-b = imread('beagle.png')
+b = imread('Drawing6.png')
 imshow(b)
 
 def calcDistance(pt1, pt2):
@@ -32,65 +32,76 @@ def calcAngle(pt1, pt2):
     return math.asin(diff/distance) 
 
 def animate():
-    x = [283,428,428,246,204,179,167,62,69,75,109,68,100,76,59]
-    y = [61,79,214,230,244,269,308,309,142,110,93,84,70,61,40]
+    x = [125, 256, 294, 85, 85, 80, 75, 75, 60, 60, 16, 16, 8, 8, 48, 48, 10, 10, 44, 10, 33]
+    y = [170, 170, 66, 66, 55, 50, 50, 42, 42, 10, 10, 87, 87, 120, 127, 135, 135, 140, 150, 152, 167]
     waypoints = zip(x,y)
+    y[:] = [(-a*9.6) + 2060 for a in y]
+    x[:] = [a*9.6 + 410 for a in x]
+    #waypoints = zip(x,y)
 
     tstart = time.time()                   # for profiling
     line, = ax.plot(x, y)
 
     for i in range(len(x) - 1):
         angle = calcAngle(waypoints[i], waypoints[i+1])
-        ax.set_title("pt" + str(i) + " angle:" + str(calcAngle(waypoints[i], waypoints[i+1]))) 
+        #ax.set_title("pt" + str(i) + " angle:" + str(calcAngle(waypoints[i], waypoints[i+1]))) 
         if abs(x[i+1] - x[i]) > abs(y[i+1] - y[i]):
             for j in range(abs(x[i+1]-x[i])):
-                if x[i+1] < x[i]:
-                    xc = x[i] - j
-                else:
-                    xc = x[i] + j
-                yc = y[i] + (xc-x[i])*(y[i+1] - y[i])/(x[i+1] - x[i]) 
-                ax.plot(xc,yc,'bo')                        # update the data
+                fname = '_tmp' + str(i) + str(j) + '_%03d.png'
+                if j % 30 == 0:
+                    if x[i+1] < x[i]:
+                        xc = x[i] - j
+                    else:
+                        xc = x[i] + j
+                    yc = y[i] + (xc-x[i])*(y[i+1] - y[i])/(x[i+1] - x[i]) 
+                    ax.plot(xc,yc,'bo')                        # update the data
 
-                if x[i+1] < x[i]:
-                    distance = math.sqrt(math.pow((xc + x[i]),2)+math.pow((yc - y[i]), 2))
-                else:
-                    distance = math.sqrt(math.pow((xc - x[i]),2)+math.pow((yc - y[i]), 2))
+                    if x[i+1] < x[i]:
+                        distance = math.sqrt(math.pow((xc + x[i]),2)+math.pow((yc - y[i]), 2))
+                    else:
+                        distance = math.sqrt(math.pow((xc - x[i]),2)+math.pow((yc - y[i]), 2))
 
 
-                delta_y = math.sin(angle) * distance 
-                delta_x = math.cos(angle) * distance
+                    delta_y = math.sin(angle) * distance 
+                    delta_x = math.cos(angle) * distance
 
-                ax.set_title("waypt: " + str(i) + " angle:" + str(calcAngle(waypoints[i], waypoints[i+1])) + "current_point: " + str(xc) + ',' + str(yc) + "calc_pt: " + str(delta_x) + ',' + str(delta_y)) 
+                    #ax.set_title("waypt: " + str(i) + " angle:" + str(calcAngle(waypoints[i], waypoints[i+1])) + "current_point: " + str(xc) + ',' + str(yc) + "calc_pt: " + str(delta_x) + ',' + str(delta_y)) 
 
-                if j > 0:
-                    del ax.lines[1]
+                    if j > 0:
+                        ax.lines.reverse()
+                        del ax.lines[1:]
 
-                fig.canvas.draw()                         # redraw the canvas
+                    fig.canvas.draw()                         # redraw the canvas
+                    fig.savefig(fname)
 
             print 'FPS:' , 200/(time.time()-tstart)
         else:
             for j in range(abs(y[i+1]-y[i])):
-                if y[i+1] < y[i]:
-                    yc = y[i] - j
-                else:
-                    yc = y[i] + j
-                xc = x[i] + (yc-y[i])*(x[i+1] - x[i])/(y[i+1] - y[i]) 
-                ax.plot(xc,yc,'bo')                        # update the data
+                fname = '_tmp' + str(i) + str(j) + '_%03d.png'
+                if j % 30 == 0:
+                    if y[i+1] < y[i]:
+                        yc = y[i] - j
+                    else:
+                        yc = y[i] + j
+                    xc = x[i] + (yc-y[i])*(x[i+1] - x[i])/(y[i+1] - y[i]) 
+                    ax.plot(xc,yc,'bo')                        # update the data
 
-                if y[i+1] < y[i]:
-                    distance = math.sqrt(math.pow((xc - x[i]),2)+math.pow((yc + y[i]), 2))
-                else:
-                    distance = math.sqrt(math.pow((xc - x[i]),2)+math.pow((yc - y[i]), 2))
+                    if y[i+1] < y[i]:
+                        distance = math.sqrt(math.pow((xc - x[i]),2)+math.pow((yc + y[i]), 2))
+                    else:
+                        distance = math.sqrt(math.pow((xc - x[i]),2)+math.pow((yc - y[i]), 2))
 
-                delta_x = math.sin(angle) * distance 
-                delta_y = math.cos(angle) * distance
+                    delta_x = math.sin(angle) * distance 
+                    delta_y = math.cos(angle) * distance
 
-                ax.set_title("waypt: " + str(i) + " angle:" + str(calcAngle(waypoints[i], waypoints[i+1])) + "current_point: " + str(xc) + ',' + str(yc) + "calc_pt: " + str(x[i] + delta_x) + ',' + str(y[i] + delta_y)) 
+                    #ax.set_title("waypt: " + str(i) + " angle:" + str(calcAngle(waypoints[i], waypoints[i+1])) + "current_point: " + str(xc) + ',' + str(yc) + "calc_pt: " + str(x[i] + delta_x) + ',' + str(y[i] + delta_y)) 
 
-                if len(ax.lines) > 1:
-                    del ax.lines[1]
+                    if len(ax.lines) > 1:
+                        ax.lines.reverse()
+                        del ax.lines[1:]
 
-                fig.canvas.draw()                         # redraw the canvas
+                    fig.canvas.draw()                         # redraw the canvas
+                    fig.savefig(fname)
             print 'FPS:' , 200/(time.time()-tstart)
 
 
