@@ -8,7 +8,6 @@ import math
 class pathFind:
     def __init__(self):
         #Points we are shooting for
-
         if setup.DEAD_RECKON_TEST:
             self.x = [0, 20, 0]
             self.y = [0, 0, 0]
@@ -34,11 +33,11 @@ class pathFind:
 
         motor.goDir(STOP)
         dr_current_point = dead_reckon.calcPosition(sd,self.waypoints, self.waypoint_count)
-        current_point = dr_current_point
+        self.current_point = dr_current_point
 
         #Find distance and bearing to next position
-        distance = comp.calcDistance(current_point, next_waypoint)
-        angle = comp.calcAngle2(current_point, next_waypoint) 
+        distance = comp.calcDistance(self.current_point, next_waypoint)
+        angle = comp.calcAngle2(self.current_point, next_waypoint) 
 
         if angle > 1.1:
             motor.turn(RIGHT,angle)
@@ -54,7 +53,7 @@ class pathFind:
         last_waypoint = self.waypoints[self.waypoint_count]
         next_waypoint = self.waypoints[self.waypoint_count + 1]
         #This is NOT the end all, be all to waypoint detection, this is the dead reckoning and compass portion. 
-        current_point = dead_reckon.calcPosition(sd,self.waypoints, self.waypoint_count)
+        self.current_point = dead_reckon.calcPosition(sd,self.waypoints, self.waypoint_count)
         #we have to use dead reckoning and compass information in order to get a good idea of where we have gone
         if abs(next_waypoint[0] - last_waypoint[0]) > abs(next_waypoint[1] - last_waypoint[1]):
             if current_point[0] > next_waypoint[0]:
@@ -63,3 +62,14 @@ class pathFind:
             if current_point[1] > next_waypoint[1]:
                 return 1
         return 0
+
+    def getCurrentPoint(self,sd):
+        if self.waypoint_count == len(self.waypoints) - 1:
+            return -1
+
+        self.current_point = dead_reckon.calcPosition(sd,self.waypoints, self.waypoint_count) 
+        return self.current_point
+
+
+
+
