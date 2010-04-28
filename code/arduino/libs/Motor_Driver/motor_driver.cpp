@@ -9,33 +9,33 @@
 
 
 
-Motor_Driver:: Motor_Driver(int enable_a , int control_1_a, int  control_2_a, 
-			                int enable_b , int control_1_b, int  control_2_b )
+Motor_Driver:: Motor_Driver(int enable_right , int control_1_right, int  control_2_right, 
+			                int enable_left , int control_1_left, int  control_2_left )
 {
 
-  enable_pin_a = enable_a;
-  control_1_pin_a = control_1_a;  
-  control_2_pin_a = control_2_a;
+  enable_pin_right = enable_right;
+  control_1_pin_right = control_1_right;  
+  control_2_pin_right = control_2_right;
 
 
  
 
-  enable_pin_b = enable_b;
-  control_1_pin_b = control_1_b;  
-  control_2_pin_b = control_2_b;
+  enable_pin_left = enable_left;
+  control_1_pin_left = control_1_left;  
+  control_2_pin_left = control_2_left;
 
 
  
 
   
-  pinMode (enable_pin_a,OUTPUT);   
-  pinMode (control_1_pin_a,OUTPUT);   
-  pinMode (control_2_pin_a,OUTPUT);  
+  pinMode (enable_pin_right,OUTPUT);   
+  pinMode (control_1_pin_right,OUTPUT);   
+  pinMode (control_2_pin_right,OUTPUT);  
   
 
-  pinMode (enable_pin_b,OUTPUT);   
-  pinMode (control_1_pin_b,OUTPUT);   
-  pinMode (control_2_pin_b,OUTPUT);  
+  pinMode (enable_pin_left,OUTPUT);   
+  pinMode (control_1_pin_left,OUTPUT);   
+  pinMode (control_2_pin_left,OUTPUT);  
   
  
 
@@ -48,49 +48,110 @@ Motor_Driver:: Motor_Driver(int enable_a , int control_1_a, int  control_2_a,
 
 void Motor_Driver:: Forward()
 {
-	//analogWrite(enable_pin_a,0);    
-	analogWrite(control_1_pin_a,0);    
-	analogWrite(control_2_pin_a,255);
+	//analogWrite(enable_pin_a,255);    
+	//analogWrite(control_1_pin_a,0);    
+	
+		digitalWrite(enable_pin_right,HIGH);    
+	digitalWrite(control_1_pin_right,LOW);   
+	
 
-  //  analogWrite(enable_pin_b,0);    
-	analogWrite(control_1_pin_b,0);    
-	analogWrite(control_2_pin_b,255);
 
+	//analogWrite(control_2_pin_a,255);
+
+   // analogWrite(enable_pin_b,255);    
+	//analogWrite(control_1_pin_b,0);    
+	//analogWrite(control_2_pin_b,255);
+
+       // digitalWrite(enable_pin_a, HIGH);
+
+	     //digitalWrite(control_1_pin_b, LOW);   
+	// digitalWrite(control_2_pin_a, LOW);
+
+
+			digitalWrite(enable_pin_left,HIGH);    
+	digitalWrite(control_1_pin_left,LOW);   
+	
+
+	// digitalWrite(enable_pin_b, HIGH);
+
+	// digitalWrite(control_2_pin_b, LOW);
+
+    // digitalWrite(control_1_pin_b, LOW);   
+	// digitalWrite(control_2_pin_b, HIGH);
+
+	pwm_pin_right = control_2_pin_right;
+	pwm_pin_left = control_2_pin_left;
 
 }
 
 void Motor_Driver:: Backward()
 {
 	//analogWrite(enable_pin_a,0);    
-	analogWrite(control_1_pin_a,255);    
-	analogWrite(control_2_pin_a,0);
+//	analogWrite(control_1_pin_a,255);    
+	//analogWrite(control_2_pin_a,0);
 
+    digitalWrite(enable_pin_right,HIGH);    
+	digitalWrite(control_2_pin_right,LOW);   
+	
+
+
+	    digitalWrite(enable_pin_left,HIGH);    
+	digitalWrite(control_2_pin_left,LOW);  
    // analogWrite(enable_pin_b,0);    
-	analogWrite(control_1_pin_b,255);    
-	analogWrite(control_2_pin_b,0);
+	////analogWrite(control_1_pin_b,255);    
+	//analogWrite(control_2_pin_b,0);
+
+		pwm_pin_right = control_1_pin_right;
+	    pwm_pin_left = control_1_pin_left;
 }
 
 void Motor_Driver:: Right()
 {
 	//analogWrite(enable_pin_a,0);    
-	analogWrite(control_1_pin_a,255);    
-	analogWrite(control_2_pin_a,0);
+	//analogWrite(control_1_pin_right,255);    
+	//analogWrite(control_2_pin_right,0);
 
   //  analogWrite(enable_pin_b,0);    
-	analogWrite(control_1_pin_b,0);    
-	analogWrite(control_2_pin_b,255);
+//	analogWrite(control_1_pin_left,0);    
+	//analogWrite(control_2_pin_left,255);
+
+	 digitalWrite(enable_pin_right,HIGH);
+     digitalWrite(enable_pin_left,HIGH);
+
+
+		   digitalWrite(control_1_pin_left,LOW);
+		 digitalWrite(control_2_pin_right,LOW);
+
+
+	 pwm_pin_right = control_1_pin_right;
+
+	 pwm_pin_left = control_2_pin_left;
 }
 
 
 void Motor_Driver:: Left()
 {
 	//analogWrite(enable_pin_a,0);    
-	analogWrite(control_1_pin_a,0);    
-	analogWrite(control_2_pin_a,255);
+	//analogWrite(control_1_pin_right,0);    
+	//analogWrite(control_2_pin_right,255);
 
    // analogWrite(enable_pin_b,0);    
-	analogWrite(control_1_pin_b,255);    
-	analogWrite(control_2_pin_b,0);
+	//analogWrite(control_1_pin_left,255);    
+	//analogWrite(control_2_pin_left,0);
+
+
+		 digitalWrite(enable_pin_right,HIGH);
+     digitalWrite(enable_pin_left,HIGH);
+
+
+	 		   digitalWrite(control_2_pin_left,LOW);
+		 digitalWrite(control_1_pin_right,LOW);
+
+
+	 
+	 pwm_pin_right = control_2_pin_right;
+
+	 pwm_pin_left = control_1_pin_left;
 }
 
 
@@ -98,14 +159,15 @@ void Motor_Driver::  Stop()
 {
 
 
-   // analogWrite(enable_pin_a,0);    
-	analogWrite(control_1_pin_a,0);    
-	analogWrite(control_2_pin_a,0);
+ 		 digitalWrite(enable_pin_right,LOW);
+     digitalWrite(enable_pin_left,LOW);
 
-   // analogWrite(enable_pin_b,0);    
-	analogWrite(control_1_pin_b,0);    
-	analogWrite(control_2_pin_b,0);
-  
+	 
+	 		   digitalWrite(control_1_pin_left,LOW);
+		 digitalWrite(control_1_pin_right,LOW);
+		 
+	 		   digitalWrite(control_2_pin_left,LOW);
+		 digitalWrite(control_2_pin_right,LOW);
 }
 
 
