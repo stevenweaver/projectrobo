@@ -39,6 +39,13 @@ ultrasonic is in inches
 
 }}}
 
+===From Arduino 2===
+<?xml version=\"1.0\"?>
+<motor>
+<cl><r>1000</r><l>1000</l></cl>
+<d><r>0</r><l>1</l></d>
+</motor>
+
 === To Arduino ===
 
 {{{
