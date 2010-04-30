@@ -36,15 +36,18 @@
 #define RIGHT 2
 
 //MOTORS
-#define MOTOR_RIGHT_ENABLE 12
-#define MOTOR_RIGHT_CONTROL1 11
-#define MOTOR_RIGHT_CONTROL2 13
-#define MOTOR_RIGHT_ENCODER 0 
 
-#define MOTOR_LEFT_ENABLE 6
-#define MOTOR_LEFT_CONTROL1 5
-#define MOTOR_LEFT_CONTROL2 7
-#define MOTOR_LEFT_ENCODER 1 
+#define MOTOR_RIGHT_ENABLE 7
+#define MOTOR_RIGHT_CONTROL1 5
+#define MOTOR_RIGHT_CONTROL2 9
+#define MOTOR_RIGHT_ENCODER 0
+
+
+#define MOTOR_LEFT_ENABLE 8
+#define MOTOR_LEFT_CONTROL1 6
+#define MOTOR_LEFT_CONTROL2 10
+#define MOTOR_LEFT_ENCODER 1
+
 
 //Receive data
 #define MAXSIZE 8 
@@ -61,17 +64,17 @@
 
 // range of input = ticks and output = pwm 
 #define PID_RIGHT_INPUT_MIN  0
-#define PID_RIGHT_INPUT_MAX  20000
+#define PID_RIGHT_INPUT_MAX  100
 #define PID_RIGHT_OUTPUT_MIN -10
 #define PID_RIGHT_OUTPUT_MAX 10
 #define PID_LEFT_INPUT_MIN  0
-#define PID_LEFT_INPUT_MAX  20000
+#define PID_LEFT_INPUT_MAX  100
 #define PID_LEFT_OUTPUT_MIN -10
 #define PID_LEFT_OUTPUT_MAX 10
 
 // the desired distance in ticks 
 // can be converted 2364 ticks = 1 revolution = 2 feet
-#define SETPOINT 11820
+#define SETPOINT 106380
 
 
 // turns
@@ -86,7 +89,16 @@
 #define EPSILON 50
 
 
-#define SPEED 30
+#define SPEED 35
+
+#define MAX_PWM_LEFT  255
+#define MAX_PWM_RIGHT 255
+
+
+
+#define PW_LEFT_START 100
+
+#define PW_RIGHT_START 100
 
 //#define MAX_PWM_LEFT  120
 //#define MAX_PWM_RIGHT 120
@@ -113,8 +125,8 @@
 Motor_Driver Motor_Driver(MOTOR_RIGHT_ENABLE, MOTOR_RIGHT_CONTROL1, MOTOR_RIGHT_CONTROL2,MOTOR_LEFT_ENABLE, MOTOR_LEFT_CONTROL1, MOTOR_LEFT_CONTROL2);
 
 //Wheel Encoding
-volatile int clicks_RIGHT = 0; 
-volatile int clicks_LEFT = 0; 
+volatile float clicks_RIGHT = 0; 
+volatile float clicks_LEFT = 0; 
 
 //PID stuff
 double Setpoint, Input_RIGHT, Input_LEFT, Output_RIGHT, Output_LEFT, Speed;
@@ -153,8 +165,8 @@ int ticks=0;
 int pw_LEFT=0;
 int pw_RIGHT=0; 
 
-int previous_clicks_RIGHT = 0;
-int previous_clicks_LEFT = 0 ;
+float previous_clicks_RIGHT = 0;
+float previous_clicks_LEFT = 0 ;
 
 //int displacement_LEFT;
 //int displacement_RIGHT;
@@ -228,13 +240,14 @@ PID_LEFT.SetMode(AUTO);
 //StartTime = millis();
   
 
- pw_RIGHT=0; 
+ pw_RIGHT=PW_RIGHT_START; 
  
-  pw_LEFT = 0;
+  pw_LEFT = PW_LEFT_START;
  previous_clicks_RIGHT = 0;
  previous_clicks_LEFT = 0;
   
-  
+    Motor_Driver.Reset();
+delay(3000);
 
   
   // we are in forward mode
@@ -253,6 +266,9 @@ PID_LEFT.SetMode(AUTO);
 
 /*******************MAIN*****************/
 void loop() {
+  
+   //   analogWrite(Motor_Driver.pwm_pin_right, 100);
+ //   analogWrite(Motor_Driver.pwm_pin_left, 100);
    // int left_us_val, left_flex_val, right_us_val, right_flex_val = 0;
    // int compass_val = 0;
     //Setpoint = 1000;
@@ -308,8 +324,17 @@ void loop() {
 //            Serial.println("output RIGHT: ");
 //    Serial.println(Output_RIGHT);
 ////    
-       // Serial.println("clicks RIGHT: ");
-   // Serial.println(clicks_RIGHT);
+       Serial.println("clicks RIGHT: ");
+    Serial.println(clicks_RIGHT);
+                Serial.println("PWM RIGHT: ");
+ Serial.println(pw_RIGHT);
+ 
+ 
+ Serial.println("input RIGHT: ");
+    Serial.println(Input_RIGHT);
+    
+         Serial.println("output RIGHT: ");
+    Serial.println(Output_RIGHT);
 ////      
 //        Serial.println("PWM RIGHT: ");
 //    Serial.println(pw_RIGHT);
@@ -319,8 +344,20 @@ void loop() {
   //  Serial.println(Input_LEFT);
 //               Serial.println("output LEFT: ");
 //    Serial.println(Output_LEFT);
-           //  Serial.println("clicks LEFT: ");
-  // Serial.println(clicks_LEFT);
+           Serial.println("clicks LEFT: ");
+ Serial.println(clicks_LEFT);
+            Serial.println("PWM LEFT: ");
+ Serial.println(pw_LEFT);
+ 
+  Serial.println("input LEFT: ");
+    Serial.println(Input_LEFT);
+    
+    
+      Serial.println("output LEFT: ");
+    Serial.println(Output_LEFT);
+    
+   
+ 
 ////      
 //       Serial.println("PWM LEFT: ");
 //    Serial.println(pw_LEFT);
@@ -468,10 +505,10 @@ void loop() {
 
 
 /*************CREATE XML FOR BEAGLEBOARD************/
-void sendSerialInfo( int clicks_RIGHT, int clicks_LEFT, int done_RIGHT, int done_LEFT)
+void sendSerialInfo( float clicks_RIGHT, float clicks_LEFT, int done_RIGHT, int done_LEFT)
 {
     
-    sprintf(xml,"<?xml version=\"1.0\"?><motor><r>%d<r><l>%d</l><r>%d</r><l><us></l></motor>",  clicks_RIGHT, clicks_LEFT, done_RIGHT, done_LEFT); 
+    sprintf(xml,"<?xml version=\"1.0\"?><motor><r>%f<r><l>%f</l><r>%d</r><l><us></l></motor>",  clicks_RIGHT, clicks_LEFT, done_RIGHT, done_LEFT); 
     Serial.println(xml);
     return;
 }
@@ -652,10 +689,16 @@ void do_PID(){
     }
     
     
-    if(pw_LEFT > 255 )
+    
+        if(pw_LEFT <0)
+      pw_LEFT = 0;
+      
+        if(pw_RIGHT <0 )
+      pw_RIGHT = 0;
+    if(pw_LEFT > MAX_PWM_LEFT)
       pw_LEFT = 255;
       
-        if(pw_RIGHT > 255 )
+        if(pw_RIGHT > MAX_PWM_RIGHT )
       pw_RIGHT = 255;
       
     analogWrite(Motor_Driver.pwm_pin_right, pw_RIGHT);
