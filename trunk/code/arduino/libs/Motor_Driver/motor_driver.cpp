@@ -41,7 +41,43 @@ Motor_Driver:: Motor_Driver(int enable_right , int control_1_right, int  control
 
 }
 
+void Motor_Driver:: Reset()
+{
+	//analogWrite(enable_pin_a,255);    
+	//analogWrite(control_1_pin_a,0);    
+	
+		digitalWrite(enable_pin_right,LOW);    
+	digitalWrite(control_1_pin_right,LOW);   
+	
 
+
+	//analogWrite(control_2_pin_a,255);
+
+   // analogWrite(enable_pin_b,255);    
+	//analogWrite(control_1_pin_b,0);    
+	//analogWrite(control_2_pin_b,255);
+
+       // digitalWrite(enable_pin_a, HIGH);
+
+	     //digitalWrite(control_1_pin_b, LOW);   
+	// digitalWrite(control_2_pin_a, LOW);
+
+
+			digitalWrite(enable_pin_left,LOW);    
+	digitalWrite(control_1_pin_left,LOW);   
+	
+
+	// digitalWrite(enable_pin_b, HIGH);
+
+	// digitalWrite(control_2_pin_b, LOW);
+
+    // digitalWrite(control_1_pin_b, LOW);   
+	// digitalWrite(control_2_pin_b, HIGH);
+
+	digitalWrite( control_2_pin_right,LOW);
+	digitalWrite(control_2_pin_left, LOW);
+
+}
 
 
 

@@ -36,15 +36,20 @@
 #define RIGHT 2
 
 //MOTORS
-#define MOTOR_RIGHT_ENABLE 12
-#define MOTOR_RIGHT_CONTROL1 11
-#define MOTOR_RIGHT_CONTROL2 13
-#define MOTOR_RIGHT_ENCODER 0 
+#define MOTOR_RIGHT_ENABLE 7
+#define MOTOR_RIGHT_CONTROL1 5
+#define MOTOR_RIGHT_CONTROL2 9
+#define MOTOR_RIGHT_ENCODER 0
 
-#define MOTOR_LEFT_ENABLE 6
-#define MOTOR_LEFT_CONTROL1 5
-#define MOTOR_LEFT_CONTROL2 7
-#define MOTOR_LEFT_ENCODER 1 
+
+#define MOTOR_LEFT_ENABLE 8
+#define MOTOR_LEFT_CONTROL1 6
+#define MOTOR_LEFT_CONTROL2 10
+#define MOTOR_LEFT_ENCODER 1
+
+
+
+
 
 //Receive data
 #define MAXSIZE 8 
@@ -86,11 +91,15 @@
 #define EPSILON 50
 
 
-#define SPEED 30
+#define SPEED 35
 
-//#define MAX_PWM_LEFT  120
-//#define MAX_PWM_RIGHT 120
+#define MAX_PWM_LEFT  255
+#define MAX_PWM_RIGHT 255
 
+
+#define PW_LEFT_START 100
+
+#define PW_RIGHT_START 100
 /*******************GLOBAL VARIABLES*****************/
 
 //For the compass
@@ -150,8 +159,8 @@ int drive=0;
 int ticks=0; 
 
 
-int pw_LEFT=0;
-int pw_RIGHT=0; 
+int pw_LEFT= PW_LEFT_START;
+int pw_RIGHT= PW_RIGHT_START; 
 
 int previous_clicks_RIGHT = 0;
 int previous_clicks_LEFT = 0 ;
@@ -228,13 +237,14 @@ void setup() {
 //StartTime = millis();
   
 
- pw_RIGHT=0; 
+ pw_RIGHT=PW_RIGHT_START; 
  
-  pw_LEFT = 0;
+  pw_LEFT = PW_LEFT_START;
  previous_clicks_RIGHT = 0;
  previous_clicks_LEFT = 0;
   
-  
+  Motor_Driver.Reset();
+delay(3000);
 
   
   // we are in forward mode
@@ -253,6 +263,24 @@ void setup() {
 
 /*******************MAIN*****************/
 void loop() {
+  
+  
+//  if(done_RIGHT == 1 && done_LEFT ==1){
+//     MsTimer2::stop();
+//   clicks_RIGHT = 0;
+//     clicks_LEFT = 0;
+//    previous_clicks_LEFT = 0;
+//    previous_clicks_RIGHT = 0;
+//         done_LEFT = 0;
+//    done_RIGHT = 0;
+//    pw_LEFT = 0;
+//    pw_RIGHT = 0;
+//   Serial.print("IM IN ");
+//   delay(5000);
+//    MsTimer2::start();
+//  }
+  
+  
    // int left_us_val, left_flex_val, right_us_val, right_flex_val = 0;
    // int compass_val = 0;
     //Setpoint = 1000;
@@ -412,6 +440,35 @@ void loop() {
 //    analogWrite(MOTOR_RIGHT_ENABLE, Output_RIGHT);
 //    analogWrite(MOTOR_LEFT_ENABLE, Output_LEFT);
 
+
+
+       Serial.println("clicks RIGHT: ");
+    Serial.println(clicks_RIGHT);
+                Serial.println("PWM RIGHT: ");
+ Serial.println(pw_RIGHT);
+ 
+ 
+ Serial.println("input RIGHT: ");
+    Serial.println(Input_RIGHT);
+////      
+//        Serial.println("PWM RIGHT: ");
+//    Serial.println(pw_RIGHT);
+////    
+////    
+                   //Serial.println("input  LEFT: ");
+  //  Serial.println(Input_LEFT);
+//               Serial.println("output LEFT: ");
+//    Serial.println(Output_LEFT);
+           Serial.println("clicks LEFT: ");
+ Serial.println(clicks_LEFT);
+            Serial.println("PWM LEFT: ");
+ Serial.println(pw_LEFT);
+ 
+  Serial.println("input LEFT: ");
+    Serial.println(Input_LEFT);
+    
+    
+    
     receiveData();
 
 }
@@ -666,15 +723,16 @@ void do_PID(){
     }
     
     
-    if(pw_LEFT > 255 )
-      pw_LEFT = 255;
+    if(pw_LEFT > MAX_PWM_LEFT )
+      pw_LEFT = MAX_PWM_LEFT;
       
-        if(pw_RIGHT > 255 )
-      pw_RIGHT = 255;
+        if(pw_RIGHT > MAX_PWM_RIGHT )
+      pw_RIGHT = MAX_PWM_RIGHT;
       
     analogWrite(Motor_Driver.pwm_pin_right, pw_RIGHT);
     analogWrite(Motor_Driver.pwm_pin_left, pw_LEFT);
     
+
 
 
 }
