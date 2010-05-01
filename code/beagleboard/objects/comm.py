@@ -12,7 +12,7 @@ class comm:
         #Set up serial connections
         if setup.QA:
             #Read from file
-            self.f = open('./xml_test', 'r')
+            self.f = open('./xml_test2', 'r')
             self.fw = open('./wheel_test', 'r')
         elif setup.DEAD_RECKON_TEST:
             self.ard2_ser = serial.Serial('/dev/arduino', 9600)

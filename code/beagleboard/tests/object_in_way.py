@@ -20,6 +20,11 @@ def main():
     position_list = []
     wheels = []
     pf = path_find.pathFind()
+    command_queue = []
+    avoiding_object = 0
+    going_towards_beacon = 0
+    turning = 0
+    current_direction = STOP 
 
     #keep the time since we've started, could be useful to use along with wheel encoder information if we know how fast yertle goes ;)
     time_started = time.time()
@@ -51,8 +56,25 @@ def main():
         if sd:
             sensor_data.insert(0,sd)
             if avoidance.obstacle(sensor_data[0]) == 1:
-                print "zomg something is in the way!!!"
-                avoidance.moveOutTheWay(current_position, sensor_data[0])
+                command_queue = avoidance.moveOutTheWay(sensor_data[0])
+                avoiding_object = 1
+
+        while avoiding_object:
+            #pop off commands
+            motor.execute(command_queue.pop(0))
+
+            if not command_queue:
+                avoiding_object = 0
+
+            wheel_info = ser.updateWheel()
+
+            if wheel_info:
+                wheels.insert(0,wheel_info)
+
+            while wheels[0].done_flags['right'] != 1 and wheels[0].done_flags['left'] != 1: 
+                wheel_info = ser.updateWheel()
+                if wheel_info:
+                    wheels.insert(0,wheel_info)
 
         #Check if there are Beacons
         #Change direction to accommodate going through the beacon.
@@ -69,13 +91,15 @@ def main():
         #Otherwise continue going about our way
         #wayPoint is the new calcPosition()
         #if pf.atWaypoint(sensor_data):
-        if wheels[0].done_flags['right'] == 1 and wheels[0].done_flags['left'] == 1: 
-            print pf.waypoint_count
-            if pf.goTowardsNewDestination(wheels) == -1:
+
+        if wheels[0].done_flags['right'] == 1 and wheels[0].done_flags['left'] == 1 and not avoiding_object and not going_towards_beacon: 
+            if pf.lastWaypoint():
                 print "finished_course!"
                 quit()
             else:
+                command_queue = pf.goTowardsNewDestination(wheels)
+                print command_queue
                 pf.waypoint_count+=1
-        #time.sleep(.02)
+
     return
 main()
