@@ -77,6 +77,10 @@ void Motor_Driver:: Reset()
 	digitalWrite( control_2_pin_right,LOW);
 	digitalWrite(control_2_pin_left, LOW);
 
+		 pwm_pin_right = 13;
+
+	 pwm_pin_left = 13;
+
 }
 
 
@@ -204,6 +208,12 @@ void Motor_Driver::  Stop()
 		 
 	 		   digitalWrite(control_2_pin_left,LOW);
 		 digitalWrite(control_2_pin_right,LOW);
+
+
+		  
+	 pwm_pin_right = 13;
+
+	 pwm_pin_left = 13;
 }
 
 

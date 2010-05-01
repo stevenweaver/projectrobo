@@ -23,6 +23,8 @@ void Right();
 
 void Left();
 
+void Reset();
+
 
 void Stop();
 
