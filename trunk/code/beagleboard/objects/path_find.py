@@ -1,7 +1,6 @@
 import setup
 from defines import * 
 import dead_reckon
-import motor
 import computations as comp
 import math
 
@@ -22,16 +21,23 @@ class pathFind:
         self.waypoint_count = 0
         self.beacon_count = 1
 
+    def lastWaypoint(self):
+        if self.waypoint_count == len(self.waypoints) - 1:
+            return 1
+        return 0
+
     def goTowardsNewDestination(self,sd):
         #this gets called when we need to calculate the next stop we should go to
         #Decide how to get there
+        commands = []
+
         if self.waypoint_count == len(self.waypoints) - 1:
             return -1
 
         last_waypoint = self.waypoints[self.waypoint_count]
         next_waypoint = self.waypoints[self.waypoint_count + 1]
 
-        motor.goDir(STOP)
+        commands.append(('go',0,STOP)) 
         dr_current_point = dead_reckon.calcPosition(sd,self.waypoints, self.waypoint_count)
         self.current_point = dr_current_point
 
@@ -40,11 +46,10 @@ class pathFind:
         angle = comp.calcAngle2(self.current_point, next_waypoint) 
 
         if angle > 1.1:
-            motor.turn(RIGHT,angle)
+            commands.append(('turn', RIGHT, angle)) 
 
-        motor.goFeet(distance)
-        motor.goDir(FORWARD)
-        return 1
+        commands.append(('go',distance,FORWARD)) 
+        return commands 
 
 
     #waypoint matching using dead-reckoning
@@ -69,7 +74,3 @@ class pathFind:
 
         self.current_point = dead_reckon.calcPosition(sd,self.waypoints, self.waypoint_count) 
         return self.current_point
-
-
-
-
