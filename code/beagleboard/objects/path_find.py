@@ -47,6 +47,8 @@ class pathFind:
 
         if angle > 1.1:
             commands.append(('turn', RIGHT, angle)) 
+        else:
+            commands.append(('turn', RIGHT, 0)) 
 
         commands.append(('go',distance,FORWARD)) 
         return commands 

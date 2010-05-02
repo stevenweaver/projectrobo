@@ -1,4 +1,5 @@
 import setup
+import path_find
 from defines import *
 #import motor
 
@@ -35,9 +36,16 @@ def moveOutTheWay(sd):
         return [('turn','right', 45)]
 
     elif sd.flex['left'] < LEFT_DANGEROUS:
-        return [('go',0,STOP),('go',4,REVERSE),('turn','right',45),('go',0,FORWARD)] 
+        return [('go',0,STOP),('go',4,REVERSE),('turn','right',45),('go',0,STOP)] 
 
     #Then check for ultrasonics
     if sd.us['left'] < RANGE_LIMIT:
-        return [('dir',STOP),('turn', LEFT, 90),('ft',1),('ft', 1),('dir',STOP),('turn', RIGHT, 90),('dir',FORWARD)] 
+        return [('go',0,STOP),('turn', LEFT, 90),('go',1,FORWARD),('go',0,STOP),('turn', RIGHT, 90),('go',0,STOP)] 
     return 0 
+
+def isOutOfWay(sd):
+    #Then check for ultrasonics
+    if sd.us['right'] < RANGE_LIMIT:
+        print sd.us['right']
+        return 0 
+    return 1
