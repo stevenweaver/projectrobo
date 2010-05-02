@@ -8,10 +8,12 @@ import path_find
 import comm
 from defines import * 
 import time
+import pprint
 
 #main loop 
 def main():
     #initialization, our huge lists of information
+    f = open('../log/back_and_forth_' + str(int(time.time())) , 'w')
     ser = comm.comm()
     sensor_data = []
     gps_list = [] 
@@ -54,10 +56,14 @@ def main():
         #if pf.atWaypoint(sensor_data):
         if wheels[0].done_flags['right'] == 1 and wheels[0].done_flags['left'] == 1: 
             if pf.goTowardsNewDestination(wheels) == -1:
-                print "finished_course!"
+                f.write('finished_course!\n')
+                f.write('all of the wheel information = \n')
+                for wheel in wheels:
+                    f.write('left: ' + str(wheel.ft['left']) + ' right: ' + str(wheel.ft['right']) + ' \n')
                 quit()
             else:
                 command_queue = pf.goTowardsNewDestination(wheels)
+                f.write('new commands = ' + str(command_queue) + '\n')
                 #this will be a turn and then a command
                 #validate that it is a turn
                 if len(command_queue) > 1:
@@ -78,7 +84,6 @@ def main():
 
                 #execute the last command
                 motor.execute(command_queue.pop(0))
-
 
                 pf.waypoint_count+=1
         #time.sleep(.02)
