@@ -20,6 +20,7 @@ def main():
     position_list = []
     wheels = []
     pf = path_find.pathFind()
+    busy = 0
 
     #keep the time since we've started, could be useful to use along with wheel encoder information if we know how fast yertle goes ;)
     time_started = time.time()
@@ -52,11 +53,33 @@ def main():
         #wayPoint is the new calcPosition()
         #if pf.atWaypoint(sensor_data):
         if wheels[0].done_flags['right'] == 1 and wheels[0].done_flags['left'] == 1: 
-            print pf.waypoint_count
             if pf.goTowardsNewDestination(wheels) == -1:
                 print "finished_course!"
                 quit()
             else:
+                command_queue = pf.goTowardsNewDestination(wheels)
+                #this will be a turn and then a command
+                #validate that it is a turn
+                if len(command_queue) > 1:
+                    for count in range(len(command_queue) -1):
+                        command = command_queue.pop(0)
+                        motor.execute(command)
+
+                        #Wait for the turtle to do its thing
+                        wheel_info = ser.updateWheel()
+
+                        if wheel_info:
+                            wheels.insert(0,wheel_info)
+
+                        while wheels[0].done_flags['right'] != 1 and wheels[0].done_flags['left'] != 1: 
+                            wheel_info = ser.updateWheel()
+                            if wheel_info:
+                                wheels.insert(0,wheel_info)
+
+                #execute the last command
+                motor.execute(command_queue.pop(0))
+
+
                 pf.waypoint_count+=1
         #time.sleep(.02)
     return
