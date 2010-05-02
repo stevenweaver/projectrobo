@@ -1,7 +1,7 @@
 #First we need to include the new python path
 import sys
 #QA
-DEAD_RECKON_TEST = 1
+#DEAD_RECKON_TEST = 1
 QA = 1
 
 HOME = '/home/steven/projectrobo/code/beagleboard' 
