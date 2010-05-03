@@ -71,8 +71,8 @@ void setup() {
   pinMode(RIGHT_ULTRASONIC_PIN, INPUT);
 
   //Interrupts for the Beacons. 
-  //attachInterrupt(LEFT_BEACON_INT, left_beacon, CHANGE);
-  //attachInterrupt(RIGHT_BEACON_INT, right_beacon, CHANGE);
+  attachInterrupt(LEFT_BEACON_INT, left_beacon, CHANGE);
+  attachInterrupt(RIGHT_BEACON_INT, right_beacon, CHANGE);
 
   }
 
@@ -80,12 +80,11 @@ void setup() {
 void loop() {
     int left_us_val, left_flex_val, right_us_val, right_flex_val = 0;
     int compass_val = 0;
-    //Setpoint = 1000;
     
     if (serialMetro.check() == 1) { // check if the metro has passed it's interval .
         //get information
-        //left_us_val       = ultrasonic(LEFT_ULTRASONIC_PIN);
-        //right_us_val      = ultrasonic(RIGHT_ULTRASONIC_PIN);
+        left_us_val       = ultrasonic(LEFT_ULTRASONIC_PIN);
+        right_us_val      = ultrasonic(RIGHT_ULTRASONIC_PIN);
         left_flex_val     = flex(LEFT_FLEX_PIN);
         right_flex_val    = flex(RIGHT_FLEX_PIN);
         compass_val       = compass();
@@ -117,7 +116,11 @@ void loop() {
         delay(10);
       }
       else if(beacon_dir == STRAIGHT) {
-        //do nothing
+        //Check if we have interapt
+          if ((left_time<1000)||(right_time <1000)){
+            beacon_dir = NA; 
+          }
+            
       }
 
       //Else beacon_dir is unavailable... sweep
