@@ -45,8 +45,10 @@ class comm:
             sxml = self.fw.readline()
         else: 
             sxml = self.ard2_ser.readline()
+            print sxml
             while sxml.find('<?xml version="1.0"?>') != 0:
-                sxml = self.ard_ser.readline()
+                sxml = self.ard_ser2.readline()
+                print sxml
 
         try:
             return wheelParse.wheelParse(sxml)

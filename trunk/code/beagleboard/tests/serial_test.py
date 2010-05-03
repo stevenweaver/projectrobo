@@ -1,6 +1,6 @@
 import serial
 import time
-s = serial.Serial('/dev/ttyUSB1', 19200)
+s = serial.Serial('/dev/babyarduino',9600) 
 while 1:
     s.write('123456789')
     print s.readline()
