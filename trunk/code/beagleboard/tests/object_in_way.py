@@ -89,6 +89,7 @@ def main():
                     angle_c = angle_a + angle_b
                     print math.degrees(angle_c)
                     angle_d = 180 - 90 - angle_c
+                    print d
                     x = d*math.sin(angle_d)
                     y = d*math.sin(angle_c)
                     print x,y
