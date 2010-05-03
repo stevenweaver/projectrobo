@@ -12,12 +12,13 @@ class comm:
         #Set up serial connections
         if setup.QA:
             #Read from file
-            self.f = open('./xml_test2', 'r')
+            self.f = open('./xml_test', 'r')
             self.fw = open('./wheel_test', 'r')
         elif setup.DEAD_RECKON_TEST:
-            self.ard2_ser = serial.Serial('/dev/arduino', 9600)
+            self.ard2_ser = serial.Serial('/dev/babyarduino', 9600)
         else:
             self.ard_ser = serial.Serial('/dev/arduino', 9600)
+            self.ard2_ser = serial.Serial('/dev/babyarduino', 9600)
             self.gps_ser = serial.Serial('/dev/gps', 9600)
             self.rssi_ser = serial.Serial('/dev/rssi', 115200)
 
@@ -70,5 +71,5 @@ class comm:
         if setup.QA:
             print command
         else:
-            ard_ser.write(send.sendStr(command))
+            ard_ser2.write(send.sendStr(command))
         return
