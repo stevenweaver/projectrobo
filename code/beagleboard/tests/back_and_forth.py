@@ -13,8 +13,14 @@ import pprint
 #main loop 
 def main():
     #initialization, our huge lists of information
-    f = open('../log/back_and_forth_' + str(int(time.time())) , 'w')
+    f = open('/home/ubuntu/beagle/log/back_and_forth_' + str(int(time.time())) , 'w')
+#try:
     ser = comm.comm()
+#    except:
+#        print "could not open serial ports"
+        #f.write('could not open serial ports \n')
+        #quit()
+
     sensor_data = []
     gps_list = [] 
     rssi_list = [] 
@@ -27,8 +33,15 @@ def main():
     #keep the time since we've started, could be useful to use along with wheel encoder information if we know how fast yertle goes ;)
     time_started = time.time()
     while(1):
-        wheel_info = ser.updateWheel()
+        try:
+            wheel_info = ser.updateWheel()
+            print wheel_info
+        except: 
+            f.write('could not open serial ports \n')
+            quit()
+
         if wheel_info:
+            print wheel_info 
             wheels.insert(0,wheel_info)
         #gps_list.insert(0,ser.updateGps())
         #rssi_list.insert(0,ser.updateRssi())

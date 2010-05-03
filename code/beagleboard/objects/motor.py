@@ -1,12 +1,14 @@
 import comm
+import time
 
 def go(ft, direction):
     ser = comm.comm()
     #send direction to serial port
     #1182 ticks equals a foot 
     ticks = ft * 1182;
-    ser.send(str(ticks) + 'T')
     ser.send(str(direction))
+    time.sleep(1)
+    ser.send(str(ticks) + 'T')
     return 1
 
 def turn(direction, degrees):
