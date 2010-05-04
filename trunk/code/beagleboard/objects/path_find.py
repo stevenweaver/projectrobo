@@ -8,14 +8,14 @@ class pathFind:
     def __init__(self):
         #Points we are shooting for
         if setup.DEAD_RECKON_TEST:
-            self.x = [125, 256, 294, 85, 85, 80, 75, 75, 60, 60, 16, 16, 8, 8, 48, 48, 10, 10, 44, 10, 33]
-            self.y = [170, 170, 66, 66, 55, 50, 50, 42, 42, 10, 10, 87, 87, 120, 127, 135, 135, 140, 150, 152, 167]
+            self.x = [0,0,3,3,0]
+            self.y = [0,3,3,0,0]
         else:
             self.x = [125, 256, 294, 85, 85, 80, 75, 75, 60, 60, 16, 16, 8, 8, 48, 48, 10, 10, 44, 10, 33]
             self.y = [170, 170, 66, 66, 55, 50, 50, 42, 42, 10, 10, 87, 87, 120, 127, 135, 135, 140, 150, 152, 167]
 
         self.waypoints = zip(self.x,self.y)
-
+        self.current_orientation = 0
         self.current_point = ()
 
         self.waypoint_count = 0
@@ -26,9 +26,11 @@ class pathFind:
             return 1
         return 0
 
-    def goTowardsNewDestination(self,sd):
+    def goTowardsNewDestination(self,sd,sensors):
         #this gets called when we need to calculate the next stop we should go to
         #Decide how to get there
+
+        #current_orientation = sd[0].compass[0]
         commands = []
 
         if self.waypoint_count == len(self.waypoints) - 1:
@@ -43,7 +45,10 @@ class pathFind:
 
         #Find distance and bearing to next position
         distance = comp.calcDistance(self.current_point, next_waypoint)
+        
+        #In order to get the real angle, we are going to have to know the current orientation of the robot
         angle = comp.calcAngle2(self.current_point, next_waypoint) 
+        print "angle: " + str(angle)
 
         if angle > 1.1:
             commands.append(('turn', RIGHT, angle)) 
