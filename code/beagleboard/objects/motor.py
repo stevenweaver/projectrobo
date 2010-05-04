@@ -11,8 +11,8 @@ def go(ft, direction):
         ser.send(str(direction))
         time.sleep(1)
         ser.send(str(int(ticks)) + 'T')
-        #print "dir:" + str(direction) + '\n'
-        #print "ticks" + str(ticks) + '\n'
+        print "dir:" + str(direction) + '\n'
+        print "ft:" + str(ft) + '\n'
         return 1
 
     return 0
@@ -25,8 +25,8 @@ def turn(direction, degrees):
         ser.send(str(direction))
         time.sleep(1)
 
-        #print "dir: " + str(direction) + '\n'
-        #print "ticks" + str(ticks) + '\n'
+        print "dir: " + str(direction) + '\n'
+        print "degrees" + str(degrees) + '\n'
         ser.send(str(int(ticks)) + 'T')
         return 1
 

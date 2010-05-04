@@ -39,7 +39,7 @@ def main():
             wheels.insert(0,wheel_info)
 
             if wheels[0].done_flags['right'] == 1 and wheels[0].done_flags['left'] == 1: 
-                if pf.goTowardsNewDestination(wheels) == -1:
+                if pf.goTowardsNewDestination(wheels,sensor_data) == -1:
                     f.write('finished_course!\n')
                     print 'finished_course!\n'
                     f.write('all of the wheel information = \n')
@@ -47,7 +47,7 @@ def main():
                         f.write('left: ' + str(wheel.ft['left']) + ' right: ' + str(wheel.ft['right']) + ' \n')
                     quit()
                 else:
-                    command_queue = pf.goTowardsNewDestination(wheels)
+                    command_queue = pf.goTowardsNewDestination(wheels, sensor_data)
                     f.write('new commands = ' + str(command_queue) + '\n')
                     #this will be a turn and then a command
                     #validate that it is a turn
