@@ -8,8 +8,8 @@ class pathFind:
     def __init__(self):
         #Points we are shooting for
         if setup.DEAD_RECKON_TEST:
-            self.x = [0, 20, 0]
-            self.y = [0, 0, 0]
+            self.x = [125, 256, 294, 85, 85, 80, 75, 75, 60, 60, 16, 16, 8, 8, 48, 48, 10, 10, 44, 10, 33]
+            self.y = [170, 170, 66, 66, 55, 50, 50, 42, 42, 10, 10, 87, 87, 120, 127, 135, 135, 140, 150, 152, 167]
         else:
             self.x = [125, 256, 294, 85, 85, 80, 75, 75, 60, 60, 16, 16, 8, 8, 48, 48, 10, 10, 44, 10, 33]
             self.y = [170, 170, 66, 66, 55, 50, 50, 42, 42, 10, 10, 87, 87, 120, 127, 135, 135, 140, 150, 152, 167]
@@ -37,7 +37,7 @@ class pathFind:
         last_waypoint = self.waypoints[self.waypoint_count]
         next_waypoint = self.waypoints[self.waypoint_count + 1]
 
-        commands.append(('go',0,STOP)) 
+        #commands.append(('go',0,STOP)) 
         dr_current_point = dead_reckon.calcPosition(sd,self.waypoints, self.waypoint_count)
         self.current_point = dr_current_point
 
