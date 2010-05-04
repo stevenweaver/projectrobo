@@ -154,7 +154,7 @@ int done_LEFT = 0, done_RIGHT = 0;
 int   ticks_thousands= 0  ,  ticks_hundereds= 0, ticks_tens = 0 , ticks_ones = 0; 
 
 float  ticks_tenthousands =0, Serial_Setpoint = 0;
-int command = 0, Serial_Setpoint_Updated = 0;
+int command = 0, Serial_Setpoint_Updated = 0, Serial_Direction_Updated = 0;
 
 /*******************SETUP*****************/
 void setup() {
@@ -241,36 +241,36 @@ void loop() {
 //    
 //  }
      
-       Serial.println("clicks RIGHT: ");
-    Serial.println(clicks_RIGHT);
-                Serial.println("PWM RIGHT: ");
- Serial.println(pw_RIGHT);
- 
- 
- Serial.println("input RIGHT: ");
-    Serial.println(Input_RIGHT);
-    
-         Serial.println("output RIGHT: ");
-    Serial.println(Output_RIGHT);
-;
-           Serial.println("clicks LEFT: ");
- Serial.println(clicks_LEFT);
-            Serial.println("PWM LEFT: ");
- Serial.println(pw_LEFT);
- 
-  Serial.println("input LEFT: ");
-    Serial.println(Input_LEFT);
-    
-    
-      Serial.println("output LEFT: ");
-    Serial.println(Output_LEFT);
-    
-
- Serial.println("Setpoint: ");
-    Serial.println(Setpoint);
+//       Serial.println("clicks RIGHT: ");
+//    Serial.println(clicks_RIGHT);
+//                Serial.println("PWM RIGHT: ");
+// Serial.println(pw_RIGHT);
+// 
+// 
+// Serial.println("input RIGHT: ");
+//    Serial.println(Input_RIGHT);
+//    
+//         Serial.println("output RIGHT: ");
+//    Serial.println(Output_RIGHT);
+//;
+//           Serial.println("clicks LEFT: ");
+// Serial.println(clicks_LEFT);
+//            Serial.println("PWM LEFT: ");
+// Serial.println(pw_LEFT);
+// 
+//  Serial.println("input LEFT: ");
+//    Serial.println(Input_LEFT);
+//    
+//    
+//      Serial.println("output LEFT: ");
+//    Serial.println(Output_LEFT);
+//    
+//
+// Serial.println("Setpoint: ");
+//    Serial.println(Setpoint);
    
    
-  if(done_RIGHT = 1 && done_LEFT == 1  )
+ // if(done_RIGHT = 1 && done_LEFT == 1  )
    
      get_command();
 
@@ -314,6 +314,9 @@ void receiveData() {
      
       Serial.print("drive: ");
       Serial.println(drive);
+       Serial.println(buff);
+      
+     // Serial_Direction_Updated = 1;
     }
     if (buff[10]=='T') {
       
@@ -339,6 +342,7 @@ void receiveData() {
 
       Serial.print("serial setpoint ");
       Serial.println(Serial_Setpoint);
+       Serial.println(buff);
     }
 
   }
@@ -417,7 +421,33 @@ void do_PID(){
 
 void get_command(){
   
- 
+       if(drive == STOP) {
+     
+         MsTimer2::stop();
+        
+        pw_RIGHT = 0; 
+        pw_LEFT = 0;
+        previous_clicks_RIGHT = 0;
+        previous_clicks_LEFT = 0;
+        clicks_LEFT = 0;
+       clicks_RIGHT = 0;
+       
+       Setpoint = 0;
+       
+          
+    }
+    
+  
+    //Motor_Driver.Forward();
+    if(Serial_Setpoint_Updated == 1){
+     
+         Setpoint = Serial_Setpoint ;
+         Serial_Setpoint_Updated = 0;
+    }
+
+       
+  if(done_RIGHT == 1 && done_LEFT == 1  ){
+   
     
    
    MsTimer2::stop();
@@ -436,10 +466,10 @@ void get_command(){
   
 //   Motor_Driver.Reset();
     delay(1000);
-   
     
     
-         if(drive == FORWARD) {
+    
+   if(drive == FORWARD) {
         
           
           Motor_Driver.Forward();
@@ -459,23 +489,18 @@ void get_command(){
 //      
       else {
        Motor_Driver.Stop();
-      }  
-      
-      
-   //Motor_Driver.Forward();
-    if(Serial_Setpoint_Updated == 1){
-     
-         Setpoint = Serial_Setpoint ;
-         Serial_Setpoint_Updated = 0;
-    }
-
-     
-      
-     
-     
-    MsTimer2::start(); 
+      }    
     
+    
+    MsTimer2::start(); 
    
+  }
+  
+  
+  
+
+    
+ 
   
   
 }
