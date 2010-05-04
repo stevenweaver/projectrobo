@@ -7,12 +7,11 @@ import time
 ## stop, forward, reverse, left, right
 #<direction>right,left,forward,reverse</direction>
 
-class sendData:
-    def sendStr(self, command):
-        data = str(command)
-        #data += "\n"
-        data = data.zfill(10)
-        return data 
+def sendStr(command):
+    data = str(command)
+    #data += "\n"
+    data = data.zfill(10)
+    return data 
 
 if __name__ == '__main__':
     ser = serial.Serial('/dev/babyarduino', 9600)

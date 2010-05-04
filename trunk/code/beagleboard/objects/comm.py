@@ -15,10 +15,10 @@ class comm:
             self.f = open('./xml_test', 'r')
             self.fw = open('./wheel_test', 'r')
         elif setup.DEAD_RECKON_TEST:
-            self.ard2_ser = serial.Serial('/dev/babyarduino', 9600)
+            self.babyard = serial.Serial('/dev/babyarduino', 9600)
         else:
             self.ard_ser = serial.Serial('/dev/arduino', 9600)
-            self.ard2_ser = serial.Serial('/dev/babyarduino', 9600)
+            self.babyard = serial.Serial('/dev/babyarduino', 9600)
             self.gps_ser = serial.Serial('/dev/gps', 9600)
             self.rssi_ser = serial.Serial('/dev/rssi', 115200)
 
@@ -44,13 +44,14 @@ class comm:
         if setup.QA: 
             sxml = self.fw.readline()
         else: 
-            sxml = self.ard2_ser.readline()
-            print sxml
+            sxml = self.babyard.readline()
+            #print sxml
             while sxml.find('<?xml version="1.0"?>') != 0:
-                sxml = self.ard_ser2.readline()
-                print sxml
+                sxml = self.babyard.readline()
+#print sxml
 
         try:
+            print sxml
             return wheelParse.wheelParse(sxml)
         except:
             #print "whoops! bad xml"
@@ -73,5 +74,7 @@ class comm:
         if setup.QA:
             print command
         else:
-            ard_ser2.write(send.sendStr(command))
+            print send.sendStr(command)
+            self.babyard.write(send.sendStr(command))
+            self.babyard.flushInput()
         return
