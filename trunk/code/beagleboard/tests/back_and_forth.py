@@ -11,7 +11,7 @@ import time
 #main loop 
 def main():
     #initialization, our huge lists of information
-    f = open('/home/ubuntu/beagle/log/back_and_forth_' + str(int(time.time())) , 'w')
+    f = open('../log/back_and_forth_' + str(int(time.time())) , 'w')
     try:
         ser = comm.comm()
     except:
@@ -27,7 +27,6 @@ def main():
     wheels = []
     pf = path_find.pathFind()
     busy = 0
-
     motor.execute(('go',0,STOP))
 
     #keep the time since we've started, could be useful to use along with wheel encoder information if we know how fast yertle goes ;)
@@ -60,7 +59,6 @@ def main():
                                     wheel_info = ser.updateWheel()
                                     if wheel_info:
                                         wheels.insert(0,wheel_info)
-
                                 
                             #Wait for the turtle to do its thing
                             wheel_info = ser.updateWheel()
