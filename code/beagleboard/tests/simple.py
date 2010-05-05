@@ -27,21 +27,20 @@ def main():
     wheels = []
     busy = 0
     motor.execute(('go',0,STOP))
+    starting_degree = -1 
 
     command_queue = [] 
     command_queue.append(('go',20,FORWARD))
-    command_queue.append(('turn',RIGHT, 90)) 
-    command_queue.append(('go',5, FORWARD)) 
-    command_queue.append(('turn',90, RIGHT)) 
-    command_queue.append(('go',20, FORWARD)) 
+    #command_queue.append(('turn',RIGHT, 90)) 
+    #command_queue.append(('go',5, FORWARD)) 
+    #command_queue.append(('turn',90, RIGHT)) 
+    #command_queue.append(('go',20, FORWARD)) 
 
     #keep the time since we've started, could be useful to use along with wheel encoder information if we know how fast yertle goes ;)
     time_started = time.time()
     while(1):
         motor.execute(command_queue.pop(0))
-
         wheel_info = ser.updateWheel()
-
         sd = ser.updateSensors()
 
         if sd:
@@ -50,30 +49,29 @@ def main():
         if wheel_info:
             wheels.insert(0,wheel_info)
 
-            if wheels[0].done_flags['right'] == 1 and wheels[0].done_flags['left'] == 1: 
-                #this will be a turn and then a command
-                if len(command_queue) > 1:
-                    for count in range(len(command_queue) -1):
-                        command = command_queue.pop(0)
-                        response = motor.execute(command)
-                        if response:
-                            while wheels[0].done_flags['right'] == 1 and wheels[0].done_flags['left'] == 1: 
-                                wheel_info = ser.updateWheel()
-                                if wheel_info:
-                                    wheels.insert(0,wheel_info)
-                            
-                        #Wait for the turtle to do its thing
-                        wheel_info = ser.updateWheel()
+        if starting_degree != -1:
+            compass_commands = compass.checkCompass(starting_degree,sensor_data)
+            ft_traveled = (wheels[0].ft['left'] + wheels[0].ft['right'])/2
+            desired_feet = command[1]
 
-                        if wheel_info:
-                            wheels.insert(0,wheel_info)
+            if desired_feet - ft_traveled > desired_feet/2
+                compass_command.append('go',ft_traveled, FORWARD)
+                #Go back 
+            else:
+                compass_command.append('go',(desired_feet - ft_traveled), FORWARD)
 
-                        while wheels[0].done_flags['right'] != 1 and wheels[0].done_flags['left'] != 1: 
-                            wheel_info = ser.updateWheel()
-                            if wheel_info:
-                                wheels.insert(0,wheel_info)
 
-                    #execute the last command
-                    motor.execute(command_queue.pop(0))
+                
+        if wheels[0].done_flags['right'] == 1 and wheels[0].done_flags['left'] == 1: 
+            #execute the last command
+            if command_queue:
+                command = command_queue.pop(0)
+                response = motor.execute(command)
+                if command[2] == FORWARD:
+                    starting_degree = sensor_data[0].compass
+
+            else:
+                print 'finished'
+                quit()
     return
 main()
