@@ -75,4 +75,5 @@ def getCoor(p):
 ##print "x,y = " ,coor
 ##print "distance is: ",distance
 ##print "Bearing is:",calcBearing(dp2, dp1)
+##print "rebearing is",calcRelBearing(99 , 90)
 

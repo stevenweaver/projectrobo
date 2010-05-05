@@ -14,20 +14,21 @@ class sensorData:
         return self.get_text(self.dom.getElementsByTagName(text)[0].childNodes)
 
     def get_compass(self):
-        #compass = float(self.get_data('c')) / 10 
-        compass = float(self.get_data('c')) 
+        compass = float(self.get_data('c')) / 10 
+        #compass = float(self.get_data('c')) 
+        return compass
 
         #compass convert according to http://code.google.com/p/projectrobo/wiki/Compass_Characterization
         #Within ~5 degrees of error
-        if compass < 150:
-            degrees = (compass * 9./5)
-
-        #Found this equation using a logorithmic best line curve: y = 99.415*ln(x) - 223.49  
-        #Within ~7 degrees of error
-        else:
-            degrees = 99.415*math.log(compass) - 223.49 
-
-        return degrees            
+#        if compass < 150:
+#            degrees = (compass * 9./5)
+#
+#        #Found this equation using a logorithmic best line curve: y = 99.415*ln(x) - 223.49  
+#        #Within ~7 degrees of error
+#        else:
+#            degrees = 99.415*math.log(compass) - 223.49 
+#
+#        return degrees            
          
     def get_flex(self):
         flex = self.dom.getElementsByTagName('f')[0]
