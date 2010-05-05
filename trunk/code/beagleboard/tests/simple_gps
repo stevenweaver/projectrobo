@@ -1,0 +1,76 @@
+#Import the modules we need
+import setup
+import motor
+import avoidance
+import compass
+import path_find
+import comm
+from defines import * 
+import time
+import gps
+import math
+
+#main loop 
+def main():
+    #initialization, our huge lists of information
+    f = open('../log/back_and_forth_' + str(int(time.time())) , 'w')
+    try:
+        ser = comm.comm()
+    except:
+        print "could not open serial ports"
+        f.write('could not open serial ports \n')
+        quit()
+
+    sensor_data = []
+    gps_list = [] 
+    rssi_list = [] 
+    current_position = [] 
+    position_list = []
+    wheels = []
+    busy = 0
+    motor.execute(('go',0,STOP))
+    starting_degree = -1 
+
+    command_queue = [] 
+    command_queue.append(('go',20,FORWARD))
+    #command_queue.append(('turn',RIGHT, 90)) 
+    #command_queue.append(('go',5, FORWARD)) 
+    #command_queue.append(('turn',90, RIGHT)) 
+    #command_queue.append(('go',20, FORWARD)) 
+
+    #keep the time since we've started, could be useful to use along with wheel encoder information if we know how fast yertle goes ;)
+    time_started = time.time()
+    while(1):
+        motor.execute(command_queue.pop(0))
+        wheel_info = ser.updateWheel()
+        sd = ser.updateSensors()
+        heading = 0
+        distance = 0
+        if sd:
+            sensor_data.insert(0,sd)
+        if wheel_info:
+            wheels.insert(0,wheel_info)
+        gps_list.insert(0,ser.updateGps())
+        #Nav when we have at least 7 sat
+        if(gps_list[0].satellites >6):
+            gps_data = gps.gps(0, gps_list[0].coor,(sd[0].compass/10))
+            robot_heading = gps_data.robot_heading
+            heading = gps_data.direction
+            distance = gps_data.distance
+            #gps_coor = gps_data.gps_coor
+            #stop if we get about 20Ft within way point
+            if ( distance > 20):
+                if(heading > 10):
+                    #turn right heading degree
+                    command_queue.append(('turn',RIGHT, heading))
+                if(heading < -10):
+                    #turn left  heading degree
+                    command_queue.append(('turn',LEFT,(-1*heading))) 
+                else:
+                    #Go streat 10 ft
+                    command_queue.append(('go',10,FORWARD))
+            else:
+                print 'finished'
+                quit()
+    return
+main()
