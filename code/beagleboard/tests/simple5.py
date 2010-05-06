@@ -59,24 +59,30 @@ def main():
 
         print 'left', sensor_data[0].us['left']
         
-        if sensor_data[0].flex['right'] < 450: 
-            response = motor.execute(('go',0,STOP))
-            time.sleep(1)
-            response = motor.execute(('turn',LEFT,35))
-            time.sleep(1)
-            
-        if sensor_data[0].flex['left'] < 450: 
-            response = motor.execute(('go',0,STOP))
-            time.sleep(1)
-            response = motor.execute(('turn',RIGHT,35))
-            time.sleep(1)
+##        if sensor_data[0].flex['right'] < 450: 
+##            response = motor.execute(('go',0,STOP))
+##            time.sleep(1)
+##            response = motor.execute(('turn',LEFT,35))
+##            time.sleep(1)
+##            
+##        if sensor_data[0].flex['left'] < 450: 
+##            response = motor.execute(('go',0,STOP))
+##            time.sleep(1)
+##            response = motor.execute(('turn',RIGHT,35))
+##            time.sleep(1)
 
         if sensor_data[0].us['left'] < 7: 
             response = motor.execute(('go',0,STOP))
             time.sleep(1)
             response = motor.execute(('turn',LEFT,100))
             time.sleep(1)
-             
+        
+        if sensor_data[0].us['right'] < 5: 
+            response = motor.execute(('go',0,STOP))
+            time.sleep(1)
+            response = motor.execute(('turn',LEFT,15))
+            time.sleep(1)
+            
         if wheels[0].done_flags['right'] == 1 and wheels[0].done_flags['left'] == 1: 
             #wall walking
             if (sensor_data[0].us['left'] < 10):
