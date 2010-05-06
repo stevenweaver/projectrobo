@@ -2,6 +2,8 @@
 #include <string.h>
 #include <Servo.h> 
 #include <Metro.h> 
+#include <MsTimer2.h>
+
 
 //*********GLOBAL CONSTANTS*******************//
 #define MAX_STRING 255 
@@ -38,9 +40,11 @@ Servo myservo;
 //Should take out of global
 int back = 0;
 int pos = 90;
+int beacon_flag = 1;
 
 //Beacon Specific Variables
-volatile int left_time, right_time = 0;
+volatile float left_time = 0;
+volatile float right_time = 3000;
 int beacon_dir = NA;
 int compass_val = 0;
 
@@ -49,6 +53,9 @@ Metro serialMetro = Metro(250);
 Metro servoMetro = Metro(10);
 
 char xml[MAX_STRING];
+
+int flag_LEFT = 0, flag_RIGHT = 0;
+
 
 /*******************SETUP*****************/
 void setup() {
@@ -73,6 +80,10 @@ void setup() {
   //Interrupts for the Beacons. 
   attachInterrupt(LEFT_BEACON_INT, left_beacon, CHANGE);
   attachInterrupt(RIGHT_BEACON_INT, right_beacon, CHANGE);
+  
+  MsTimer2::set(30, servo); // 500ms period
+  MsTimer2::start();
+
 
   }
 
@@ -95,41 +106,85 @@ void loop() {
         serialMetro.reset();
     }
     
-    if (servoMetro.check() == 1) { // check if the metro has passed it's interval .
-      //This needs fixed up
-      if(beacon_dir == LEFT) {
-        if(pos >= 180) {
-           beacon_dir = NA; 
-           right_time = 0;
-           left_time = 0;
-        }
-        pos++;
-        delay(10);
-      }
-      else if(beacon_dir == RIGHT) {
-        if(pos <= 0) {
-           beacon_dir = NA; 
-           right_time = 0;
-           left_time = 0;
-        }
-        pos--;
-        delay(10);
-      }
-      else if(beacon_dir == STRAIGHT) {
-        //Check if we have interapt
-          if ((left_time<1000)||(right_time <1000)){
-            beacon_dir = NA; 
-          }
-            
-      }
+    //if (servoMetro.check() == 1) { // check if the metro has passed it's interval .
+
+        //servoMetro.reset();
+        
+        
+         //   Serial.println("Millis");  
+ //  Serial.println(millis());
+   
+    //}
+}
+
+/***************SENSOR FUNCTIONS***************/
+
+void servo() {
+  
+  
+
+     
+     
+//       //This needs fixed up
+//      if(beacon_dir == LEFT) {
+//        if(pos >= 135) {
+//           beacon_dir = NA; 
+//           right_time = 0;
+//           left_time = 0;
+//        }
+//        pos++;
+//        delay(10);
+//      }
+//      else if(beacon_dir == RIGHT) {
+//        if(pos <= 45) {
+//           beacon_dir = NA; 
+//           right_time = 0;
+//           left_time = 0;
+//        }
+//        pos--;
+//        delay(10);
+//      }
+//      else if(beacon_dir == STRAIGHT) {
+//        //Check if we have interapt
+////          int current_time = millis();
+////          Serial.print("current_time: ");
+////          Serial.println(current_time);
+////          Serial.print("left time difference");
+////          if (((current_time - left_time) > 800)||((current_time - right_time) > 800)){
+////            left_time = 0;
+////            right_time = 0;
+////            beacon_dir = NA; 
+//          }
+//          
+//       
+//            
+//            
+//      }
+
+if (millis() - right_time > 2000 && millis() - left_time > 2000){
+
+   right_time = 0;
+   //left_time = 0;
+   left_time = 2000;
+   
+}
+   
+
+      
+      
+          // if (left_time - right_time > 50 || right_time - left_time > 500){
+   
+        if (millis() - left_time  > 200 || millis()- right_time > 200){
+  
+           
 
       //Else beacon_dir is unavailable... sweep
-      else {
-        if(pos >= 180) {
+    
+        if(pos >= 135) {
           back = 1; 
         }
         
-        else if(pos <= 0) {
+        else if(pos <= 45) {
           back = 0; 
         }
       
@@ -138,14 +193,33 @@ void loop() {
       
         else
           pos = pos-1;  
-      }
-
-        myservo.write(pos);              // tell servo to go to position in variable 'pos'  
-        servoMetro.reset();
-    }
+          
+          
+      
+            myservo.write(pos);
+                    // tell servo to go to position in variable 'pos'  
+                    
+   }
+//  else if ( left_time - right_time < 100)
+//  {
+//         pos = pos;  
+//      
+//        myservo.write(pos);
+//  }
+//  else if( left_time - right_time < 500){
+//    pos++;
+//    myservo.write(pos);
+//  }
+//    else if( right_time- left_time < 500){
+//    pos--;
+//    myservo.write(pos);
+ // }
+   else if (millis() - left_time > 0 &&  millis() - right_time > 0){    
+      pos = pos;  
+      
+      myservo.write(pos);
+   }
 }
-
-/***************SENSOR FUNCTIONS***************/
 
 int ultrasonic(int pin) {
     //Used to read in the pulse that is being sent by the MaxSonar device.
@@ -207,52 +281,15 @@ void sendSerialInfo(int left_us_val, int left_flex_val,int right_us_val, int rig
 
 //INTERRUPTS//
 void left_beacon() {
-  if(!left_time){
-    left_time = millis();
-    beacon_dir = NA;
-  }
-
-  Serial.print("Saw Left Interrupt! TIME: ");
-  //Serial.println(left_time);
-  beacon_dir = NA;
-  if(right_time) {
-    if((left_time - right_time) > 500) {  
-      //Serial.println("Beacon Right!");
-      beacon_dir = RIGHT;
-      right_time = 0;
-      left_time = 0;
-    }
-    else {
-      //Serial.println("Beacon Straight!"); 
-      beacon_dir = STRAIGHT;
-      left_time = 0;
-      right_time = 0;
-    }
-  }
+ left_time = millis();
+ 
 }
 
 void right_beacon() {
-  if(!right_time){
+ 
     right_time = millis();
-    beacon_dir = NA;
-  }
   
-  Serial.print("Saw Right Interrupt! TIME: ");
-  //Serial.println(right_time);
 
-  if(left_time){
-    if((right_time - left_time) > 500) {
-      //Serial.println("Beacon Left!");
-      beacon_dir = LEFT;
-      left_time = 0;
-      right_time = 0;
-    }    
-    
-    else {
-      beacon_dir = STRAIGHT;
-      left_time = 0;
-      right_time = 0;
-    }  
 
-  }
-}  
+
+}
