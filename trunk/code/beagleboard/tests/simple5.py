@@ -71,7 +71,7 @@ def main():
             response = motor.execute(('turn',RIGHT,35))
             time.sleep(1)
 
-        if sensor_data[0].us['left'] < 10: 
+        if sensor_data[0].us['left'] < 7: 
             response = motor.execute(('go',0,STOP))
             time.sleep(1)
             response = motor.execute(('turn',LEFT,100))
@@ -79,8 +79,8 @@ def main():
              
         if wheels[0].done_flags['right'] == 1 and wheels[0].done_flags['left'] == 1: 
             #wall walking
-            if (sensor_data[0].us['left'] < 25):
-                response = motor.execute(('turn', LEFT, 100))
+            if (sensor_data[0].us['left'] < 10):
+                response = motor.execute(('turn', LEFT, 90))
                 while wheels[0].done_flags['right'] != 1 and wheels[0].done_flags['left'] != 1: 
                     wheel_info = ser.updateWheel()
                     if wheel_info:
@@ -91,7 +91,7 @@ def main():
                     wheel_info = ser.updateWheel()
                     if wheel_info:
                         wheels.insert(0,wheel_info)
-            elif (sensor_data[0].us['right'] > 40):
+            elif (sensor_data[0].us['right'] > 30):
                 response = motor.execute(('turn', RIGHT, 90))
                 while wheels[0].done_flags['right'] != 1 and wheels[0].done_flags['left'] != 1: 
                     wheel_info = ser.updateWheel()
