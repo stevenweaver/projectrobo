@@ -36,25 +36,33 @@ class pathFind:
         if self.waypoint_count == len(self.waypoints) - 1:
             return -1
 
-        last_waypoint = self.waypoints[self.waypoint_count]
+        current_waypoint = self.waypoints[self.waypoint_count]
         next_waypoint = self.waypoints[self.waypoint_count + 1]
 
         #commands.append(('go',0,STOP)) 
         dr_current_point = dead_reckon.calcPosition(sd,self.waypoints, self.waypoint_count)
         self.current_point = dr_current_point
+        distance23 = comp.calcDistance(self.current_point, next_waypoint)
 
-        #Find distance and bearing to next position
-        distance = comp.calcDistance(self.current_point, next_waypoint)
-        
+        if self.waypoint_count >= 1:
+            last_waypoint = self.waypoints[self.waypoint_count - 1]
+            #Find distance and bearing to next position
+            distance12 = comp.calcDistance(last_waypoint, self.current_point)
+            distance13 = comp.calcDistance(last_waypoint, next_waypoint)
+            angle = math.degrees(math.acos((math.pow(distance23,2) - math.pow(distance12,2) - math.pow(distance13,2))/(2*distance12*distance13)))
+            print "angle: " + str(angle)
+
+        else:
+            angle = comp.calcAngle2(self.current_point, next_waypoint) 
+            print "angle:" + str(angle)
+
         #In order to get the real angle, we are going to have to know the current orientation of the robot
-        angle = comp.calcAngle2(self.current_point, next_waypoint) 
-        print "angle: " + str(angle)
-
         if angle > 1.1:
             commands.append(('turn', RIGHT, angle)) 
         else:
             commands.append(('turn', RIGHT, 0)) 
 
+        distance = distance23
         commands.append(('go',distance,FORWARD)) 
         return commands 
 
