@@ -91,7 +91,7 @@
 #define EPSILON 10
 
 
-#define SPEED 25
+#define SPEED 50
 
 #define MAX_PWM_LEFT  255
 #define MAX_PWM_RIGHT 255
@@ -472,7 +472,7 @@ void get_command(){
 //    done_LEFT = 0;
   
 //   Motor_Driver.Reset();
-    delay(1000);
+    delay(100);
    
     
 if(Serial_Direction_Updated == 1) {    
