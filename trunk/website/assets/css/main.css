@@ -92,7 +92,22 @@ a:hover {
         width:940px;
 }
 
-
+.thumbnail_korhan img {
+	float:left;
+	position:absolute;
+	top:-140px;
+	left:-90px;
+}
+.thumbnail_korhan{
+	display:block;
+	float:left;
+	width:220px;
+	height:146px;
+	line-height:100px;
+	overflow:hidden;
+	position:relative;
+ 	z-index:1;
+}
 
 .thumbnail img {
         float:left;
@@ -137,6 +152,23 @@ a:hover {
         left:-90px;
 }
 .thumbnail_gnoc {
+    display:block;
+    float:left;
+    width:220px;
+    height:146px;
+    line-height:100px;
+    overflow:hidden;
+    position:relative;
+    z-index:1;      
+}
+
+.thumbnail_long img {
+        float:left;
+        position:absolute;
+        top:-10px;
+        left:-50px;
+}
+.thumbnail_long {
     display:block;
     float:left;
     width:220px;
