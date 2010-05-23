@@ -403,3 +403,12 @@ thumbnail_med img {
 .overview li { margin-bottom: 2px;}
 
 .member_foot h1 {float: left; margin-left: 100px;}
+
+.design_list {
+    font-size: 8pt;
+}
+
+.designs img {
+    max-width: 200px;
+
+}
