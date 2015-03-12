@@ -1,0 +1,1 @@
+A robot that can autonomously navigate around a predetermined course in the shortest time possible. The course will cover areas with usable GPS signals as well as GPS denied environments. Navigation beacons will be placed on the course to aid in navigation and score the robot's progress.
